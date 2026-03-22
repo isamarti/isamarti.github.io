@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 9: L'Arquitectura de la Motxilla | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_motxilla" data-lesson-id="lesson9">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 9.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>🎒 Lliçó 9: L'Arquitectura de la Motxilla</h1>
+            <p>Benvinguts a una de les lliçons més importants del curs. Fins ara, l'Aina podia rebre mal, però no podia guardar res. Avui aprendrem a crear la seua motxilla.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
+                <p>⚠️ <strong>Important:</strong> En aquesta lliçó ens centrarem exclusivament en el disseny visual i en la creació de dades. Deixarem la motxilla "llesta i bonica", però la "màgia" per a recollir objectes i usar-los la programarem en la Lliçó 10. Dividir la faena ens permetrà entendre millor com Godot separa la imatge de la informació.</p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>1. El node GridContainer: L'aparador dels Objectes</h2>
+            <p>Per a visualitzar la nostra motxilla, necessitem un contenidor que organitze els objectes de manera automàtica. Godot ens ofereix per a això el node <strong>GridContainer</strong>.</p>
+            <p>Aquest node agafa tots els seus fills i els ordena en una graella perfecta (de files i columnes) sense que hàgem de posicionar-los manualment a l'eix X o Y.</p>
+
+            <div class="highlight-section">
+                <h3>🛠️ Creant la UI de l'Inventari</h3>
+                <ol>
+                    <li>Afig un nou node <strong>GridContainer</strong> dins del teu <code>CanvasLayer</code> (pots crear una escena nova anomenada <code>InventariUI.tscn</code> o posar-ho dins de <code>Vida.tscn</code> per tindre tota la UI junta).</li>
+                    <li>En l'Inspector del <code>GridContainer</code>, canvia la propietat <strong>Columns</strong> al número de columnes que vulgues que tinga la teua motxilla (per exemple, 4 o 5).</li>
+                    <li>Afig diversos nodes <strong>TextureRect</strong> o panells com a fills del GridContainer per a representar les caselles (els "slots"). Veuràs com s'ordenen sols!</li>
+                </ol>
+            </div>
+            <p>De moment, posa diverses caselles en blanc o amb un fons fosc, i ajusta dalt l'espai i el disseny perquè quede professional i bonic. Utilitza nodes de tipus <code>MarginContainer</code> si cal per donar espaiats atractius.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Custom Resources: Què és un Objecte?</h2>
+            <p>A Godot, els <strong>Resources</strong> són contenidors de dades que no fan res per si mateixos, però guarden informació de manera molt eficient. A diferència dels Nods, els Resources no apareixen a l'Arbre d'Escenes i només guarden variables (com p.ex. la imatge d'una espasa, el pes o el seu nom).</p>
+            
+            <p>Fins ara hem usat Resources "de fàbrica", com <code>Texture2D</code> per a les imatges. Ara crearem el nostre propi tipus de recurs personalitzat (<strong>Custom Resource</strong>) per a definir què és un "Item" (Objecte) al nostre joc.</p>
+
+            <div class="highlight-section">
+                <h3>📜 Codi del recurs Item (Item.gd)</h3>
+                <p>Crea un script nou, però que no estiga assignat a cap node (Fes clic dret a l'explorador de fitxers i selecciona "Crea Nou -> Script"). Anomena'l <code>Item.gd</code>.</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name Item
+
+@export var name: String = ""
+@export var description: String = ""
+@export var texture: Texture2D
+@export var quantity: int = 1
+@export var max_stack: int = 99</code></pre>
+            </div>
+            <p>Gràcies a la declaració <code>class_name Item</code> i la paraula clau <code>@export</code>, ara podem anar a l'explorador d'arxius, fer clic dret i escollir "Nou Recurs". Si busques "Item", podràs crear objectes infinits (ex. "Poma", "Poció") directament des de l'editor, ficant el seu nom, icona, i quantitat!</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. El cervell de la Motxilla: L'Array</h2>
+            <p>La UI ja es veu, i sabem com definir objectes. Però on es guarden? Per a gestionar l'inventari en memòria utilitzarem una col·lecció de dades anomenada <strong>Array</strong>.</p>
+            <p>Un Array és com una llista ordenada o filera de caixes. La llista començarà des de la caixa 0 fins a la quantitat de caselles creades.</p>
+
+            <div class="highlight-section">
+                <h3>📜 Codi de la lògica de l'Inventari (Inventory.gd)</h3>
+                <p>Ens interessa que la motxilla no forme part necessàriament de la UI, sinó que siguen dades universals. Crearem un altre Script (<code>Inventory.gd</code>) que actue com al gestor principal de dades.</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name Inventory
+
+# Creem un Array que contindrà elements de la classe 'Item'
+# L'iniciem buit, amb espai per a diverses caselles que posem a 'null' (buit)
+@export var slots: Array[Item] = []
+
+func _init():
+    # Quan es crea l'inventari, posem un tamany predeterminat
+    slots.resize(16)</code></pre>
+            </div>
+            <p>Així creat, tenim "forats" a l'Array que de moment estan buits (<code>null</code>). Més avant els anirem substituint per Resources reals d'objectes.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Connectant Dades i UI (Un xicotet avenç)</h2>
+            <p>Hem fet la UI. Hem fet els Resources. Ara la UI ha de "saber" dibuixar eixos Resources. Si l'espai de l'Array està <code>null</code>, la UI ha de dibuixar l'slot buit. Si té un objecte (p.ex. una Poma), ha de dibuixar la seua icona i quantitat.</p>
+
+            <div class="highlight-section">
+                <p>Com ho farem per a la pròxima lliçó? Deixarem preparades les eines. Afegirem una funcionalitat on polsant una tecla (ex. <kbd>TAB</kbd> o <kbd>I</kbd>) el node arrel de la motxilla es façe visible o invisible utilitzant <code>visible = !visible</code>.</p>
+            </div>
+            
+            <p>En aquesta lliçó ens enfoquem exclusivament a tindre una UI increïble i la creació de les nostres estructures de dades en `.tres`. Deixar això resolt es fonamental.</p>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tasca Pràctica 9: Preparant la Motxilla</h3>
+            <p><strong>Objectiu:</strong> Cuidar al màxim la part gràfica de l'inventari i preparar les dades Custom Resource.</p>
+            <ol>
+                <li><strong>UI de l'Inventari:</strong> Fes servir un node <code>GridContainer</code> per a construir la teua interfície de Slots. Juga amb marcs, fons, transparències i marges fins que crees un panell d'inventari preciós per al teu personatge.</li>
+                <li><strong>Navegació amb Botó:</strong> Configura una drecera de teclat a l'Input Map (ex. tecla I) i programa l'escena principal per a ocultar/mostrar (<code>visible = false</code> / <code>visible = true</code>) aquesta nova UI a voluntat.</li>
+                <li><strong>La base de dables:</strong> Crea un script de Recurs personalitzat (<code>class_name Item</code>) seguint el codi d'escriptura.</li>
+                <li><strong>Crea els Teus Primers Objectes:</strong> Fes clic dret a l'explorador i crea almenys <strong>dos recursos nous tipus Item</strong> (ex. un diamant, una poma, o una destral). Configura visualment en l'inspector les imatges, els noms i les descripcions d'aquests recursos `.tres`.</li>
+            </ol>
+            <p><strong>Entrega:</strong> Puja l'arxiu ZIP del projecte. Em fixaré especialment en que la motxilla (la part visual i l'aparició/desaparició amb el botó) funcione suaument i siga bonica.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

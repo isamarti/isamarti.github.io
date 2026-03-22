@@ -28,95 +28,367 @@
     <div id="main-content" class="container hidden-content">
         <header>
             <h1>🎒 Lliçó 9: L'Arquitectura de la Motxilla</h1>
-            <p>Benvinguts a una de les lliçons més importants del curs. Fins ara, l'Aina podia rebre mal, però no podia guardar res. Avui aprendrem a crear la seua motxilla.</p>
+            <p>Benvinguts a una de les lliçons més importants del curs. Fins ara, l'Aina podia rebre mal, però no podia
+                guardar res. Avui aprendrem a crear la seua motxilla.</p>
         </header>
 
         <section class="card animate-on-load">
             <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
-                <p>⚠️ <strong>Important:</strong> En aquesta lliçó ens centrarem exclusivament en el disseny visual i en la creació de dades. Deixarem la motxilla "llesta i bonica", però la "màgia" per a recollir objectes i usar-los la programarem en la Lliçó 10. Dividir la faena ens permetrà entendre millor com Godot separa la imatge de la informació.</p>
+                <p>⚠️ <strong>Important:</strong> En aquesta lliçó ens centrarem exclusivament en el disseny visual i en
+                    la creació de dades. Deixarem la motxilla "llesta i bonica", però la "màgia" per a recollir objectes
+                    i usar-los la programarem en la Lliçó 10. Dividir la faena ens permetrà entendre millor com Godot
+                    separa la imatge de la informació.</p>
             </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>1. El node GridContainer: L'aparador dels Objectes</h2>
-            <p>Per a visualitzar la nostra motxilla, necessitem un contenidor que organitze els objectes de manera automàtica. Godot ens ofereix per a això el node <strong>GridContainer</strong>.</p>
-            <p>Aquest node agafa tots els seus fills i els ordena en una graella perfecta (de files i columnes) sense que hàgem de posicionar-los manualment a l'eix X o Y.</p>
+            <h2>1. Què és un Resource (Recurs) en Godot?</h2>
+            <p>Fins ara hem treballat amb Nodes (Aina, els enemics, les càmeres). Els nodes són "coses que fan coses":
+                es mouen, col·lideixen o emeten sons. Però, on guardem la informació pura? Per a això serveixen els
+                <strong>Resources</strong>.
+            </p>
+
+            <h3>1. L'analogia de la "Fitxa de Personatge"</h3>
+            <p>Imagina un joc de taula:</p>
+            <ul>
+                <li><strong>El Jugador és el Node:</strong> és qui mou la peça, tira els daus i està físicament a la
+                    taula.</li>
+                <li><strong>La Fitxa de Cartolina és el Resource:</strong> és un paper on està escrit el nom, la força i
+                    els objectes que porta. La cartolina no "fa" res, però el jugador la necessita per a saber qui és i
+                    què té.</li>
+            </ul>
+
+            <h3>2. Per què no usem Nodes per als objectes de la motxilla?</h3>
+            <p>Si tinguérem 100 pocions al terra, i cadascuna fora un node complet amb física i codi, el joc aniria
+                lent. En canvi, si eixes 100 pocions només són una "referència" a un fitxer de dades (Resource), el joc
+                és molt més lleuger.</p>
+
+            <h3>3. El fitxer .tres (Text Resource)</h3>
+            <p>Quan creem un Resource a Godot, es guarda amb l'extensió <code>.tres</code>. És un fitxer que conté dades
+                en format text que podem editar des de l'Inspector de Godot sense haver de tocar el codi del personatge.
+            </p>
+
+            <div style="text-align: center; margin: 2rem 0;">
+                <img src="../assets/images/resources.jpg" alt="Explicació gràfica d'un Resource front a un Node"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid var(--border-color);">
+                <p style="font-size: 0.9rem; color: #888; margin-top: 0.5rem;"><em>Diferència visual i conceptual entre
+                        el que és un Node (l'entitat mecànica) i què és un Resource (la informació estètica).</em></p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1rem;">
+                <tr style="background-color: var(--card-bg); border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 0.5rem; text-align: left;">Concepte</th>
+                    <th style="padding: 0.5rem; text-align: left;">Funció</th>
+                    <th style="padding: 0.5rem; text-align: left;">Exemple</th>
+                    <th style="padding: 0.5rem; text-align: left;">Ubicació</th>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 0.5rem;"><strong>Node</strong> (Escena .tscn)</td>
+                    <td style="padding: 0.5rem;">Actuar i moure's en el món.</td>
+                    <td style="padding: 0.5rem;">L'Aina, un Slime, una Càmera.</td>
+                    <td style="padding: 0.5rem;">Està en l'Arbre de l'Escena.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem;"><strong>Resource</strong> (Dades .tres)</td>
+                    <td style="padding: 0.5rem;">Guardar i organitzar informació.</td>
+                    <td style="padding: 0.5rem;">Una Espasa, una Poció, l'Inventari.</td>
+                    <td style="padding: 0.5rem;">Està en la carpeta de fitxers.</td>
+                </tr>
+            </table>
+
+            <h3>4. Per què és útil?</h3>
+            <ul>
+                <li><strong>Organització:</strong> Permet tindre una carpeta anomenada <code>resources</code> amb tots
+                    els ítems del joc ben ordenats.</li>
+                <li><strong>Facilitat d'edició:</strong> Si vols que l'"Espasa de Fusta" ara es diga "Espasa de
+                    l'Aprenent", només has de canviar el nom en el fitxer <code>.tres</code> i s'actualitzarà
+                    automàticament en tot el joc.</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Quins Resources necessitem?</h2>
+            <p>Abans de dibuixar la motxilla o crear codi complex, hem de definir què hi pot anar dins i com
+                s'estructura. Per a fer-ho, usarem tres <strong>Resources (fitxes de dades)</strong> independents,
+                cadascú amb una funció molt clara.</p>
 
             <div class="highlight-section">
-                <h3>🛠️ Creant la UI de l'Inventari</h3>
+                <h3>Pas A: El "Motle" de l'objecte (InvItem.gd)</h3>
+                <p>Crearem un script que defineix que qualsevol objecte del joc (una poció, una clau) només necessita
+                    dues dades bàsiques: per exemple, el nom i una icona.</p>
+                <p>Crea un script nou a l'explorador de fitxers anomenat <code>InvItem.gd</code> i copia açò:</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name InvItem
+
+@export var name:String
+@export var texture:Texture2D
+
+func init(item_name, texture_path):
+    name=item_name
+    texture=load(texture_path)</code></pre>
+            </div>
+
+            <div class="highlight-section">
+                <h3>Pas B: El "Motle" del forat (InvSlot.gd)</h3>
+                <p>La motxilla no guarda els objectes solts, els guarda en "quadrets" o "caselles" (slots). Aquest
+                    script serveix per a dir: <em>"En aquest quadret hi ha tal objecte i en tenim X quantitat"</em>.</p>
+                <p>Crea un script nou anomenat <code>InvSlot.gd</code> i escriu-li aquest motle:</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name itemSlot
+
+@export var item:InvItem
+@export var amount:int</code></pre>
+            </div>
+
+            <div class="highlight-section">
+                <h3>Pas C: El "Motle" de la Motxilla (Inv.gd)</h3>
+                <p>És el mapa general de la nostra motxilla. Senzillament diu que tenim una llista (un Array) de
+                    quadrets (InvSlot).</p>
+                <p>Crea el darrer script anomenat <code>Inv.gd</code> per gestionar l'inventari sencer:</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name Inv
+
+# Un array (llista) que només accepta fitxes de forats ("InvSlot")
+@export var slots: Array[InvSlot]</code></pre>
+            </div>
+            <p>Amb aquests tres nous <code>class_name</code> creats, podrem anar a l'explorador de fitxers, fer clic
+                dret i crear directament l'inventari, els llocs lliures i els objectes físics (com el `.tres` de la
+                Poció) des de l'Inspector!</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Creant els Resources Pas a Pas</h2>
+            <p>Ara que tenim els tres scripts ("motles"), anem a "cuinar" les nostres primeres dades preparant
+                l'inventari del jugador i una poció. Tot açò es fa visualment des de l'Inspector!</p>
+
+            <div class="highlight-section">
+                <h3>1. Crear un InvItem (La Poció)</h3>
                 <ol>
-                    <li>Afig un nou node <strong>GridContainer</strong> dins del teu <code>CanvasLayer</code> (pots crear una escena nova anomenada <code>InventariUI.tscn</code> o posar-ho dins de <code>Vida.tscn</code> per tindre tota la UI junta).</li>
-                    <li>En l'Inspector del <code>GridContainer</code>, canvia la propietat <strong>Columns</strong> al número de columnes que vulgues que tinga la teua motxilla (per exemple, 4 o 5).</li>
-                    <li>Afig diversos nodes <strong>TextureRect</strong> o panells com a fills del GridContainer per a representar les caselles (els "slots"). Veuràs com s'ordenen sols!</li>
+                    <li>A l'explorador de fitxers (a baix a l'esquerra), fes <strong>Clic Dret</strong> en la teua
+                        carpeta de resources i tria <strong>Nou &gt; Recurs...</strong></li>
+                    <li>A la finestra de cerca que apareix, busca <strong>InvItem</strong> (la classe que vam crear al
+                        Pas A). Selecciona-la i dóna-li el nom de fitxer <code>Pocio.tres</code>.</li>
+                    <li>Fes doble clic sobre <code>Pocio.tres</code>. A l'Inspector de la dreta voràs les variables que
+                        varem definir. Ompli el <strong>Name</strong> amb <em>"Pocio"</em> i en <strong>Texture</strong>
+                        assigna-li una imatge!</li>
                 </ol>
             </div>
-            <p>De moment, posa diverses caselles en blanc o amb un fons fosc, i ajusta dalt l'espai i el disseny perquè quede professional i bonic. Utilitza nodes de tipus <code>MarginContainer</code> si cal per donar espaiats atractius.</p>
+
+            <div class="highlight-section">
+                <h3>2. Crear l'Inventari Principal (Inv)</h3>
+                <ol>
+                    <li>Fes Clic Dret una altra volta a l'explorador: <strong>Nou &gt; Recurs...</strong> Busca
+                        <strong>Inv</strong> (el Pas C) i anomena l'arxiu <code>playerinv.tres</code>.
+                    </li>
+                    <li>Obre el <code>playerinv.tres</code> a l'Inspector. Voràs que té una variable anomenada
+                        <strong>Slots</strong> que és un <em>Array[itemSlot]</em>.
+                    </li>
+                    <li>Si la teua motxilla visual tindrà 15 quadrets, fes clic sobre l'Array i estableix el seu
+                        <strong>Size</strong> (Tamany) a 15. Ara tens 15 forats buits (<code>&lt;empty&gt;</code>).
+                    </li>
+                    <li>Fes click en cada forat i crea un new itemSlot</li>
+                </ol>
+
+                <p>Ara ja tenim tots els recursos amb els que hem d'omplir la motxilla de l'Aina. </p>
+            </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>2. Custom Resources: Què és un Objecte?</h2>
-            <p>A Godot, els <strong>Resources</strong> són contenidors de dades que no fan res per si mateixos, però guarden informació de manera molt eficient. A diferència dels Nods, els Resources no apareixen a l'Arbre d'Escenes i només guarden variables (com p.ex. la imatge d'una espasa, el pes o el seu nom).</p>
-            
-            <p>Fins ara hem usat Resources "de fàbrica", com <code>Texture2D</code> per a les imatges. Ara crearem el nostre propi tipus de recurs personalitzat (<strong>Custom Resource</strong>) per a definir què és un "Item" (Objecte) al nostre joc.</p>
+            <h2>4. Disseny de la Interfície (UI)</h2>
+            <p>Ara que tenim les dades a guardar, anem a crear la interfície visual on les mostrarem. Per això,
+                utilitzarem les imatges <strong>inventory.png</strong> (el fons de la motxilla) i
+                <strong>inv_slot.png</strong> (el fons de cada quadret), que estan a la carpeta images.
+            </p>
+
+            <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <p><strong>Fons de l'Inventari</strong></p>
+                    <img src="../assets/images/inventory.png" alt="Fons de la motxilla"
+                        style="max-width: 200px; border-radius: 8px;">
+                </div>
+                <div style="text-align: center;">
+                    <p><strong>Casella (Slot)</strong></p>
+                    <img src="../assets/images/inv_slot.png" alt="Fons de la casella"
+                        style="max-width: 100px; border-radius: 8px;">
+                </div>
+            </div>
+
+            <p style="margin-top: 1rem;">Per a situar aquestes caselles, necessitarem un contenidor que organitze els
+                objectes de manera automàtica. Godot ens ofereix per a això el node <strong>GridContainer</strong>.
+                Aquest node agafa tots els seus fills i els ordena en una graella perfecta (de files i columnes) sense
+                que hàgem de posicionar-los manualment a l'eix X o Y.</p>
+
+            <div class="highlight-section" style="margin-top: 2rem;">
+                <h3>🛠️ Pas 1: L'Escena del Quadret (`InventoryUiSlot.tscn`)</h3>
+                <p>Abans de fer la motxilla sencera, crearem una <strong>escena individual</strong> només per al
+                    quadret. D'eixa manera podrem reutilitzar-lo i tindre un sistema d'interacció per separat.</p>
+                <p>Crea una nova escena i reprodueix EXACTAMENT aquesta jerarquia de nodes:</p>
+
+                <ul class="tree-list"
+                    style="background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; font-family: monospace; list-style-type: none; line-height: 1.6;">
+                    <li><span style="color:#5cdb7a;">■</span> <strong>InventoryUiSlot</strong> (Node Panel o Control
+                        arrel)</li>
+                    <li>&nbsp;&nbsp;├── <span style="color:#5c97db;">●</span> <strong>Sprite2D</strong> (Ací posarem la
+                        textura <code>inv_slot.png</code>)</li>
+                    <li>&nbsp;&nbsp;├── <span style="color:#5cdb7a;">■</span> <strong>CenterContainer</strong></li>
+                    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span> <strong>Panel</strong>
+                    </li>
+                    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span style="color:#5c97db;">●</span>
+                        <strong>item_icon</strong> (Sprite2D per mostrar la foto de l'objecte)
+                    </li>
+                    <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#a8db5c;">▶</span>
+                        <strong>amount</strong> (Label per mostrar el número d'objectes)
+                    </li>
+                    <li>&nbsp;&nbsp;├── <span style="color:#5cdb7a;">■</span> <strong>Button</strong> (Un botó dalt de
+                        tot per detectar quan fem clic al quadret)</li>
+                    <li>&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span> <strong>UsePanel</strong> (Un panell
+                        amagat inicialment)</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span style="color:#5cdb7a;">■</span>
+                        <strong>Use</strong> (Botó per usar objecte)
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span>
+                        <strong>Drop</strong> (Botó per tirar l'objecte)
+                    </li>
+                </ul>
+
+                <p>Aquesta estructura tan completa ens servirà no només per mostrar la imatge de l'objecte, sinó per
+                    tenir botons per usar-los o tirar-los a la següent lliçó! Quedarà com es veu a la imatge:</p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="../assets/images/slotfet.png" alt="Estructura de nodes de InventoryUiSlot"
+                        style="max-width: 300px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                </div>
+            </div>
 
             <div class="highlight-section">
-                <h3>📜 Codi del recurs Item (Item.gd)</h3>
-                <p>Crea un script nou, però que no estiga assignat a cap node (Fes clic dret a l'explorador de fitxers i selecciona "Crea Nou -> Script"). Anomena'l <code>Item.gd</code>.</p>
-                <pre><code class="language-gdscript">extends Resource
-class_name Item
+                <h3>🛠️ Pas 2: Creant la Motxilla sencera (`InventariUI.tscn`)</h3>
+                <p>Ara que tenim un quadret preparat per a fer de tot, anem a organitzar-ne molts de manera automàtica
+                    utilitzant el fantàstic node <strong>GridContainer</strong>.</p>
 
-@export var name: String = ""
-@export var description: String = ""
-@export var texture: Texture2D
-@export var quantity: int = 1
-@export var max_stack: int = 99</code></pre>
+                <div class="highlight-section"
+                    style="border-left: 4px solid #3b82f6; background-color: #eff6ff; margin: 1.5rem 0; padding: 1rem; border-radius: 0 8px 8px 0;">
+                    <h4 style="margin-top: 0; color: #1e3a8a;">ℹ️ Per què fem servir un NinePatchRect?</h4>
+                    <p style="margin-bottom: 0;">Un <strong>NinePatchRect</strong> és un node de la interfície gràfica
+                        especial. A diferència d'un <em>TextureRect</em> normal (que es deforma o es pixela quan el fem
+                        més gran per fer-lo quadrar amb tots els objectes), el NinePatchRect "talla" intel·ligentment la
+                        imatge en 9 quadrants (un 3x3). D'aquesta manera, pot estirar la part central infinitament per
+                        acollir tots els slots, <strong>mantenint els cantons originals arrodonits sense estirar-los ni
+                            distorsionar-los!</strong> És el node ideal per a dibuixar fons de panells i finestres als
+                        videojocs.</p>
+                </div>
+
+                <ol>
+                    <li>Crea una altra escena nova anomenada <code>InventariUI.tscn</code> amb un
+                        <strong>CanvasLayer</strong> d'arrel.
+                    </li>
+                    <li>Afig un <strong>NinePatchRect</strong> anomenat <code>Background</code> i posa-li la textura
+                        <code>inventory.png</code>. Açò serà el fons principal de la motxilla.
+                    </li>
+                    <li>Dins del fons, afig un node <strong>GridContainer</strong> i centra'l per a que ocupe l'espai
+                        lliure al dibuix. A l'Inspector d'aquest node, canvia la propietat <strong>Columns</strong> al
+                        nombre de columnes (ex. 5).</li>
+                    <li>En lloc de crear slots nous a mà, <strong>instància</strong> (amb l'icona de la cadena damunt
+                        del GridContainer) l'escena <code>InventoryUiSlot.tscn</code> com a fill.</li>
+                    <li>Duplica aquesta instància prement <code>Ctrl+D</code> diverses vegades. Observa com el
+                        GridContainer els ordena ràpidament en la graella!</li>
+                </ol>
+
+                <p>La jerarquia final de la teua nova escena hauria de quedar tal que així, amb tants Slots (quadrets)
+                    com hages ficat a l'Array del teu <code>playerinv.tres</code>:</p>
+                <ul class="tree-list"
+                    style="background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; font-family: monospace; list-style-type: none; line-height: 1.6;">
+                    <li><span style="color:#5cdb7a;">■</span> <strong>Inventory</strong> (Node arrel CanvasLayer o
+                        Control)</li>
+                    <li>&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span> <strong>Background</strong>
+                        (NinePatchRect)</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span>
+                        <strong>GridContainer</strong>
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 🎬
+                        <strong>InventoryUiSlot</strong> (Escena instanciada)
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 🎬
+                        <strong>InventoryUiSlot2</strong> (Escena instanciada)
+                    </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 🎬
+                        <strong>InventoryUiSlot3...</strong> (I així successivament)
+                    </li>
+                </ul>
             </div>
-            <p>Gràcies a la declaració <code>class_name Item</code> i la paraula clau <code>@export</code>, ara podem anar a l'explorador d'arxius, fer clic dret i escollir "Nou Recurs". Si busques "Item", podràs crear objectes infinits (ex. "Poma", "Poció") directament des de l'editor, ficant el seu nom, icona, i quantitat!</p>
+            <p>Juga amb els espais del GridContainer i l'escalat fins que tingues tantes caselles instanciades com les
+                que has ficat a l'Array de <code>playerinv.tres</code>. La teua nova motxilla a l'Editor s'hauria de
+                veure similar a esta:</p>
+
+            <div style="text-align: center; margin: 2rem 0;">
+                <img src="../assets/images/invfet.png" alt="Vista prèvia de l'Inventari complet"
+                    style="max-width: 450px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+            </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>3. El cervell de la Motxilla: L'Array</h2>
-            <p>La UI ja es veu, i sabem com definir objectes. Però on es guarden? Per a gestionar l'inventari en memòria utilitzarem una col·lecció de dades anomenada <strong>Array</strong>.</p>
-            <p>Un Array és com una llista ordenada o filera de caixes. La llista començarà des de la caixa 0 fins a la quantitat de caselles creades.</p>
+            <h2>5. 🔗 Connexió: Unint la Interfície amb les Dades</h2>
+            <p>Ara que ja tenim l'escena de la motxilla (<code>InventoryUi</code>) i el fitxer on guardarem els objectes
+                (<code>playerInv.tres</code>), hem de dir-li a la interfície: <em>"Ei, mira dins d'aquest fitxer per a
+                    saber què has de dibuixar"</em>.</p>
 
             <div class="highlight-section">
-                <h3>📜 Codi de la lògica de l'Inventari (Inventory.gd)</h3>
-                <p>Ens interessa que la motxilla no forme part necessàriament de la UI, sinó que siguen dades universals. Crearem un altre Script (<code>Inventory.gd</code>) que actue com al gestor principal de dades.</p>
-                <pre><code class="language-gdscript">extends Resource
-class_name Inventory
+                <h3>1. Preparar l'Script de la Interfície</h3>
+                <p>En l'script del node arrel de la teua UI d'inventari, afegirem una variable especial que ens permeta
+                    "arrossegar" el nostre inventari des de l'editor.</p>
+                <pre><code class="language-gdscript">extends Control
 
-# Creem un Array que contindrà elements de la classe 'Item'
-# L'iniciem buit, amb espai per a diverses caselles que posem a 'null' (buit)
-@export var slots: Array[Item] = []
-
-func _init():
-    # Quan es crea l'inventari, posem un tamany predeterminat
-    slots.resize(16)</code></pre>
+# Aquesta línia crea un buit a l'Inspector per a posar el nostre .tres
+@export var inv: Inv</code></pre>
             </div>
-            <p>Així creat, tenim "forats" a l'Array que de moment estan buits (<code>null</code>). Més avant els anirem substituint per Resources reals d'objectes.</p>
-        </section>
-
-        <section class="card animate-on-load">
-            <h2>4. Connectant Dades i UI (Un xicotet avenç)</h2>
-            <p>Hem fet la UI. Hem fet els Resources. Ara la UI ha de "saber" dibuixar eixos Resources. Si l'espai de l'Array està <code>null</code>, la UI ha de dibuixar l'slot buit. Si té un objecte (p.ex. una Poma), ha de dibuixar la seua icona i quantitat.</p>
 
             <div class="highlight-section">
-                <p>Com ho farem per a la pròxima lliçó? Deixarem preparades les eines. Afegirem una funcionalitat on polsant una tecla (ex. <kbd>TAB</kbd> o <kbd>I</kbd>) el node arrel de la motxilla es façe visible o invisible utilitzant <code>visible = !visible</code>.</p>
+                <h3>2. Connectar des de l'Editor (Sense codi!)</h3>
+                <p>Aquest és el pas on fem la màgia de Godot:</p>
+                <ol>
+                    <li>Obre l'escena <code>InventoryUi.tscn</code>.</li>
+                    <li>Selecciona el node arrel (el que té l'script que acabem de modificar).</li>
+                    <li>Mira a l'Inspector a la dreta. Veuràs una nova casella buida anomenada <strong>"Inv"</strong>.
+                    </li>
+                    <li>Vés a la teua carpeta de fitxers, busca el teu recurs <code>playerInv.tres</code> i arrossega'l
+                        directament dins d'eixa casella de l'Inspector.</li>
+                </ol>
             </div>
-            
-            <p>En aquesta lliçó ens enfoquem exclusivament a tindre una UI increïble i la creació de les nostres estructures de dades en `.tres`. Deixar això resolt es fonamental.</p>
+
+            <div class="highlight-section">
+                <h3>3. Per què fem aquesta connexió ara?</h3>
+                <p>Encara que avui no veurem com es mouen els ítems, en fer aquest pas hem aconseguit que:</p>
+                <ul>
+                    <li>La UI ja té accés a la llista de slots.</li>
+                    <li>Podem tindre diferents inventaris (un per al jugador, un per a un cofre, un per a un botiguer)
+                        usant la mateixa escena de UI, simplement canviant quin fitxer <code>.tres</code> li fiquem a
+                        l'Inspector.</li>
+                </ul>
+            </div>
         </section>
 
         <section class="card animate-on-load task-box">
             <h3>🛠️ Tasca Pràctica 9: Preparant la Motxilla</h3>
-            <p><strong>Objectiu:</strong> Cuidar al màxim la part gràfica de l'inventari i preparar les dades Custom Resource.</p>
+            <p><strong>Objectiu:</strong> Cuidar al màxim la part gràfica de l'inventari i preparar les dades
+                estructurades amb Resources.</p>
             <ol>
-                <li><strong>UI de l'Inventari:</strong> Fes servir un node <code>GridContainer</code> per a construir la teua interfície de Slots. Juga amb marcs, fons, transparències i marges fins que crees un panell d'inventari preciós per al teu personatge.</li>
-                <li><strong>Navegació amb Botó:</strong> Configura una drecera de teclat a l'Input Map (ex. tecla I) i programa l'escena principal per a ocultar/mostrar (<code>visible = false</code> / <code>visible = true</code>) aquesta nova UI a voluntat.</li>
-                <li><strong>La base de dables:</strong> Crea un script de Recurs personalitzat (<code>class_name Item</code>) seguint el codi d'escriptura.</li>
-                <li><strong>Crea els Teus Primers Objectes:</strong> Fes clic dret a l'explorador i crea almenys <strong>dos recursos nous tipus Item</strong> (ex. un diamant, una poma, o una destral). Configura visualment en l'inspector les imatges, els noms i les descripcions d'aquests recursos `.tres`.</li>
+                <li><strong>UI de l'Inventari:</strong> Crea primer la sub-escena <code>InventoryUiSlot.tscn</code> amb
+                    tota la jerarquia de nodes. Després configura l'escena principal <code>InventariUI.tscn</code> amb
+                    un fons i un <code>GridContainer</code>, i instància a dins tants Slots com necessites, ajustant
+                    marcs i marges.</li>
+                <li><strong>La base de dades:</strong> Crea els 3 scripts de Recurs personalitzat
+                    (<code>InvItem.gd</code>, <code>InvSlot.gd</code> i <code>Inv.gd</code>) seguint el codi descrit a
+                    la lliçó.</li>
+                <li><strong>Crea la teua Motxilla i Eslots:</strong> Fes clic dret a l'explorador i crea un recurs tipus
+                    <code>Inv</code> (amb nom com <code>Inv_Player.tres</code>). Configura a l'Inspector que l'Array
+                    tinga el mateix nombre d'eslots que caselles tens dibuixades. Dins de l'Array per a cada casella
+                    crea-li un recurs tipus <code>InvSlot</code>.
+                </li>
+                <li><strong>Crea els Teus Primers Objectes:</strong> De forma semblant, crea almenys <strong>dos
+                        recursos nous tipus InvItem</strong> (ex. diamant, poma) i inserta'ls directament als slots de
+                    la motxilla i fica temps una quantitat major a 0 per provar-ho a l'Inspector.</li>
             </ol>
-            <p><strong>Entrega:</strong> Puja l'arxiu ZIP del projecte. Em fixaré especialment en que la motxilla (la part visual i l'aparició/desaparició amb el botó) funcione suaument i siga bonica.</p>
+            <p><strong>Entrega:</strong> Puja el projecte sencer. La teua tasca és que la UI siga increïble, el botó
+                l'amague i tots els arxius `.tres` estiguen configurats.</p>
         </section>
 
         <footer class="footer">

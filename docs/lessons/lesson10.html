@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 10: Donant vida a l'Inventari | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_inventari" data-lesson-id="lesson10">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 10.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>📦 Lliçó 10: Donant vida a l'Inventari</h1>
+            <p>A la lliçó anterior vam deixar la motxilla "bonica" però buida. Avui anem a programar el seu "cervell".
+                Dividirem la feina en tres scripts que treballen en equip: el Quadret (Vista), la Motxilla (Dades) i el
+                Panell (Control).</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El motor del quadret: InventoryUiSlot.gd</h2>
+            <p>Cada quadret individual de la motxilla necessita el seu propi script per a gestionar tres coses:</p>
+            <ul>
+                <li>Mostrar la icona i la quantitat correctament.</li>
+                <li>Detectar quan el jugador clica el botó.</li>
+                <li>Avisar (mitjançant senyals) quan volem usar o tirar l'objecte.</li>
+            </ul>
+
+            <div class="highlight-section">
+                <h3>📜 Codi sencer del Quadret</h3>
+                <p>Crea el script <code>InventoryUiSlot.gd</code> i copia aquest codi al node arrel del teu Slot:</p>
+                <pre><code class="language-gdscript">extends Panel
+
+@onready var item_visual = $CenterContainer/Panel/item_icon
+@onready var item_amount = $CenterContainer/Panel/amount
+@onready var usePanel = $UsePanel
+
+var item_in_slot:itemSlot
+
+signal use(item:itemSlot)
+signal drop(item:itemSlot)
+
+func _ready() -> void:
+    usePanel.visible = false
+    $Button.disabled = true
+    
+func update_slot(slot:itemSlot):
+    if !slot.item:
+        item_visual.visible=false
+        item_amount.visible=false
+    else:
+        item_in_slot=slot
+        item_visual.visible=true
+        item_amount.visible=true
+        item_visual.texture=slot.item.texture
+        item_amount.text=str(slot.amount)
+        $Button.disabled=false
+    
+func _on_button_pressed() -> void:
+    if(usePanel.visible):
+        usePanel.visible=false
+    else:
+        usePanel.visible=true
+    
+func _on_use_pressed() -> void:
+    use.emit(item_in_slot)
+    usePanel.visible=false
+
+func _on_drop_pressed() -> void:
+    drop.emit(item_in_slot)
+    usePanel.visible=false</code></pre>
+            </div>
+
+            <div class="highlight-section">
+                <h3>Explicació del codi del Slot:</h3>
+                <ul>
+                    <li><strong>Variables @onready:</strong> Connectem els nodes visuals (icona, text i el panell
+                        d'opcions) perquè el codi puga canviar-los.</li>
+                    <li><strong>La funció update_slot:</strong> És el cor del sistema. Rep la informació del recurs
+                        <code>itemSlot</code>. Si no hi ha res, ho amaga tot per a que el quadret es veja buit; si hi ha
+                        un objecte, posa la seua textura i el número de quantitat.
+                    </li>
+                    <li><strong>Gestió del botó:</strong> El botó principal del slot serveix per a mostrar o amagar el
+                        <code>UsePanel</code> (el menú desplegable amb "Usar" i "Tirar").
+                    </li>
+                    <li><strong>Les Senyals (use i drop):</strong> Com que el quadret no sap què fa una poció,
+                        simplement "crida" cap a fora: "Ei! Volen usar aquest ítem!".</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El Cervell de les Dades: Inv.gd</h2>
+            <p>Aquest script no està en cap escena, està "dins" del fitxer de dades (el teu `.tres`). És el cervell que
+                organitza els objectes.</p>
+
+            <div class="highlight-section">
+                <h3>📜 Codi del Recurs Inv</h3>
+                <p>Aquest codi s'encarrega d'afegir i agrupar els objectes de manera automàtica:</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name Inv
+
+@export var slots:Array[itemSlot]
+
+var inv_item:InvItem
+
+signal inv_updated
+
+func update_inv(item:InvItem):
+    print(item)
+    
+    var inserted = false
+    
+    for slot in slots:
+        if (slot.item!=null):
+            if slot.item.name==item.name:
+                slot.amount+=1
+                inserted=true
+                break
+            
+    if(!inserted):
+        var empty_slot = slots.filter(func(slot):return (slot.item==null))
+        
+        if !empty_slot.is_empty():
+            empty_slot[0].item=item
+            empty_slot[0].amount=1
+    
+    inv_updated.emit()</code></pre>
+            </div>
+
+            <div class="highlight-section">
+                <h3>Com gestiona els ítems? (update_inv)</h3>
+                <p>Quan l'Aina agafa algo del terra, aquest script fa tres passos lògics:</p>
+                <ul>
+                    <li><strong>Són iguals?:</strong> Mira si l'ítem que acabem d'agafar ja el tenim a la motxilla. Si
+                        és així (per exemple, ja teníem una poció), en lloc de gastar un altre quadret, li suma 1 a la
+                        quantitat.</li>
+                    <li><strong>On hi ha lloc?:</strong> Si l'ítem és completament nou, busca el primer forat que tinga
+                        el valor
+                        <code>null</code> (buit). Ho fa utilitzant la funció <code>.filter</code>, que és com un colador
+                        de
+                        dades.
+                    </li>
+                    <li><strong>Avisar del canvi:</strong> Una vegada guardat, emet la senyal <code>inv_updated</code>.
+                        Això és vital perquè la interfície sàpiga que ha de refrescar-se per mostrar els canvis.</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <section class="card animate-on-load">
+            <h2>3. L'Orquestrador: InventoryUi.gd</h2>
+            <p>Aquest és el "Director" que tenim a la pantalla. Uneix les dades amb la imatge. </p>
+            <p>Les seues funcions principals:</p>
+            <ul>
+                <li>Connexió Inicial (_ready): En obrir el joc, aquest script va slot per slot connectant-se a
+                    les seues senyals de "Usar" i "Tirar"</li>.
+                <li> També es connecta al Recurs de l'inventari.Obrir/Tancar: Detecta
+                    la tecla "I" (o la que vulguem) per a mostrar o amagar tot el panell.</li>
+                <li>Lògica d'accions (use_item): Ací és on decidim què passa realment. Per exemple: Si l'objecte es diu
+                    "potion" $\rightarrow$ Cridem a la funció de curar.Si
+                    es diu "key" $\rightarrow$ Emetem una senyal cap a l'escenari per a obrir la porta.</li>
+            </ul>
+
+            <div class="highlight-section">
+                <h3>📜 Codi Principal (InventoryUi.gd)</h3>
+                <pre><code class="language-gdscript">extends Control
+
+@onready var ui_slots = $Background/GridContainer.get_children()
+@export var inv:Inv
+
+signal use_key
+
+func _ready() -> void:
+    inv.inv_updated.connect(update_inv_ui)
+    
+    for i in range(min(ui_slots.size(), inv.slots.size())):
+        ui_slots[i].use.connect(use_item)
+        ui_slots[i].drop.connect(drop_item)
+    
+    update_inv_ui()
+    close()
+    
+func _unhandled_input(event: InputEvent) -> void:
+    if Input.is_action_just_pressed("inventory"):
+        if visible:
+            close()
+        else:
+            open()    
+
+func close():
+    visible=false
+    
+func open():
+    visible=true
+
+func update_inv_ui():
+    for i in range(min(ui_slots.size(), inv.slots.size())):
+        ui_slots[i].update_slot(inv.slots[i])
+
+func use_item(item:itemSlot):
+    drop_item(item)
+    # Afegir condicionals per als diferents items segons el nom. Per exemple:
+    # if (item.item.name=="key"):
+    #     use_key.emit()
+    
+func drop_item(item:itemSlot):
+    if item.amount>1:
+        item.amount-=1
+    else:
+        var index=0
+        while(index < inv.slots.size()):
+            if inv.slots[index]==item:
+                inv.slots.remove_at(index)
+                break
+            index+=1
+    update_inv_ui()</code></pre>
+                <p><strong>Què fa en resum?</strong> Captura quan polsem la tecla assignada al mapa d'accions
+                    ("inventory") per obrir o tancar la UI, escolta si algun botó ha emès els senyals <code>use</code> i
+                    <code>drop</code>, i automàticament refresca les quantitats i les icones en pantalla.
+                </p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. 🎒 L'Aina i la seua Motxilla: La connexió final</h2>
+            <p>Per a que tot el sistema que hem programat funcione, l'Aina ha de ser la <strong>propietària</strong> de
+                la informació i de la interfície.</p>
+
+            <div class="highlight-section">
+                <h3>1. Equipant l'Aina (Nodes i Recursos)</h3>
+                <p>Dins de l'escena del nostre personatge (<code>Player.tscn</code>), hem de fer dos passos fonamentals:
+                </p>
+                <ul>
+                    <li><strong>Afegir la UI:</strong> Arrossegueu l'escena <code>InventariUI.tscn</code> dins de l'Aina
+                        (millor si està dins d'un node <strong>CanvasLayer</strong> per a que no es moga amb la càmera i
+                        sempre aparega al centre de la pantalla de forma perfecta).</li>
+                    <li><strong>Assignar les dades:</strong> Creem la variable <code>inventory</code> amb
+                        <code>@export</code> a l'script de l'Aina i, a l'Inspector d'aquesta, hi afegim el recurs
+                        <code>playerInv.tres</code> arrossegant-ho. D'aquesta manera, l'Aina ja "té" una motxilla física
+                        on guardar coses de colp!
+                    </li>
+                </ul>
+            </div>
+
+            <div class="highlight-section">
+                <h3>2. La funció de Recollida (collect)</h3>
+                <p>Dins de l'script de l'Aina, necessitarem una funció anomenada <code>collect</code>.</p>
+                <ul>
+                    <li><strong>Què fa?:</strong> Aquesta funció serà la "porta d'entrada". Quan l'Aina trobe un objecte
+                        al món, aquest objecte li "passarà" el seu fitxer <code>.tres</code> corresponent.</li>
+                    <li><strong>Com funciona?:</strong> La funció agafarà eixe fitxer en brut i cridarà al mètode
+                        <code>update_inv</code> de la nostra motxilla per a guardar-lo oficialment dintre a tota
+                        màquina.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #10b981; background-color: #ecfdf5;">
+                <h3 style="margin-top: 0; color: #065f46;">🌍 Objectes al Món: El camí del .tres</h3>
+                <p>Perquè l'Aina puga recollir una clau o una poció saltant per l'escenari, l'objecte que veiem a la
+                    pantalla ha de tindre obligatòriament dues coses preparades:</p>
+                <ul>
+                    <li>Una imatge (Sprite2D) i una <strong>Area2D</strong> amb forma: Per a que el joc sàpiga on està
+                        l'objecte i quan el toquem.</li>
+                    <li>El seu propi fitxer <strong>.tres</strong>: A l'script de l'objecte del terra, hem de tindre un
+                        buit en l'Inspector de la variant de l'export per a posar el recurs de l'ítem (per exemple, li
+                        arrosseguem el nostre fitxer <code>clau.tres</code> o <code>pocio.tres</code>).</li>
+                </ul>
+                <p style="margin-bottom: 0;"><strong>El flux per lo tant és el següent:</strong><br>
+                    L'Aina entra a l'Area2D de l'objecte ➔ L'objecte llança la dada i diu: <em>"Ei, Aina! Soc una clau,
+                        ací tens el meu recurs .tres!"</em> ➔ L'Aina crida a la seua pròpia funció
+                    <code>collect()</code> de passada i el guarda ràpidament. Bam!
+                </p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. 🗝️ El Repte: La Porta Bloquejada</h2>
+            <p>Ara que ja sabem recollir objectes, anem a posar-ho a prova amb un trencaclosques clàssic.</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #8b5cf6; background-color: #f5f3ff;">
+                <h3 style="color: #5b21b6; margin-top: 0;">Com fer que una clau òbriga una porta?</h3>
+                <p>La clau per si sola no sap obrir portes de manera mecànica; necessitem que hi haja una comunicació
+                    entre la motxilla de l'Aina i l'escenari.</p>
+                <ul>
+                    <li><strong>L'Acció de l'Usuari:</strong> Quan obrim l'inventari i cliquem en "Usar" sobre la clau
+                        d'or, l'inventari ha d'emetre eixa nova senyal explícita (per exemple, la senyal
+                        <code>use_key</code>).
+                    </li>
+                    <li><strong>L'Escenari escolta:</strong> Heu de connectar eixa senyal única de la UI (que actualment
+                        està dins de l'Aina) amb l'script del vostre nivell principal o directament a la mateixa porta.
+                    </li>
+                    <li><strong>La Condició:</strong> La porta només s'ha d'obrir o destrossar (fent
+                        <code>queue_free()</code> o ocultant-se) exclusivament si s'ha rebut la senyal d'ús de la clau
+                        màgica.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tasca Pràctica 10: Programant l'Inventari</h3>
+            <p><strong>El vostre objectiu és:</strong></p>
+            <ul>
+                <li>Crear un recurs <code>.tres</code> per a una <strong>Clau</strong>.</li>
+                <li>Col·locar una clau a l'escenari que l'Aina puga recollir (ha de tindre la seua respectiva
+                    <strong>Area2D</strong> i codi de recollida).
+                </li>
+                <li>Dibuixar una Porta (o un mur invisible) al Tilemap o a l'escena que ens impedisca continuar o
+                    passar.</li>
+                <li>Programar la lògica perquè, en usar la clau des de l'inventari mentre estem prop de la porta,
+                    aquesta desaparega o es desbloquegi completament.</li>
+            </ul>
+            <div class="highlight-section" style="background-color: transparent; border: none; padding: 0.5rem 0;">
+                <p>💡 <strong>Pista per a experts:</strong> Haureu de connectar la senyal <code>use_key</code> que emet
+                    l'inventari de l'Aina amb l'escena del vostre nivell. Penseu bé en quin node està escoltant a quin!
+                </p>
+            </div>
+            <p><strong>Entrega:</strong> Comprova que tota la cadena de recollida, guardat i ús funciona perfectament.
+                Adjunta el zip del teu projecte actualitzat a Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

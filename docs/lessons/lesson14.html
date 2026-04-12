@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 14: Explorant la Tercera Dimensió | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="godot_3d" data-lesson-id="lesson14">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 14.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>🧊 Lliçó 14: Explorant la Tercera Dimensió amb Godot</h1>
+            <p>Un cop consolidada la lògica de joc en 2D, és el moment d'obrir la finestra a una de les capacitats més potents de Godot: el seu motor 3D. Aquesta lliçó no pretén ser un curs exhaustiu de modelatge, sinó una introducció a com traslladar els coneixements de programació i nodes que ja tenim a un entorn amb profunditat.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El canvi de paradigma: L'eix Z</h2>
+            <p>Fins ara, ens hem mogut en un pla cartesià d'eixos X (horitzontal) i Y (vertical). En el món 3D, Godot afegeix l'eix <strong>Z</strong>, que representa la profunditat.</p>
+            <ul>
+                <li><strong style="color: #ef4444;">X (Roig):</strong> Esquerra / Dreta.</li>
+                <li><strong style="color: #10b981;">Y (Verd):</strong> Amunt / Avall.</li>
+                <li><strong style="color: #3b82f6;">Z (Blau):</strong> Davant / darrere.</li>
+            </ul>
+            <p>Un dels avantatges de Godot és que la filosofia de treball es manté intacta: continuem treballant amb una jerarquia de nodes, però ara aquests tenen una propietat anomenada <code>Transform</code> (posició, rotació i escala en 3 eixos).</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Equivalència de nodes: Del 2D al 3D</h2>
+            <p>Per al professorat, és vital entendre que no han de tornar a aprendre-ho tot de zero. Godot utilitza una nomenclatura simètrica que facilita la transició:</p>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>Mecànica de joc</th>
+                    <th>Node en 2D</th>
+                    <th>Node en 3D</th>
+                </tr>
+                <tr>
+                    <td>Cos físic del personatge</td>
+                    <td><code>CharacterBody2D</code></td>
+                    <td><code>CharacterBody3D</code></td>
+                </tr>
+                <tr>
+                    <td>Detecció d'àrees/proximitat</td>
+                    <td><code>Area2D</code></td>
+                    <td><code>Area3D</code></td>
+                </tr>
+                <tr>
+                    <td>Representació visual</td>
+                    <td><code>Sprite2D</code></td>
+                    <td><code>MeshInstance3D</code></td>
+                </tr>
+                <tr>
+                    <td>Forma de col·lisió</td>
+                    <td><code>CollisionShape2D</code></td>
+                    <td><code>CollisionShape3D</code></td>
+                </tr>
+            </table>
+            
+            <p>Aquesta simetria permet que, per exemple, el codi de moviment que vam escriure per a l'Aina en la Lliçó 4 siga pràcticament idèntic en 3D, canviant simplement <code>Vector2</code> per <code>Vector3</code>.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Elements essencials d'una escena 3D</h2>
+            <p>A diferència del 2D, on sovint en teníem prou amb una càmera i un personatge, en 3D hi ha tres elements "invisibles" però obligatoris per a que l'escena funcione:</p>
+            <ul>
+                <li><strong>WorldEnvironment:</strong> Controla el "cel" (Sky), la boira i la il·luminació ambiental. Sense ell, el món es veuria pla i sense volum.</li>
+                <li><strong>DirectionalLight3D:</strong> Actua com el sol del nostre món. Produeix les ombres que ajuden el jugador a percebre la profunditat.</li>
+                <li><strong>Camera3D:</strong> En 3D, la càmera té propietats de lent (FOV - camp de visió). La seua posició i angle canvien completament la jugabilitat (primera persona, tercera persona o vista isomètrica).</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Prototipat ràpid: Els nodes CSG</h2>
+            <p>Per a l'aula d'informàtica, Godot ofereix els nodes CSG (Constructive Solid Geometry). Aquests permeten crear habitacions, escales i objectes complexos combinant formes geomètriques bàsiques (cub, cilindre, esfera) sense necessitat de saber modelar en programes externs com Blender. És una eina fantàstica per a que l'alumnat cree els seus propis escenaris de forma immediata.</p>
+            
+            <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
+                <h3 style="margin-top: 0; color: #b45309;">👨‍🏫 Aplicació didàctica a l'aula</h3>
+                <p>El salt al 3D ofereix oportunitats transversals úniques:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Matemàtiques:</strong> Visualització de la geometria espacial i ús de vectors en tres dimensions.</li>
+                    <li><strong>Tecnologia:</strong> Introducció al renderitzat, el funcionament de la llum i l'optimització de recursos (polígons).</li>
+                    <li><strong>Arts Visuals:</strong> Treball sobre el volum, les textures i la composició escènica.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>📝 Exercici pràctic</h3>
+            <p>Creeu una escena 3D bàsica que continga:</p>
+            <ul>
+                <li>Un terra (utilitzant un <code>CSGBox3D</code>).</li>
+                <li>Una càpsula que represente el jugador (<code>MeshInstance3D</code>).</li>
+                <li>Una llum direccional ajustada per a veure ombres allargades.</li>
+                <li>Una càmera col·locada en una posició elevada que enfoque el conjunt.</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

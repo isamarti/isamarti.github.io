@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 12: Posem fil musical a l'aventura | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="music_master" data-lesson-id="lesson12">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 12.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>🎵 Lliçó 12: Posem fil musical a l'aventura</h1>
+            <p>Un bon RPG no seria res sense la seua música. El so és el que ens diu si estem en un bosc tranquil, en un
+                poble acollidor o enmig d'una batalla perillosa. Avui aprendrem a gestionar l'àudio de forma fàcil però
+                professional.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. 🔊 Els 3 Nodes de So en Godot</h2>
+            <p>No tots els sons del nostre joc han de sonar igual. Godot ens ofereix tres eines diferents segons si volem una música de fons, el soroll d'una font o un efecte en una cova.</p>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">1. AudioStreamPlayer (So Global)</h3>
+                <p>És el node que farem servir per a la música de fons.</p>
+                <ul>
+                    <li><strong>Com funciona?:</strong> El so se sent perfectament a tota la pantalla, sense importar on estiga l'Aina. No té "posició".</li>
+                    <li><strong>Ús ideal:</strong> Música d'ambient, sons de la interfície (clics de botons) o veus de narrador.</li>
+                </ul>
+
+                <h3>2. AudioStreamPlayer2D (So Posicional)</h3>
+                <p>Aquest node és ideal per a objectes que fan soroll dins del nostre món en 2D.</p>
+                <ul>
+                    <li><strong>Com funciona?:</strong> El so té una posició en el mapa. Si l'Aina està lluny de l'objecte, se sent fluix; si s'apropa, el volum puja. A més, si l'Aina està a l'esquerra de l'objecte, el so se sentirà més per l'auricular dret (efecte estèreo).</li>
+                    <li><strong>Ús ideal:</strong> Una foguera que crepita, una cascada d'aigua o el soroll d'un enemic que s'apropa.</li>
+                </ul>
+
+                <h3>3. AudioStreamPlayer3D (So Espacial)</h3>
+                <p>Encara que el nostre joc és un RPG en 2D, és bo saber que existeix aquest node.</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Com funciona?:</strong> Igual que el 2D, però calculant la distància en tres dimensions (X, Y, Z). Inclou efectes més complexos com l'absorció del so per l'aire o l'efecte Doppler.</li>
+                    <li><strong>Ús ideal:</strong> Jocs en 3D (com un shooter o un joc d'exploració en primera persona).</li>
+                </ul>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #3b82f6; background-color: #eff6ff;">
+                <h3 style="margin-top: 0; color: #1d4ed8;">💡 Resum per a la classe: Quin triar?</h3>
+                <table style="width:100%; text-align:left; border-collapse: collapse;">
+                    <tr style="border-bottom: 2px solid #93c5fd;">
+                        <th style="padding-bottom: 0.5rem; color: #1e3a8a;">Situació</th>
+                        <th style="padding-bottom: 0.5rem; color: #1e3a8a;">Node Recomanat</th>
+                        <th style="padding-bottom: 0.5rem; color: #1e3a8a;">Raó</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;">Música del bosc</td>
+                        <td style="padding: 0.5rem 0;"><code>AudioStreamPlayer</code></td>
+                        <td style="padding: 0.5rem 0;">Ha de sonar igual a tot arreu.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;">L'Aina rep mal</td>
+                        <td style="padding: 0.5rem 0;"><code>AudioStreamPlayer</code></td>
+                        <td style="padding: 0.5rem 0;">És un efecte del personatge, no del món.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem 0;">Una torxa a la paret</td>
+                        <td style="padding: 0.5rem 0;"><code>AudioStreamPlayer2D</code></td>
+                        <td style="padding: 0.5rem 0;">Volem que el jugador "trobe" la torxa pel so.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fffbeb;">
+                <h3 style="margin-top: 0; color: #b45309;">🛠️ Truc d'organització: Els "Audio Buses"</h3>
+                <p style="margin-bottom: 0;">Si voleu fer les coses bé, podeu anar a la part inferior de Godot, a la pestanya <strong>Audio</strong>, i crear canals separats (Buses): un per a "Música" i un altre per a "Efectes". Així, en el futur, podríeu fer un menú d'opcions on el jugador puga baixar la música sense silenciar els cops d'espasa.</p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El node AudioStreamPlayer</h2>
+            <p>Com ja hem introduït, Godot té tres tipus de nodes per al so, però avui ens centrarem en el més bàsic:</p>
+            <ul>
+                <li><strong>AudioStreamPlayer:</strong> Reprodueix so de forma global (perfecte per a la música de fons que sona igual a tota la pantalla).</li>
+            </ul>
+
+            <div class="highlight-section">
+                <h3>Com configurar-lo:</h3>
+                <ol>
+                    <li>Afegeix un node <strong>AudioStreamPlayer</strong> a la teua escena principal (o al nivell).</li>
+                    <li>A la propietat <strong>Stream</strong> de l'Inspector, arrossega el teu fitxer de música (<code>.mp3</code> o <code>.ogg</code>).</li>
+                    <li>Activa la casella <strong>Autoplay</strong> si vols que la música comence tan bon punt s'òbriga el nivell.</li>
+                </ol>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h4 style="margin-top: 0; color: #334155;">📥 Recursos musicals per descarregar</h4>
+                <ul style="margin-bottom: 0;">
+                    <li><a href="../assets/Beneath_the_Ancient_Bough.mp3" download style="color: var(--accent-color); font-weight: 600;">Beneath the Ancient Bough</a></li>
+                    <li><a href="../assets/Sovereign_of_the_Ancient_Keep.mp3" download style="color: var(--accent-color); font-weight: 600;">Sovereign of the Ancient Keep</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. El concepte de "Loop" (Bucle)</h2>
+            <p>La música dels videojocs sol ser curta, però es repeteix constantment sense que es note el tall.</p>
+            
+            <div class="highlight-section" style="border-left: 4px solid #ef4444; background-color: #fef2f2;">
+                <h3 style="margin-top: 0; color: #b91c1c;">⚠️ Important!</h3>
+                <p style="margin-bottom: 0;">Quan importeu un fitxer de música a Godot, aneu a la pestanya <strong>Import</strong> (normalment situada al costat de la pestanya d'Escena), assegureu-vos que la casella <strong>Loop</strong> estiga activada i premeu "<strong>Reimport</strong>". Així la música no s'aturarà mai!</p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. ⚔️ Polifonia: So de l'espasa sense tallar la música</h2>
+            <p>Un error comú quan comencem és pensar que el joc només pot reproduir un so alhora. Si intentem usar el mateix node per a la música i per a l'espasa, en atacar, la música s'aturarà. Per a evitar-ho, usarem la <strong>polifonia</strong> (molts sons escoltant-se a la vegada).</p>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">1. Nodes independents per a funcions diferents</h3>
+                <p>La clau és tindre nodes separats en la jerarquia de la nostra escena (o de l'Aina):</p>
+                <ul>
+                    <li><strong>MusicPlayer (AudioStreamPlayer):</strong> Amb la música del bosc en loop.</li>
+                    <li><strong>SfxPlayer (AudioStreamPlayer):</strong> Buit, que farem servir per als efectes especials (com l'espasa).</li>
+                </ul>
+
+                <h3>2. Com fer que l'espasa sone al ritme de l'animació</h3>
+                <p>En lloc de posar el so per codi de forma aïllada, el millor és lligar-lo a l'<strong>AnimationPlayer</strong> de l'Aina. Així el "swish" sonarà exactament quan l'espasa es mou:</p>
+                <ol>
+                    <li>Obre l'animació d'<strong>Atac</strong> de l'Aina.</li>
+                    <li>Afegeix una nova pista (Add track) de tipus <strong>"Audio Playback Track"</strong>.</li>
+                    <li>Li manarem que volem seleccionar el node <strong>SfxPlayer</strong> de l'Aina com un enllaç.</li>
+                    <li>En el moment exacte del moviment de l'espasa sobre la línia del temps, fes <strong>clic dret &gt; Insert Key</strong> i tria el fitxer del so de l'espasa que estigues gastant.</li>
+                </ol>
+
+                <h3 style="margin-bottom: 0.5rem;">3. El resultat: Capes de so</h3>
+                <p>D'aquesta manera, Godot barreja els dos sons automàticament:</p>
+                <ul style="margin-bottom: 0;">
+                    <li>La música continua sonant pel canal de música ininterrompudament.</li>
+                    <li>L'efecte de l'espasa s'activa en una "capa" paral·lela cada vegada que l'Aina ataca, sense interferir d'una banda a una altra.</li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h4 style="margin-top: 0; color: #334155;">📥 Recurs de so per descarregar</h4>
+                <p style="margin-bottom: 0;">Pots utilitzar aquest efecte sonor per a l'atac: <a href="../assets/sword.mp3" download style="color: var(--accent-color); font-weight: 600;">sword.mp3</a></p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

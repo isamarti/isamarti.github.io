@@ -19,100 +19,283 @@
             <input type="password" id="password-input" placeholder="Contrasenya">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a l'Inici</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
         </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div id="main-content" class="container hidden-content">
         <header>
-            <h1>💬 Lliçó 11: Diàlegs amb DialogManager</h1>
-            <p>Un bon joc necessita història i món. I per contar històries, l'Aina ha de poder parlar amb els NPCs. En aquesta lliçó integrarem el magnífic addon <strong>DialogManager de Nathan Hoad</strong> per a gestionar converses de manera professional.</p>
+            <h1>💬 Lliçó 11: L'Aina ja no està sola</h1>
+            <p>Un bon joc necessita història i món. I per contar històries, l'Aina ha de poder llegir cartells,
+                enterar-se de coses o parlar amb els NPCs. En aquesta lliçó integrarem el magnífic addon
+                <strong>DialogManager de Nathan Hoad</strong> per a gestionar converses de manera professional.
+            </p>
         </header>
 
         <section class="card animate-on-load">
             <h2>1. Com afegir extensions a Godot (DialogManager)</h2>
-            <p>Godot és un motor immens, però no porta absolutament tot de sèrie per no sobrecarregar-lo. Afortunadament, compta amb una gran comunitat que crea <strong>Addons (Extensions)</strong> que podem descarregar i instal·lar al nostre projecte amb dos clics.</p>
-            
+            <p>Godot és un motor immens, però no porta absolutament tot de sèrie per no sobrecarregar-lo.
+                Afortunadament, compta amb una gran comunitat que crea <strong>Addons (Extensions)</strong> que podem
+                descarregar i instal·lar al nostre projecte amb dos clics.</p>
+
             <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
                 <h3 style="margin-top: 0; color: #b45309;">⬇️ Instal·lació pas a pas:</h3>
                 <ol>
-                    <li>Ves a la pestanya <strong>AssetLib</strong> situada dalt i al centre de l'editor (al costat de 2D, 3D i Script).</li>
-                    <li>Al cercador de la pròpia finestra, escriu <strong>"Dialogue Manager"</strong> i tria la de <em>Nathan Hoad</em>.</li>
-                    <li>Prem sobre el seu nom, clica a <strong>Download</strong> i seguidament a <strong>Install</strong>. (Deixa marcades totes les caselles que eixen per defecte).</li>
-                    <li><strong>Molt important:</strong> Activa el plugin anant a <em>Projecte -> Configuració del projecte -> Extensions (Plugins)</em> i marcant la casella corresponent per a <strong>Enable/Activar</strong> el "Dialogue Manager".</li>
+                    <li>Ves a la pestanya <strong>AssetLib</strong> situada dalt i al centre de l'editor (al costat de
+                        2D, 3D i Script).</li>
+                    <li>Al cercador de la pròpia finestra, escriu <strong>"Dialogue Manager"</strong> i tria la de
+                        <em>Nathan Hoad</em>.
+                    </li>
+                    <li>Prem sobre el seu nom, clica a <strong>Download</strong> i seguidament a
+                        <strong>Install</strong>. (Deixa marcades totes les caselles que eixen per defecte).
+                    </li>
+                    <li><strong>Molt important:</strong> Activa el plugin anant a <em>Projecte -> Configuració del
+                            projecte -> Extensions (Plugins)</em> i marcant la casella corresponent per a
+                        <strong>Enable/Activar</strong> el "Dialogue Manager".
+                    </li>
                 </ol>
             </div>
             <p>Aleshores observaràs com ha aparegut dalt de tot de la pantalla una nova fitxa anomenada "Dialogue".</p>
         </section>
 
         <section class="card animate-on-load">
-            <h2>2. El Sistema d'Interacció: Com parlem al joc?</h2>
-            <p>Per poder parlar amb algú, el nostre personatge necessita saber si té algú just davant capaç d'escoltar i respondre. Això ho resoldrem creant dues entitats senzilles basades en <code>Area2D</code>: el <strong>ActionableFinder</strong> (Buscador d'accions, que portarà l'Aina acoblat) i el <strong>Actionable</strong> (el component que tindrà al seu interior qualsevol cosa que puga interactuar-se al mapa).</p>
+            <h2>2. 📝 Anatomia d'un arxiu .dialogue</h2>
+            <p>Un fitxer de diàleg no és més que un document de text on escrivim què diran els personatges. Però, a més
+                de text, podem afegir-hi regles. Anem a veure totes les opcions:</p>
+
+            <div class="highlight-section">
+                <h3>1. Els Títols (Etiquetes)</h3>
+                <p>Cada conversa ha de començar amb un títol precedit de <code>~</code>. Això ens permet tenir moltes
+                    converses en un mateix fitxer i cridar la que vulguem.</p>
+                <pre><code class="language-plaintext">~ aquest_es_el_titol
+Aina: Hola!</code></pre>
+
+                <h3>2. Personatges i Diàleg</h3>
+                <p>Simplement escrivim el Nom del personatge, dos punts (<code>:</code>) i el text.</p>
+                <pre><code class="language-plaintext">Aina: Hola, hi ha algú?
+Guardià: Soc ací, jove aventurera.</code></pre>
+
+                <h3>3. Eleccions (Ramificacions)</h3>
+                <p>Podem donar opcions al jugador usant el guionet (<code>-</code>). El que estiga indentat (més a la
+                    dreta) sota l'opció, només passarà si el jugador la tria.</p>
+                <pre><code class="language-plaintext">Guardià: Vols la clau del bosc?
+- Sí, per favor!
+    Guardià: Ací la tens. Porta cura.
+- No, encara no.
+    Guardià: Doncs torna quan estigues preparada.</code></pre>
+
+                <h3>4. Variables i Condicions (if / else)</h3>
+                <p>Podem fer que el personatge sàpiga coses del joc. Per exemple, si l'Aina té la clau a l'inventari.
+                </p>
+                <p><strong>Nota:</strong> Les variables han de coincidir amb les que teniu als vostres Globals de Godot.
+                </p>
+                <pre><code class="language-plaintext">~ conversa_porta
+if te_la_clau == true
+    Guardià: Veig que ja tens la clau. Vols entrar?
+    - Sí!
+        do obrir_porta()
+    - Encara no.
+        Guardià: D'acord, t'espere ací.
+else
+    Guardià: Està tancat. Necessites la clau màgica.</code></pre>
+
+                <h3>5. Executar accions (do)</h3>
+                <p>Aquesta és la part més potent. Amb la paraula clau <code>do</code>, podem demanar-li al joc que
+                    execute una funció (mètode) des del diàleg.</p>
+                <pre><code class="language-plaintext">do Globals.curar_jugador()
+do emetre_senyal_victoria()
+do animacio_porta_oberta()</code></pre>
+
+                <h3>6. Salts entre converses (set i goto)</h3>
+                <p>Podem canviar valors o saltar d'una part del guió a una altra.</p>
+                <pre><code class="language-plaintext">set te_la_clau = false # (per si l'hem usada i volem que desaparega).
+goto conversa_final # (per a saltar a un altre títol ~ del mateix fitxer).</code></pre>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #3b82f6; background-color: #eff6ff;">
+                <h3 style="margin-top: 0; color: #1d4ed8;">💡 Resum visual per a l'arxiu:</h3>
+                <table style="width:100%; text-align:left; border-collapse: collapse;">
+                    <tr style="border-bottom: 2px solid #93c5fd;">
+                        <th style="padding-bottom: 0.5rem;">Símbol</th>
+                        <th style="padding-bottom: 0.5rem;">Què fa?</th>
+                        <th style="padding-bottom: 0.5rem;">Exemple</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>~</code></td>
+                        <td style="padding: 0.5rem 0;">Crea un títol de conversa.</td>
+                        <td style="padding: 0.5rem 0;"><code>~ inici_joc</code></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>:</code></td>
+                        <td style="padding: 0.5rem 0;">Separa el personatge del text.</td>
+                        <td style="padding: 0.5rem 0;"><code>Aina: Hola!</code></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>-</code></td>
+                        <td style="padding: 0.5rem 0;">Crea una opció per triar.</td>
+                        <td style="padding: 0.5rem 0;"><code>- Vull anar-me'n</code></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>if</code></td>
+                        <td style="padding: 0.5rem 0;">Comprova una dada del joc.</td>
+                        <td style="padding: 0.5rem 0;"><code>if vida &lt; 10</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem 0;"><code>do</code></td>
+                        <td style="padding: 0.5rem 0;">Crida a una funció de Godot.</td>
+                        <td style="padding: 0.5rem 0;"><code>do tancar_inventari()</code></td>
+                    </tr>
+                </table>
+            </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>3. L'Actionable: Els elements del món</h2>
-            <p>Qualsevol NPC, senyal de fusta, clau al terra o cartell que puguem llegir necessitarà un node que indiqui a la memòria del joc que "amb això s'hi pot interactuar". Crearem una escena pare i universal anomenada <code>Actionable.tscn</code> per no haver de repetir feina mai més.</p>
+            <h2>3. Diàlegs Automàtics: "L'Aina pensa"</h2>
+            <p>A vegades no volem parlar amb ningú, simplement volem que aparega un missatge quan passem per un lloc.
+                Per exemple: l'Aina s'apropa a la porta tancada i apareix un text: "Sembla que està tancada...
+                necessitaré una clau".</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #10b981; background-color: #ecfdf5;">
+                <h3 style="margin-top: 0; color: #047857;">🤔 Com es fa?</h3>
+                <ul style="margin-bottom: 0;">
+                    <li>Usem una <strong>Area2D</strong> al voltant de la porta o la zona.</li>
+                    <li>En l'script, quan detectem que l'Aina entra (amb la senyal <code>body_entered</code>), cridem al
+                        Dialog Manager per a llançar una línia de text específica del nostre fitxer
+                        <code>.dialogue</code>.
+                    </li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 1rem;">Això serveix per donar pistes al jugador sense que ell hagi de prémer cap botó.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Diàlegs per Interacció: Actionables</h2>
+            <p>Aquí és on el joc es torna un RPG de veritat. Volem que l'Aina puga parlar amb NPCs o examinar objectes
+                prement una tecla.</p>
+            <p>Per fer-ho, farem servir el sistema de Nathan Hoad:</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #8b5cf6; background-color: #f5f3ff;">
+                <ul style="margin-bottom: 0;">
+                    <li style="margin-bottom: 0.5rem;"><strong style="color: #6d28d9;">Actionable:</strong> És una
+                        <code>Area2D</code> especial que posem en els personatges o objectes amb els quals es pot
+                        parlar. Aquesta àrea guarda la informació de quin diàleg ha de llançar.
+                    </li>
+                    <li><strong style="color: #6d28d9;">ActionableFinder:</strong> És una altra <code>Area2D</code> (o
+                        <code>RayCast2D</code>) que porta l'Aina. Quan l'Aina prem la tecla d'acció (per exemple, la
+                        "E"), el Finder busca si hi ha algun <em>Actionable</em> a prop i activa la seua conversa.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. L'Actionable: Els elements del món</h2>
+            <p>Qualsevol NPC, senyal de fusta, clau al terra o cartell que puguem llegir necessitarà un node que indiqui
+                a la memòria del joc que "amb això s'hi pot interactuar". Crearem una escena pare i universal anomenada
+                <code>Actionable.tscn</code> per no haver de repetir feina mai més.
+            </p>
 
             <div class="highlight-section">
                 <h3>Creant l'Actionable Base</h3>
                 <ul>
-                    <li>Crea una nova escena amb un <strong>Area2D</strong> com a node arrel i anomena'l <code>Actionable</code>.</li>
-                    <li>Assegura't de canviar a l'Inspector la seua <strong>Collision Layer</strong> (per exemple, la capa 3 exclusiva per a <em>Interaccions</em>, deixant la màscara al buit).</li>
-                    <li>Afegeix-li un nou script anomenat <code>Actionable.gd</code>. Aquest xicotet script serà el que rebrà el recurs de diàleg i donarà l'ordre de mostrar-lo en pantalla quan siga tocat.</li>
+                    <li>Crea una nova escena amb un <strong>Area2D</strong> com a node arrel i anomena'l
+                        <code>Actionable</code>.
+                    </li>
+                    <li>Assegura't de canviar a l'Inspector la seua <strong>Collision Layer</strong> (per exemple, la
+                        capa 5 exclusiva per a <em>Interaccions</em>, deixant la màscara al buit).</li>
+                    <li>Afegeix-li un nou script anomenat <code>Actionable.gd</code> i copia aquest codi. Aquest script
+                        serà l'encarregat de rebre el recurs de diàleg i donar l'ordre de mostrar-lo per pantalla en ser
+                        tocat.</li>
                 </ul>
+                <pre><code class="language-gdscript">extends Area2D
+
+@export var dialogue_resource: DialogueResource
+@export var start = ""
+
+func action():
+    DialogueManager.show_dialogue_balloon(dialogue_resource, start)</code></pre>
             </div>
-            
-            <p>En finalitzar l'escena, tan sols se li haurà d'afegir com a node fill d'aquell "Senyal de ruta" o de l'"Ermità de la cova", i ajustar el seu quadrat (CollisionShape) al lloc on l'Aina l'haja de tocar.</p>
+
+            <p>En finalitzar l'escena, tan sols se li haurà d'afegir com a node fill d'aquell objecte o NPC amb el que
+                vols que Aina interactue i assignar-li el dialeg i el punt d'entrada.
+            </p>
         </section>
 
         <section class="card animate-on-load">
-            <h2>4. El Cercador: Actionable Finder al Player</h2>
-            <p>Ara hem de dir-li a l'Aina que mire precisament si té algun <code>Actionable</code> al solapament actiu un cop premem nosaltres la tecla corresponent al teclat (com l'Espai o la E d'Explorar).</p>
-            
+            <h2>6. El Cercador: Actionable Finder al Player</h2>
+            <p>Ara hem de dir-li a l'Aina que mire precisament si té algun <code>Actionable</code> al solapament actiu
+                un cop premem nosaltres la tecla corresponent al teclat (com l'Espai o la E d'Explorar).</p>
+
             <div class="highlight-section">
-                <h3>Buscant Objectes Màgics i Entitats</h3>
-                <p>Afegirem un nou <strong>Area2D</strong> com a fill de l'Aina, on li posarem el nom de <code>ActionableFinder</code>. Dins d'ell li col·locarem un seu <code>CollisionShape2D</code> (per exemple, un cercle o un rectangle gran) centrat cap a on siga més adient buscar interaccions (normalment just al davant del seu cos). Aquest finder cal configurar-li exclusivament que mire a la <strong>Collision Mask</strong> número 3.</p>
-                
-                <p>El secret de tot el mecanisme resideix en el codi, que injectarem directament a l'script global del Jugador (Player.gd):</p>
+                <h3>Buscant Objectes i Entitats</h3>
+                <p>Afegirem un nou <strong>Area2D</strong> com a fill de l'Aina, on li posarem el nom de
+                    <code>ActionableFinder</code>. Dins d'ell li col·locarem un seu <code>CollisionShape2D</code> (per
+                    exemple, un cercle o un rectangle gran). Aquest finder cal configurar-li exclusivament que mire a la
+                    <strong>Collision Mask</strong> número 5.
+                </p>
+                <p>Després, recorda modificar el AnimationPlayer d'Aina per incloure el ActionableFinder en la posició
+                    que més t'interesse segons cap on mira Aina. </p>
+                <p> Crea una nova acció anomenada <code>talk</code> al mapa d'entrades i assigna-li la tecla que vulgues
+                    (per exemple, l'espai) </p>
+                <p>El secret de tot el mecanisme resideix en el codi, que injectarem directament a l'script global del
+                    Jugador (Player.gd):</p>
                 <pre><code class="language-gdscript">@onready var actionable_finder = $ActionableFinder
 
 func _unhandled_input(event: InputEvent) -> void:
-    if Input.is_action_just_pressed("interact"):
+    if Input.is_action_just_pressed("talk"):
         var actionables = actionable_finder.get_overlapping_areas()
         if actionables.size() > 0:
             actionables[0].action() # Cridem instantàniament a la funció del primer objecte interactuable trobat
             return # Evitem encadenar altres accions posteriors si hem executat un diàleg</code></pre>
             </div>
-            <p>Com podeu deduir, la crida a <code>get_overlapping_areas()</code> és màgica: recull un Array amb cadascuna de les Area2D del "Buscador" exclusiu que s'han intersectat amb la Capa de l'"Acionable". Només s'habilita a través de dita instrucció en l'InputMap.</p>
+            <p>Com podeu deduir, la crida a <code>get_overlapping_areas()</code> és màgica: recull un Array amb
+                cadascuna de les Area2D del "Buscador" exclusiu que s'han intersectat amb la Capa de l'"Actionable".
+                Només s'habilita a través de dita instrucció en l'InputMap.</p>
         </section>
-        
+
         <section class="card animate-on-load task-box">
             <h3>🛠️ Tasca Pràctica 11: Programant Diàlegs com Professionals</h3>
             <p><strong>El vostre objectiu és:</strong></p>
             <ul>
-                <li><strong>Instal·lar l'addon:</strong> Aneu a l'apartat superior del AssetLib de Godot i busqueu el famós <strong>DialogManager</strong> (per Nathan Hoad). Instal·leu-lo al vostre Projecte i activeu-lo a Configuracións del Projecte -> Plugins.</li>
-                <li><strong>Preparar les capes:</strong> Renomeneu la layer del projecte número 3 perquè s'anomene de forma entenedora "Interactable" o similar.</li>
-                <li><strong>Crear Scene i Finder:</strong> Dissenyeu la jerarquia de l'<code>Actionable</code> com a escena individual i adjunteu l'<code>ActionableFinder</code> (amb format cercle/quadrat) exclusivament al mig de l'Aina perquè només intercepte els codis en pitjar al botó habilitat.</li>
-                <li><strong>El Diàleg:</strong> Escriviu un xicotet fitxer <code>.dialogue</code> des del menú que introdueix la nova eina i connecteu-ho tot (inclòs el balloon.tscn visual que el mateix addon proveeix) perquè llançe els textos de veritat!</li>
+                <li><strong>Instal·lar l'addon:</strong> Aneu a l'apartat superior del AssetLib de Godot i busqueu el
+                    famós <strong>DialogManager</strong> (per Nathan Hoad). Instal·leu-lo al vostre Projecte i
+                    activeu-lo a Configuracións del Projecte -> Plugins.</li>
+                <li><strong>Llançar una conversa de forma automàtica:</strong> Crea un diàleg amb alguna cosa que puga
+                    pensar l'Aina al trobar-se en algun punt.</li>
+                <li><strong>Crear Actionable i ActionableFinder:</strong> Dissenyeu la jerarquia de
+                    l'<code>Actionable</code> com a
+                    escena individual i adjunteu l'<code>ActionableFinder</code> (amb format cercle/quadrat)
+                    exclusivament al mig de l'Aina perquè només intercepte els codis en pitjar al botó habilitat.</li>
+                <li><strong>El Diàleg:</strong> Crea un nou personatge NPC i fer que l'Aina puga tindre una conversa amb
+                    ell.</li>
             </ul>
+            <strong>Entrega:</strong> El teu projecte comprimit a Aules
         </section>
 
         <footer class="footer">
             <a href="../index.html" class="btn">Tornar a l'Inici</a>
             <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
                 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
-                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
                 </a><br />
-                Aquesta obra està subjecta a una llicència de <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank" style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0 Internacional</a>.
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
             </div>
         </footer>
     </div>
 
     <script src="../script.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </body>
+
 </html>

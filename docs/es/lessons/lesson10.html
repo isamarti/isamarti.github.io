@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 10: Dando vida al Inventario | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_inventari" data-lesson-id="lesson10">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson10.html" class="lang-btn">CA</a>
+        <a href="lesson10.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 10.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>📦 Lección 10: Dando vida al Inventario</h1>
+            <p>En la lección anterior dejamos la mochila "bonita" pero vacía. Hoy vamos a programar su "cerebro".
+                Dividiremos el trabajo en tres scripts que trabajan en equipo: el Cuadradito (Vista), la Mochila (Datos) y el
+                Panel (Control).</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El motor del cuadradito: InventoryUiSlot.gd</h2>
+            <p>Cada cuadradito individual de la mochila necesita su propio script para gestionar tres cosas:</p>
+            <ul>
+                <li>Mostrar el icono y la cantidad correctamente.</li>
+                <li>Detectar cuándo el jugador clica el botón.</li>
+                <li>Avisar (mediante señales) cuando queremos usar o tirar el objeto.</li>
+            </ul>
+
+            <div class="highlight-section">
+                <h3>📜 Código entero del Cuadradito</h3>
+                <p>Crea el script <code>InventoryUiSlot.gd</code> y copia este código en el nodo raíz de tu Slot:</p>
+                <pre><code class="language-gdscript">extends Panel
+
+@onready var item_visual = $CenterContainer/Panel/item_icon
+@onready var item_amount = $CenterContainer/Panel/amount
+@onready var usePanel = $UsePanel
+
+var item_in_slot:itemSlot
+
+signal use(item:itemSlot)
+signal drop(item:itemSlot)
+
+func _ready() -> void:
+    usePanel.visible = false
+    $Button.disabled = true
+    
+func update_slot(slot:itemSlot):
+    if !slot.item:
+        item_visual.visible=false
+        item_amount.visible=false
+    else:
+        item_in_slot=slot
+        item_visual.visible=true
+        item_amount.visible=true
+        item_visual.texture=slot.item.texture
+        item_amount.text=str(slot.amount)
+        $Button.disabled=false
+    
+func _on_button_pressed() -> void:
+    if(usePanel.visible):
+        usePanel.visible=false
+    else:
+        usePanel.visible=true
+    
+func _on_use_pressed() -> void:
+    use.emit(item_in_slot)
+    usePanel.visible=false
+
+func _on_drop_pressed() -> void:
+    drop.emit(item_in_slot)
+    usePanel.visible=false</code></pre>
+            </div>
+
+            <div class="highlight-section">
+                <h3>Explicación del código del Slot:</h3>
+                <ul>
+                    <li><strong>Variables @onready:</strong> Conectamos los nodos visuales (icono, texto y el panel
+                        de opciones) para que el código pueda cambiarlos.</li>
+                    <li><strong>La función update_slot:</strong> Es el corazón del sistema. Recibe la información del recurso
+                        <code>itemSlot</code>. Si no hay nada, lo oculta todo para que el cuadradito se vea vacío; si hay
+                        un objeto, pone su textura y el número de cantidad.
+                    </li>
+                    <li><strong>Gestión del botón:</strong> El botón principal del slot sirve para mostrar u ocultar el
+                        <code>UsePanel</code> (el menú desplegable con "Usar" y "Tirar").
+                    </li>
+                    <li><strong>Las Señales (use y drop):</strong> Como el cuadradito no sabe qué hace una poción,
+                        simplemente "grita" hacia fuera: "¡Oye! ¡Quieren usar este ítem!".</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El Cerebro de los Datos: Inv.gd</h2>
+            <p>Este script no está en ninguna escena, está "dentro" del archivo de datos (tu `.tres`). Es el cerebro que
+                organiza los objetos.</p>
+
+            <div class="highlight-section">
+                <h3>📜 Código del Recurso Inv</h3>
+                <p>Este código se encarga de añadir y agrupar los objetos de manera automática:</p>
+                <pre><code class="language-gdscript">extends Resource
+class_name Inv
+
+@export var slots:Array[itemSlot]
+
+var inv_item:InvItem
+
+signal inv_updated
+
+func update_inv(item:InvItem):
+    print(item)
+    
+    var inserted = false
+    
+    for slot in slots:
+        if (slot.item!=null):
+            if slot.item.name==item.name:
+                slot.amount+=1
+                inserted=true
+                break
+            
+    if(!inserted):
+        var empty_slot = slots.filter(func(slot):return (slot.item==null))
+        
+        if !empty_slot.is_empty():
+            empty_slot[0].item=item
+            empty_slot[0].amount=1
+    
+    inv_updated.emit()</code></pre>
+            </div>
+
+            <div class="highlight-section">
+                <h3>¿Cómo gestiona los ítems? (update_inv)</h3>
+                <p>Cuando Aina coge algo del suelo, este script hace tres pasos lógicos:</p>
+                <ul>
+                    <li><strong>¿Son iguales?:</strong> Mira si el ítem que acabamos de coger ya lo tenemos en la mochila. Si
+                        es así (por ejemplo, ya teníamos una poción), en lugar de gastar otro cuadradito, le suma 1 a la
+                        cantidad.</li>
+                    <li><strong>¿Dónde hay sitio?:</strong> Si el ítem es completamente nuevo, busca el primer hueco que tenga
+                        el valor
+                        <code>null</code> (vacío). Lo hace utilizando la función <code>.filter</code>, que es como un colador
+                        de datos.
+                    </li>
+                    <li><strong>Avisar del cambio:</strong> Una vez guardado, emite la señal <code>inv_updated</code>.
+                        Esto es vital para que la interfaz sepa que tiene que refrescarse para mostrar los cambios.</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <section class="card animate-on-load">
+            <h2>3. El Orquestador: InventoryUi.gd</h2>
+            <p>Este es el "Director" que tenemos en la pantalla. Une los datos con la imagen. </p>
+            <p>Sus funciones principales:</p>
+            <ul>
+                <li>Conexión Inicial (_ready): Al abrir el juego, este script va slot por slot conectándose a
+                    sus señales de "Usar" y "Tirar"</li>.
+                <li> También se conecta al Recurso del inventario. Abrir/Cerrar: Detecta
+                    la tecla "I" (o la que queramos) para mostrar u ocultar todo el panel.</li>
+                <li>Lógica de acciones (use_item): Aquí es donde decidimos qué pasa realmente. Por ejemplo: Si el objeto se llama
+                    "potion" $\rightarrow$ Llamamos a la función de curar. Si
+                    se llama "key" $\rightarrow$ Emitimos una señal hacia el escenario para abrir la puerta.</li>
+            </ul>
+
+            <div class="highlight-section">
+                <h3>📜 Código Principal (InventoryUi.gd)</h3>
+                <pre><code class="language-gdscript">extends Control
+
+@onready var ui_slots = $Background/GridContainer.get_children()
+@export var inv:Inv
+
+signal use_key
+
+func _ready() -> void:
+    inv.inv_updated.connect(update_inv_ui)
+    
+    for i in range(min(ui_slots.size(), inv.slots.size())):
+        ui_slots[i].use.connect(use_item)
+        ui_slots[i].drop.connect(drop_item)
+    
+    update_inv_ui()
+    close()
+    
+func _unhandled_input(event: InputEvent) -> void:
+    if Input.is_action_just_pressed("inventory"):
+        if visible:
+            close()
+        else:
+            open()    
+
+func close():
+    visible=false
+    
+func open():
+    visible=true
+
+func update_inv_ui():
+    for i in range(min(ui_slots.size(), inv.slots.size())):
+        ui_slots[i].update_slot(inv.slots[i])
+
+func use_item(item:itemSlot):
+    drop_item(item)
+    # Añadir condicionales para los diferentes items según el nombre. Por ejemplo:
+    # if (item.item.name=="key"):
+    #     use_key.emit()
+    
+func drop_item(item:itemSlot):
+    if item.amount>1:
+        item.amount-=1
+    else:
+        var index=0
+        while(index < inv.slots.size()):
+            if inv.slots[index]==item:
+                inv.slots.remove_at(index)
+                break
+            index+=1
+    update_inv_ui()</code></pre>
+                <p><strong>¿Qué hace en resumen?</strong> Captura cuando pulsamos la tecla asignada en el mapa de acciones
+                    ("inventory") para abrir o cerrar la UI, escucha si algún botón ha emitido las señales <code>use</code> y
+                    <code>drop</code>, y automáticamente refresca las cantidades y los iconos en pantalla.
+                </p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. 🎒 Aina y su Mochila: La conexión final</h2>
+            <p>Para que todo el sistema que hemos programado funcione, Aina tiene que ser la <strong>propietaria</strong> de
+                la información y de la interfaz.</p>
+
+            <div class="highlight-section">
+                <h3>1. Equipando a Aina (Nodos y Recursos)</h3>
+                <p>Dentro de la escena de nuestro personaje (<code>Player.tscn</code>), tenemos que hacer dos pasos fundamentales:
+                </p>
+                <ul>
+                    <li><strong>Añadir la UI:</strong> Arrastrad la escena <code>InventariUI.tscn</code> dentro de Aina
+                        (mejor si está dentro de un nodo <strong>CanvasLayer</strong> para que no se mueva con la cámara y
+                        siempre aparezca en el centro de la pantalla de forma perfecta).</li>
+                    <li><strong>Asignar los datos:</strong> Creamos la variable <code>inventory</code> con
+                        <code>@export</code> en el script de Aina y, en el Inspector de esta, le añadimos el recurso
+                        <code>playerInv.tres</code> arrastrándolo. De esta manera, Aina ya "tiene" una mochila física
+                        donde guardar cosas de golpe.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="highlight-section">
+                <h3>2. La función de Recogida (collect)</h3>
+                <p>Dentro del script de Aina, necesitaremos una función llamada <code>collect</code>.</p>
+                <ul>
+                    <li><strong>¿Qué hace?:</strong> Esta función será la "puerta de entrada". Cuando Aina encuentre un objeto
+                        en el mundo, este objeto le "pasará" su archivo <code>.tres</code> correspondiente.</li>
+                    <li><strong>¿Cómo funciona?:</strong> La función cogerá ese archivo en bruto y llamará al método
+                        <code>update_inv</code> de nuestra mochila para guardarlo oficialmente dentro a toda
+                        máquina.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #10b981; background-color: #ecfdf5;">
+                <h3 style="margin-top: 0; color: #065f46;">🌍 Objetos en el Mundo: El camino del .tres</h3>
+                <p>Para que Aina pueda recoger una llave o una poción saltando por el escenario, el objeto que vemos en la
+                    pantalla tiene que tener obligatoriamente dos cosas preparadas:</p>
+                <ul>
+                    <li>Una imagen (Sprite2D) y una <strong>Area2D</strong> con forma: Para que el juego sepa dónde está
+                        el objeto y cuándo lo tocamos.</li>
+                    <li>Su propio archivo <strong>.tres</strong>: En el script del objeto del suelo, tenemos que tener un
+                        hueco en el Inspector de la variable del export para poner el recurso del ítem (por ejemplo, le
+                        arrastramos nuestro archivo <code>clau.tres</code> o <code>pocio.tres</code>).</li>
+                </ul>
+                <p style="margin-bottom: 0;"><strong>El flujo por lo tanto es el siguiente:</strong><br>
+                    Aina entra en el Area2D del objeto ➔ El objeto lanza el dato y dice: <em>"¡Oye, Aina! Soy una llave,
+                        ¡aquí tienes mi recurso .tres!"</em> ➔ Aina llama a su propia función
+                    <code>collect()</code> de pasada y lo guarda rápidamente. ¡Bam!
+                </p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. 🗝️ El Reto: La Puerta Bloqueada</h2>
+            <p>Ahora que ya sabemos recoger objetos, vamos a ponerlo a prueba con un rompecabezas clásico.</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #8b5cf6; background-color: #f5f3ff;">
+                <h3 style="color: #5b21b6; margin-top: 0;">¿Cómo hacer que una llave abra una puerta?</h3>
+                <p>La llave por sí sola no sabe abrir puertas de manera mecánica; necesitamos que haya una comunicación
+                    entre la mochila de Aina y el escenario.</p>
+                <ul>
+                    <li><strong>La Acción del Usuario:</strong> Cuando abrimos el inventario y clicamos en "Usar" sobre la llave
+                        de oro, el inventario tiene que emitir esa nueva señal explícita (por ejemplo, la señal
+                        <code>use_key</code>).
+                    </li>
+                    <li><strong>El Escenario escucha:</strong> Tenéis que conectar esa señal única de la UI (que actualmente
+                        está dentro de Aina) con el script de vuestro nivel principal o directamente a la misma puerta.
+                    </li>
+                    <li><strong>La Condición:</strong> La puerta solo se tiene que abrir o destrozar (haciendo
+                        <code>queue_free()</code> u ocultándose) exclusivamente si se ha recibido la señal de uso de la llave
+                        mágica.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tarea Práctica 10: Programando el Inventario</h3>
+            <p><strong>Vuestro objetivo es:</strong></p>
+            <ul>
+                <li>Crear un recurso <code>.tres</code> para una <strong>Llave</strong>.</li>
+                <li>Colocar una llave en el escenario que Aina pueda recoger (tiene que tener su respectiva
+                    <strong>Area2D</strong> y código de recogida).
+                </li>
+                <li>Dibujar una Puerta (o un muro invisible) en el Tilemap o en la escena que nos impida continuar o
+                    pasar.</li>
+                <li>Programar la lógica para que, al usar la llave desde el inventario mientras estamos cerca de la puerta,
+                    esta desaparezca o se desbloquee completamente.</li>
+            </ul>
+            <div class="highlight-section" style="background-color: transparent; border: none; padding: 0.5rem 0;">
+                <p>💡 <strong>Pista para expertos:</strong> Tendréis que conectar la señal <code>use_key</code> que emite
+                    el inventario de Aina con la escena de vuestro nivel. ¡Pensad bien qué nodo está escuchando a cuál!
+                </p>
+            </div>
+            <p><strong>Entrega:</strong> Comprueba que toda la cadena de recogida, guardado y uso funciona perfectamente.
+                Adjunta el zip de tu proyecto actualizado en Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 11: Diálogos con DialogManager | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_parla" data-lesson-id="lesson11">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson11.html" class="lang-btn">CA</a>
+        <a href="lesson11.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 11.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>💬 Lección 11: Aina ya no está sola</h1>
+            <p>Un buen juego necesita historia y mundo. Y para contar historias, Aina tiene que poder leer carteles,
+                enterarse de cosas o hablar con los NPCs. En esta lección integraremos el magnífico addon
+                <strong>DialogManager de Nathan Hoad</strong> para gestionar conversaciones de manera profesional.
+            </p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Cómo añadir extensiones a Godot (DialogManager)</h2>
+            <p>Godot es un motor inmenso, pero no trae absolutamente todo de serie para no sobrecargarlo.
+                Afortunadamente, cuenta con una gran comunidad que crea <strong>Addons (Extensiones)</strong> que podemos
+                descargar e instalar en nuestro proyecto con dos clics.</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
+                <h3 style="margin-top: 0; color: #b45309;">⬇️ Instalación paso a paso:</h3>
+                <ol>
+                    <li>Ve a la pestaña <strong>AssetLib</strong> situada arriba y al centro del editor (al lado de
+                        2D, 3D y Script).</li>
+                    <li>En el buscador de la propia ventana, escribe <strong>"Dialogue Manager"</strong> y elige la de
+                        <em>Nathan Hoad</em>.
+                    </li>
+                    <li>Pulsa sobre su nombre, haz clic en <strong>Download</strong> y seguidamente en
+                        <strong>Install</strong>. (Deja marcadas todas las casillas que salen por defecto).
+                    </li>
+                    <li><strong>Muy importante:</strong> Activa el plugin yendo a <em>Proyecto -> Configuración del
+                            proyecto -> Extensiones (Plugins)</em> y marcando la casilla correspondiente para
+                        <strong>Enable/Activar</strong> el "Dialogue Manager".
+                    </li>
+                </ol>
+            </div>
+            <p>Entonces observarás cómo ha aparecido arriba del todo de la pantalla una nueva pestaña llamada "Dialogue".</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. 📝 Anatomía de un archivo .dialogue</h2>
+            <p>Un archivo de diálogo no es más que un documento de texto donde escribimos qué dirán los personajes. Pero, además
+                de texto, podemos añadirle reglas. Vamos a ver todas las opciones:</p>
+
+            <div class="highlight-section">
+                <h3>1. Los Títulos (Etiquetas)</h3>
+                <p>Cada conversación tiene que empezar con un título precedido de <code>~</code>. Esto nos permite tener muchas
+                    conversaciones en un mismo archivo y llamar a la que queramos.</p>
+                <pre><code class="language-plaintext">~ este_es_el_titulo
+Aina: ¡Hola!</code></pre>
+
+                <h3>2. Personajes y Diálogo</h3>
+                <p>Simplemente escribimos el Nombre del personaje, dos puntos (<code>:</code>) y el texto.</p>
+                <pre><code class="language-plaintext">Aina: Hola, ¿hay alguien?
+Guardián: Estoy aquí, joven aventurera.</code></pre>
+
+                <h3>3. Elecciones (Ramificaciones)</h3>
+                <p>Podemos dar opciones al jugador usando el guion (<code>-</code>). Lo que esté indentado (más a la
+                    derecha) bajo la opción, solo pasará si el jugador la elige.</p>
+                <pre><code class="language-plaintext">Guardián: ¿Quieres la llave del bosque?
+- ¡Sí, por favor!
+    Guardián: Aquí la tienes. Ten cuidado.
+- No, todavía no.
+    Guardián: Pues vuelve cuando estés preparada.</code></pre>
+
+                <h3>4. Variables y Condiciones (if / else)</h3>
+                <p>Podemos hacer que el personaje sepa cosas del juego. Por ejemplo, si Aina tiene la llave en el inventario.
+                </p>
+                <p><strong>Nota:</strong> Las variables tienen que coincidir con las que tenéis en vuestros Globals de Godot.
+                </p>
+                <pre><code class="language-plaintext">~ conversacion_puerta
+if tiene_la_llave == true
+    Guardián: Veo que ya tienes la llave. ¿Quieres entrar?
+    - ¡Sí!
+        do abrir_puerta()
+    - Todavía no.
+        Guardián: De acuerdo, te espero aquí.
+else
+    Guardián: Está cerrado. Necesitas la llave mágica.</code></pre>
+
+                <h3>5. Ejecutar acciones (do)</h3>
+                <p>Esta es la parte más potente. Con la palabra clave <code>do</code>, podemos pedirle al juego que
+                    ejecute una función (método) desde el diálogo.</p>
+                <pre><code class="language-plaintext">do Globals.curar_jugador()
+do emitir_senal_victoria()
+do animacion_puerta_abierta()</code></pre>
+
+                <h3>6. Saltos entre conversaciones (set y goto)</h3>
+                <p>Podemos cambiar valores o saltar de una parte del guion a otra.</p>
+                <pre><code class="language-plaintext">set tiene_la_llave = false # (por si la hemos usado y queremos que desaparezca).
+goto conversacion_final # (para saltar a otro título ~ del mismo archivo).</code></pre>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #3b82f6; background-color: #eff6ff;">
+                <h3 style="margin-top: 0; color: #1d4ed8;">💡 Resumen visual para el archivo:</h3>
+                <table style="width:100%; text-align:left; border-collapse: collapse;">
+                    <tr style="border-bottom: 2px solid #93c5fd;">
+                        <th style="padding-bottom: 0.5rem;">Símbolo</th>
+                        <th style="padding-bottom: 0.5rem;">¿Qué hace?</th>
+                        <th style="padding-bottom: 0.5rem;">Ejemplo</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>~</code></td>
+                        <td style="padding: 0.5rem 0;">Crea un título de conversación.</td>
+                        <td style="padding: 0.5rem 0;"><code>~ inicio_juego</code></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>:</code></td>
+                        <td style="padding: 0.5rem 0;">Separa el personaje del texto.</td>
+                        <td style="padding: 0.5rem 0;"><code>Aina: ¡Hola!</code></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>-</code></td>
+                        <td style="padding: 0.5rem 0;">Crea una opción para elegir.</td>
+                        <td style="padding: 0.5rem 0;"><code>- Quiero irme</code></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;"><code>if</code></td>
+                        <td style="padding: 0.5rem 0;">Comprueba un dato del juego.</td>
+                        <td style="padding: 0.5rem 0;"><code>if vida &lt; 10</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem 0;"><code>do</code></td>
+                        <td style="padding: 0.5rem 0;">Llama a una función de Godot.</td>
+                        <td style="padding: 0.5rem 0;"><code>do cerrar_inventario()</code></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Diálogos Automáticos: "Aina piensa"</h2>
+            <p>A veces no queremos hablar con nadie, simplemente queremos que aparezca un mensaje cuando pasamos por un sitio.
+                Por ejemplo: Aina se acerca a la puerta cerrada y aparece un texto: "Parece que está cerrada...
+                necesitaré una llave".</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #10b981; background-color: #ecfdf5;">
+                <h3 style="margin-top: 0; color: #047857;">🤔 ¿Cómo se hace?</h3>
+                <ul style="margin-bottom: 0;">
+                    <li>Usamos una <strong>Area2D</strong> alrededor de la puerta o la zona.</li>
+                    <li>En el script, cuando detectamos que Aina entra (con la señal <code>body_entered</code>), llamamos al
+                        Dialog Manager para lanzar una línea de texto específica de nuestro archivo
+                        <code>.dialogue</code>.
+                    </li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 1rem;">Esto sirve para dar pistas al jugador sin que él tenga que pulsar ningún botón.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Diálogos por Interacción: Actionables</h2>
+            <p>Aquí es donde el juego se vuelve un RPG de verdad. Queremos que Aina pueda hablar con NPCs o examinar objetos
+                pulsando una tecla.</p>
+            <p>Para hacerlo, usaremos el sistema de Nathan Hoad:</p>
+
+            <div class="highlight-section" style="border-left: 4px solid #8b5cf6; background-color: #f5f3ff;">
+                <ul style="margin-bottom: 0;">
+                    <li style="margin-bottom: 0.5rem;"><strong style="color: #6d28d9;">Actionable:</strong> Es una
+                        <code>Area2D</code> especial que ponemos en los personajes u objetos con los que se puede
+                        hablar. Esta área guarda la información de qué diálogo tiene que lanzar.
+                    </li>
+                    <li><strong style="color: #6d28d9;">ActionableFinder:</strong> Es otra <code>Area2D</code> (o
+                        <code>RayCast2D</code>) que lleva Aina. Cuando Aina pulsa la tecla de acción (por ejemplo, la
+                        "E"), el Finder busca si hay algún <em>Actionable</em> cerca y activa su conversación.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. El Actionable: Los elementos del mundo</h2>
+            <p>Cualquier NPC, señal de madera, llave en el suelo o cartel que podamos leer necesitará un nodo que indique
+                a la memoria del juego que "con esto se puede interactuar". Crearemos una escena padre y universal llamada
+                <code>Actionable.tscn</code> para no tener que repetir trabajo nunca más.
+            </p>
+
+            <div class="highlight-section">
+                <h3>Creando el Actionable Base</h3>
+                <ul>
+                    <li>Crea una nueva escena con un <strong>Area2D</strong> como nodo raíz y llámalo
+                        <code>Actionable</code>.
+                    </li>
+                    <li>Asegúrate de cambiar en el Inspector su <strong>Collision Layer</strong> (por ejemplo, la
+                        capa 5 exclusiva para <em>Interacciones</em>, dejando la máscara vacía).</li>
+                    <li>Añádele un nuevo script llamado <code>Actionable.gd</code> y copia este código. Este script
+                        será el encargado de recibir el recurso de diálogo y dar la orden de mostrarlo por pantalla al ser
+                        tocado.</li>
+                </ul>
+                <pre><code class="language-gdscript">extends Area2D
+
+@export var dialogue_resource: DialogueResource
+@export var start = ""
+
+func action():
+    DialogueManager.show_dialogue_balloon(dialogue_resource, start)</code></pre>
+            </div>
+
+            <p>Al finalizar la escena, tan solo se le tendrá que añadir como nodo hijo de aquel objeto o NPC con el que
+                quieres que Aina interactúe y asignarle el diálogo y el punto de entrada.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>6. El Buscador: Actionable Finder en el Player</h2>
+            <p>Ahora tenemos que decirle a Aina que mire precisamente si tiene algún <code>Actionable</code> en el solapamiento activo
+                una vez pulsemos nosotros la tecla correspondiente en el teclado (como el Espacio o la E de Explorar).</p>
+
+            <div class="highlight-section">
+                <h3>Buscando Objetos y Entidades</h3>
+                <p>Añadiremos un nuevo <strong>Area2D</strong> como hijo de Aina, donde le pondremos el nombre de
+                    <code>ActionableFinder</code>. Dentro de él le colocaremos su <code>CollisionShape2D</code> (por
+                    ejemplo, un círculo o un rectángulo grande). Este finder hay que configurarlo exclusivamente para que mire a la
+                    <strong>Collision Mask</strong> número 5.
+                </p>
+                <p>Después, recuerda modificar el AnimationPlayer de Aina para incluir el ActionableFinder en la posición
+                    que más te interese según hacia dónde mira Aina. </p>
+                <p> Crea una nueva acción llamada <code>talk</code> en el mapa de entradas y asígnale la tecla que quieras
+                    (por ejemplo, el espacio) </p>
+                <p>El secreto de todo el mecanismo reside en el código, que inyectaremos directamente en el script global del
+                    Jugador (Player.gd):</p>
+                <pre><code class="language-gdscript">@onready var actionable_finder = $ActionableFinder
+
+func _unhandled_input(event: InputEvent) -> void:
+    if Input.is_action_just_pressed("talk"):
+        var actionables = actionable_finder.get_overlapping_areas()
+        if actionables.size() > 0:
+            actionables[0].action() # Llamamos instantáneamente a la función del primer objeto interactuable encontrado
+            return # Evitamos encadenar otras acciones posteriores si hemos ejecutado un diálogo</code></pre>
+            </div>
+            <p>Como podéis deducir, la llamada a <code>get_overlapping_areas()</code> es mágica: recoge un Array con
+                cada una de las Area2D del "Buscador" exclusivo que se han intersectado con la Capa del "Actionable".
+                Solo se habilita a través de dicha instrucción en el InputMap.</p>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tarea Práctica 11: Programando Diálogos como Profesionales</h3>
+            <p><strong>Vuestro objetivo es:</strong></p>
+            <ul>
+                <li><strong>Instalar el addon:</strong> Id al apartado superior del AssetLib de Godot y buscad el
+                    famoso <strong>DialogManager</strong> (por Nathan Hoad). Instaladlo en vuestro Proyecto y
+                    activadlo en Configuración del Proyecto -> Plugins.</li>
+                <li><strong>Lanzar una conversación de forma automática:</strong> Crea un diálogo con alguna cosa que pueda
+                    pensar Aina al encontrarse en algún punto.</li>
+                <li><strong>Crear Actionable y ActionableFinder:</strong> Diseñad la jerarquía del
+                    <code>Actionable</code> como
+                    escena individual y adjuntad el <code>ActionableFinder</code> (con formato círculo/cuadrado)
+                    exclusivamente en el medio de Aina para que solo intercepte los códigos al pulsar el botón habilitado.</li>
+                <li><strong>El Diálogo:</strong> Crea un nuevo personaje NPC y haz que Aina pueda tener una conversación con
+                    él.</li>
+            </ul>
+            <strong>Entrega:</strong> Tu proyecto comprimido en Aules
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

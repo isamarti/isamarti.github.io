@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 1: Fundamentos y Entorno de Trabajo | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="godot_rocks" data-lesson-id="lesson1">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson1.html" class="lang-btn">CA</a>
+        <a href="lesson1.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña proporcionada por el profesor para acceder a la Lección 1.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lección 1: Fundamentos y Entorno de Trabajo</h1>
+            <p>Bienvenidos a la primera sesión del curso.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <p>
+                Antes de abrir el motor de videojuegos, es vital entender el "porqué" estamos aquí. Como docentes, no buscamos
+                solamente que el alumnado "haga un juego", sino que utilizamos el desarrollo como una herramienta pedagógica de alto
+                nivel.
+            </p>
+
+            <h2>1. ¿Qué es realmente aprender a programar?</h2>
+            <p>
+                Según nuestra experiencia en el aula, y tal como marcan las competencias del siglo XXI, aprender a
+                programar no es memorizar sintaxis, sino:
+            </p>
+            <ul>
+                <li><strong>Desarrollar el pensamiento lógico:</strong> Aprender a desglosar un problema grande en
+                    pequeñas subtareas resolubles (descomposición).</li>
+                <li><strong>Fomentar la creatividad y la perseverancia:</strong> El código no siempre funciona a la primera.
+                    La "depuración" de errores entrena la resiliencia y el mantenimiento del esfuerzo ante los retos.</li>
+                <li><strong>Entender el mundo digital:</strong> Dejar de ser consumidores pasivos de tecnología para
+                    convertirnos en creadores, entendiendo la lógica que hay detrás de las pantallas.</li>
+            </ul>
+
+            <figure style="margin: 2rem 0; text-align: center;">
+                <img src="../../assets/images/aprendreaprogamar.png" alt="Aprender a programar esquema"
+                    style="max-width: 100%; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <figcaption style="margin-top: 0.5rem; font-size: 0.9rem; color: #64748b;">Esquema de competencias
+                    digitales</figcaption>
+            </figure>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El Videojuego como vehículo de aprendizaje</h2>
+            <p>
+                ¿Por qué utilizar videojuegos y no otro tipo de software? La respuesta es clara: conectan con
+                el alumnado. El videojuego es su lenguaje natural, y esto nos permite:
+            </p>
+            <ul>
+                <li><strong>Aprendizaje significativo:</strong> El alumno tiene un objetivo claro (ej: "quiero que Aina
+                    salte"). La teoría (física, vectores, variables) se aprende porque se necesita para crear.</li>
+                <li><strong>Implicación y motivación:</strong> El "feedback" es inmediato. Ver a tu personaje moverse
+                    genera una satisfacción que retroalimenta las ganas de seguir aprendiendo.</li>
+                <li><strong>Proyectos multidisciplinares:</strong> Como veremos, un juego es el nexo perfecto entre las
+                    Artes, las Matemáticas, la Música y la Narrativa.</li>
+                <li><strong>Talentos múltiples:</strong> El aula se convierte en un estudio real donde cada alumno puede
+                    destacar en lo que mejor se le da (dibujo, guion, programación o diseño de sonido).</li>
+            </ul>
+
+            <figure style="margin: 2rem 0; text-align: center;">
+                <img src="../../assets/images/programarvideojocs.png" alt="Videojuegos como aprendizaje"
+                    style="max-width: 100%; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </figure>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. ¿Por qué necesitamos un motor de videojuegos?</h2>
+            <p>
+                Muchas veces, el alumnado (e incluso el profesorado) se pregunta: “¿No podríamos programar el juego
+                directamente con código?”. La respuesta es que sí, pero sería como querer construir un coche fabricando desde
+                cero cada tornillo, el motor y los neumáticos.
+            </p>
+            <p>
+                Un motor de videojuegos (o <em>game engine</em>) es un conjunto de herramientas de software que nos
+                ofrecen el "esqueleto" del juego ya construido. Nos ahorra tener que programar desde cero aspectos
+                complejos como:
+            </p>
+            <ul>
+                <li><strong>El motor físico:</strong> Cómo caen los objetos o cómo rebotan.</li>
+                <li><strong>El renderizado:</strong> Cómo se dibujan las imágenes y las luces en la pantalla.</li>
+                <li><strong>La gestión de memoria:</strong> Cómo se cargan y borran los sonidos y las imágenes para no
+                    colapsar el ordenador.</li>
+            </ul>
+
+            <h3>Un mercado lleno de opciones</h3>
+            <p>Actualmente, el mercado nos ofrece un amplio abanico de posibilidades según nuestras necesidades:</p>
+            <ul>
+                <li>
+                    <strong>Sistemas de "Drag & Drop" (Scratch, GDevelop):</strong> Ideales para la introducción a la
+                    lógica en niveles iniciales, donde la prioridad es la implicación y la motivación inmediata.
+                </li>
+                <li>
+                    <strong>Motores de alto rendimiento (Unity, Unreal Engine):</strong> Son los gigantes de la industria,
+                    capaces de crear mundos 3D hiperrealistas, pero con una curva de aprendizaje y unos requisitos de
+                    hardware que a menudo los hacen inviables para el aula estándar.
+                </li>
+                <li
+                    style="background-color: rgba(45, 212, 191, 0.1); padding: 0.5rem; border-radius: 0.5rem; border-left: 3px solid var(--accent-color);">
+                    <strong>Godot Engine:</strong> El equilibrio perfecto. Se posiciona como la herramienta ideal para proyectos
+                    educativos. Es libre y gratuito, basado en nodos visuales fáciles de comprender y permite dar el salto
+                    del 2D al 3D cuando el proyecto lo requiera.
+                </li>
+            </ul>
+
+            <h3 style="margin-top: 2rem;">📊 Comparativa Técnica: La elección del motor educativo</h3>
+            <p>
+                Para decidir qué motor se adapta mejor al aula, debemos analizar no solo su potencia gráfica,
+                sino su viabilidad técnica en un centro educativo y la curva de aprendizaje para el alumno.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Scratch</th>
+                        <th>GDevelop</th>
+                        <th>Godot Engine</th>
+                        <th>Unity</th>
+                        <th>Unreal Engine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Nivel ideal</strong></td>
+                        <td>Inicial (ESO)</td>
+                        <td>Intermedio</td>
+                        <td><strong>Secundaria / FP</strong></td>
+                        <td>Profesional / FP</td>
+                        <td>Profesional / AAA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lenguaje</strong></td>
+                        <td>Bloques visuales</td>
+                        <td>Eventos (No-code)</td>
+                        <td><strong>GDScript (tipo Python)</strong></td>
+                        <td>C# (Complejo)</td>
+                        <td>C++ / Blueprints</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Licencia</strong></td>
+                        <td>Gratuito</td>
+                        <td>Open Source</td>
+                        <td><strong>MIT (100% Libre)</strong></td>
+                        <td>Propietario</td>
+                        <td>Propietario</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arquitectura</strong></td>
+                        <td>Actores y disfraces</td>
+                        <td>Escenas y objetos</td>
+                        <td><strong>Nodos y Escenas</strong></td>
+                        <td>Componentes y Prefabs</td>
+                        <td>Actores y Blueprints</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hardware</strong></td>
+                        <td>Bajo (Web)</td>
+                        <td>Bajo / Medio</td>
+                        <td><strong>Bajo (Portable)</strong></td>
+                        <td>Medio / Alto</td>
+                        <td>Muy Alto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Instalación</strong></td>
+                        <td>No (Navegador)</td>
+                        <td>Opcional</td>
+                        <td><strong>No (Ejecutable único)</strong></td>
+                        <td>Compleja (GBs)</td>
+                        <td>Muy Compleja</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Especialidad</strong></td>
+                        <td>Lógica básica</td>
+                        <td>Juegos 2D rápidos</td>
+                        <td><strong>Excelente 2D y 3D</strong></td>
+                        <td>3D y Mobile</td>
+                        <td>3D de alta gama</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-section">
+                <h3>💡 ¿Por qué Godot es la elección ganadora?</h3>
+                <p>
+                    A partir de la experiencia real en el aula con proyectos como <a
+                        href="https://isamarti.itch.io/la-paella-del-saber" target="_blank"
+                        style="color: var(--accent-color); font-weight: bold;">"La Paella del Saber"</a> o
+                    <a href="https://isamarti.itch.io/aitana-torrent-el-videojoc" target="_blank"
+                        style="color: var(--accent-color); font-weight: bold;">"Aitana Torrent"</a>, extraemos tres
+                    conclusiones clave:
+                </p>
+                <ul>
+                    <li><strong>GDScript:</strong> Su similitud con Python hace que el alumno aprenda una sintaxis limpia
+                        y transferible a otros ámbitos de la informática.</li>
+                    <li><strong>Sistema de Nodos:</strong> La jerarquía visual de Godot (donde cada escena puede ser un nodo)
+                        es la representación más fiel del pensamiento computacional estructurado.</li>
+                    <li><strong>Inclusión y Roles:</strong> Permite que equipos de alumnos con diferentes talentos (dibujantes,
+                        guionistas, programadores) trabajen de manera coordinada en un proyecto multidisciplinar.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Preparando el motor: Descarga y Ejecución</h2>
+            <p>
+                Godot Engine destaca por ser una herramienta portable. Esto significa que no necesita un proceso
+                de instalación complejo que requiera permisos de administrador, lo cual facilita enormemente su
+                uso en los ordenadores de los centros educativos.
+            </p>
+            <ul>
+                <li><strong>Descarga:</strong> Accede a la sección de descargas de la <a
+                        href="https://godotengine.org/download" target="_blank" style="color: var(--accent-color);">web
+                        oficial de Godot Engine</a>. Elige la versión estable de Godot 4.x.</li>
+                <li><strong>Ejecución:</strong> Una vez descargado el archivo .zip, descomprímelo. Solo tienes que hacer
+                    doble clic sobre el ejecutable para abrir el motor.</li>
+                <li><strong>Primer paso:</strong> Al abrirlo, verás el Project Manager. Aquí es donde crearemos nuestro
+                    proyecto pulsando el botón "New".</li>
+                <li><strong>Crea el proyecto:</strong> Asigna un nombre a tu proyecto y selecciona la carpeta donde
+                    deseas guardarlo. Pulsa en "Create". </li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. El Espacio de Trabajo: Anatomía de Godot</h2>
+            <p>
+                Cuando abrimos un proyecto nuevo, nos encontramos con la interfaz principal. Está diseñada para tener todo el
+                que necesitamos a un golpe de vista, dividida en cuatro zonas fundamentales:
+            </p>
+            <figure style="margin: 2rem 0; text-align: center;">
+                <img src="../../assets/images/entorn.png" alt="Interfaz de Godot"
+                    style="width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <figcaption style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">El entorno de trabajo de Godot
+                    4</figcaption>
+            </figure>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+
+                <!-- A. Scene Dock -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">A</span>
+                        El Panel de Escena
+                    </h3>
+                    <p><strong>(Arriba a la izquierda)</strong> Aquí es donde veremos la jerarquía de la escena actual. Es
+                        el árbol donde se organizan los nodos (nuestras piezas de LEGO).</p>
+                    <p style="font-size: 0.9rem; color: #475569;">El que esté arriba del todo es el "padre" y los que
+                        cuelgan de él son los "hijos".</p>
+                </div>
+
+                <!-- B. Viewport -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">B</span>
+                        El Visor
+                    </h3>
+                    <p><strong>(En el centro)</strong> Es nuestra ventana al mundo del juego. Aquí es donde colocamos
+                        visualmente los personajes y escenarios.</p>
+                    <p style="font-size: 0.9rem; color: #475569;">Podemos cambiar entre la vista 2D, 3D y el editor de
+                        Scripts (código) con los botones superiores centrales.</p>
+                </div>
+
+                <!-- C. Inspector -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">C</span>
+                        El Inspector
+                    </h3>
+                    <p><strong>(A la derecha)</strong> Este es el panel de control de cada pieza. Cuando seleccionas un
+                        nodo a la izquierda, aquí aparecerán todas sus propiedades (posición, imágenes, velocidad,
+                        etc.).</p>
+                    <p style="font-size: 0.9rem; color: #475569;">Como docentes, aquí es donde podremos modificar parámetros
+                        sin tocar ni una línea de código.</p>
+                </div>
+
+                <!-- D. FileSystem -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">D</span>
+                        El Sistema de Archivos
+                    </h3>
+                    <p><strong>(Abajo a la izquierda)</strong> Es el explorador de carpetas de nuestro proyecto. Aquí
+                        guardaremos nuestras imágenes (assets), nuestros códigos (scripts) y nuestras escenas.</p>
+                    <p style="font-size: 0.9rem; color: #475569;">Es vital mantener esta zona limpia y organizada desde
+                        el primer día.</p>
+                </div>
+
+            </div>
+
+            <!-- E. Bottom Panel -->
+            <div
+                style="margin-top: 2rem; background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                <h3 style="margin-top: 0; display: inline-block; margin-right: 0.5rem;">E. El Panel Inferior</h3>
+                <span style="color: #64748b;">Abajo del todo</span>
+                <p style="margin-bottom: 0;">Aquí encontraremos herramientas que usaremos más adelante, como la Consola de salida (para
+                    ver errores), el Depurador o el editor de Animaciones.</p>
+            </div>
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px dashed #cbd5e1;">
+                <h3 style="color: var(--accent-color); display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📍</span> El Sistema de Coordenadas y la Pantalla Visible
+                </h3>
+                <p>Cuando miramos el Visor (Viewport) central, debemos entender cómo se posicionan los objetos en
+                    este mundo digital.</p>
+
+                <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">El Rectángulo Morado: Tu escenario
+                </h4>
+                <p>Dentro del espacio infinito de Godot, veréis un rectángulo con una línea morada (o azul, según la
+                    configuración).</p>
+                <div
+                    style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #6366f1; margin: 1rem 0;">
+                    <p style="margin: 0; font-weight: 600;">Este rectángulo representa lo que el jugador realmente verá
+                        en su pantalla al ejecutar el juego.</p>
+                </div>
+                <p>Todo lo que esté fuera de este rectángulo permanecerá oculto para el jugador hasta que la cámara se mueva.
+                </p>
+
+                <h4 style="color: var(--secondary-color); margin-top: 2rem; margin-bottom: 0.5rem;">Las Reglas del
+                    Plano 2D</h4>
+                <p>A diferencia de lo que aprendemos en clase de matemáticas, las coordenadas en el desarrollo de
+                    videojuegos funcionan así:</p>
+                <ul style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <li
+                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                        <strong>El Punto (0,0):</strong> El origen de coordenadas se encuentra exactamente en la esquina
+                        <em>superior izquierda</em> del rectángulo morado.
+                    </li>
+                    <li
+                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                        <strong>El Eje X (Horizontal):</strong> Las X crecen hacia la derecha. <span
+                            style="color: #64748b;">(Igual que en mates)</span>
+                    </li>
+                    <li
+                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; border-left: 4px solid #ef4444;">
+                        <strong>El Eje Y (Vertical):</strong> Aquí está el cambio clave: <strong>las Y crecen hacia
+                            abajo</strong>. Si quieres que un personaje caiga, tendrás que aumentar su Y; si quieres que
+                        salte, tendrás que restar valor a su Y.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- TASCA PER A L'ALUMNAT -->
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tarea para entregar</h3>
+            <p>
+                Una vez creado tu proyecto, vamos a configurarlo para que tenga una estética de 16 bits impecable
+                y no presente problemas de visualización.
+            </p>
+            <p>
+                Abre "Project Settings" en el menú proyecto y configura las siguientes opciones:
+            </p>
+            <ul>
+                <li>Resolución de la ventana: Ve a Project > Project Settings > Display > Window. Configura el Viewport
+                    Width a 1152 y el Viewport Height a 648.</li>
+                <li>Stretch Mode: En la misma sección de Window, baja hasta Stretch y selecciona Mode: canvas_items y
+                    Aspect: keep. Esto evitará que el juego se deforme en pantallas de diferentes medidas.</li>
+                <li>Filtro de Texturas (Pixel Art): Para que los píxeles se vean nítidos (y no borrosos), ve a Rendering >
+                    Textures y cambia el Default Texture Filter a Nearest.</li>
+            </ul>
+            <p>
+                Antes de empezar a crear nodos, es imprescindible establecer un orden en el panel FileSystem. Como buenos
+                ingenieros, no queremos que nuestros recursos estén mezclados:
+            </p>
+            <ul>
+                <li>Crea una carpeta para las escenas (<code>scenes/</code>).</li>
+                <li>Crea una carpeta para el código (<code>scripts/</code>).</li>
+                <li>Crea una carpeta para los recursos gráficos y sonoros (<code>assets/</code>).</li>
+            </ul>
+            <ol>
+                <li>Haz una captura de pantalla de las diferentes configuraciones que has realizado.</li>
+                <li>Haz una captura de pantalla de tu proyecto abierto, con las carpetas que has creado. </li>
+                <li>Escribe un documento breve explicando con tus palabras cómo crees que el desarrollo de
+                    videojuegos puede ayudar a nuestro alumnado a desarrollar el "pensamiento lógico" .</li>
+                <li>Sube la captura y el documento al Aula Virtual.</li>
+            </ol>
+            
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+</body>
+
+</html>

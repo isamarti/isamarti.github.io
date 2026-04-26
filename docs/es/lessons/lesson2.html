@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 2: Nodos, Escenas y el Primer Enemigo | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="node_master" data-lesson-id="lesson2">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson2.html" class="lang-btn">CA</a>
+        <a href="lesson2.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 2.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lección 2: La Arquitectura de Godot y nuestro primer Enemigo</h1>
+            <p>En esta lección entenderemos cómo se construye realmente un videojuego en Godot. Dejaremos de lado la
+                configuración y empezaremos a colocar las primeras piezas de nuestro mundo digital.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Conceptos Fundamentales: Los Nodos</h2>
+            <p>
+                Si imaginamos que nuestro videojuego es una construcción de LEGO, los <strong>Nodos</strong> son las piezas
+                individuales (un rectángulo de 2x4, una rueda, una ventana). Cada nodo tiene una función específica: mostrar
+                una imagen, reproducir un sonido o detectar una colisión.
+            </p>
+            <p>
+                Un nodo tiene tres características que lo hacen único:
+            </p>
+            <ul>
+                <li>Tiene un nombre: (ej: "Enemigo").</li>
+                <li>Tiene propiedades editables: (ej: "Posición").</li>
+                <li>Recibe actualizaciones en cada fotograma: (¡el motor le dice constantemente "actúa!")</li>
+                <li>Se puede extender con nuevas propiedades y funciones.</li>
+                <li>Se puede conectar con otros nodos para realizar acciones.</li>
+            </ul>
+            <p>
+                Vamos a crear nuestro primer nodo para ver cómo funciona y empezar a crear nuestro primer
+                personaje, un enemigo.
+            </p>
+            <h3>Para crear personajes empezaremos con un CharacterBody2D</h3>
+            <ol>
+                <li>En el panel de Escenas, pulsa el botón <strong>+ (New Scene)</strong>.</li>
+                <li>Elige "Other Node" y busca <strong>CharacterBody2D</strong>. Haz doble clic para crearlo.</li>
+                <li>Fíjate en el panel del <strong>Inspector</strong> a la derecha. Aquí puedes ver y editar todas las
+                    propiedades del nodo.</li>
+            </ol>
+            <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; align-items: flex-start;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="../../assets/images/inspector.png" alt="Inspector de Godot"
+                        style="width: 100%; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <p><strong>El Inspector</strong> (a la derecha del editor) es donde personalizamos cada pieza. Cualquier
+                        cambio que hagamos aquí se guarda en el archivo de la escena. Dependiendo del tipo de nodo, encontraremos
+                        unas características u otras. </p>
+                    <p>Algunas de las características más importantes del CharacterBody2D son:</p>
+
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; margin-top: 1rem;">A. Sección
+                        "CharacterBody2D" (La lógica física)</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Aquí es donde configuramos cómo se comporta el cuerpo de
+                        el enemigo frente al mundo:</p>
+                    <ul style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <li><strong>Motion Mode:</strong> Si lo ponemos en <em>Grounded</em>, el motor lo entenderá como un
+                            personaje que camina por el suelo (con gravedad). Si lo ponemos en <em>Floating</em>, será para
+                            enemigos que vuelan o nadan (como el genio o la bruja de tus ejemplos).</li>
+                        <li><strong>Slide On Ceiling:</strong> Una opción para decidir si desliza o para cuando choca con un
+                            techo.</li>
+                    </ul>
+
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">B. Sección "Transform" (El alma
+                        matemática)</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Como hemos visto, todos los nodos 2D tienen esta
+                        sección. Es vital para la programación:</p>
+                    <ul style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <li><strong>Position:</strong> Las coordenadas donde se encuentra. Recuerda: si cambias la <em>X</em> en
+                            el Inspector, el enemigo se mueve a la derecha.</li>
+                        <li><strong>Scale:</strong> Aquí es donde cambiarás el tamaño si tus imágenes son demasiado grandes o
+                            pequeñas (ej: 2, 2).</li>
+                        <li><strong>Rotation:</strong> Útil por si quieres que el enemigo esté inclinado o caído.</li>
+                    </ul>
+
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">C. Sección "Collision" (Las fronteras)
+                    </h4>
+                    <ul style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <li><strong>Layer (Capa):</strong> ¿En qué capa está mi enemigo? (Ej: Capa 2).</li>
+                        <li><strong>Mask (Máscara):</strong> ¿Qué capas "mira" el enemigo para no atravesarlas? (Ej:
+                            Capa 1, donde está el suelo).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div
+                style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--secondary-color); padding: 1.5rem; margin-top: 2rem; border-radius: 0.5rem;">
+                <h4
+                    style="color: var(--secondary-color); margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🎮</span> ¿Cómo interactuar con el Inspector desde el Código?
+                </h4>
+                <p style="font-size: 0.95rem;">Más adelante veremos la creación de código, pero cualquier palabra que veáis
+                    en el Inspector puede ser controlada por el script.</p>
+                <p style="font-size: 0.95rem;">Si queremos que el enemigo se mueva, escribiremos:</p>
+                <pre
+                    style="background: #1e293b; color: #f8fafc; padding: 0.8rem; border-radius: 0.4rem; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>velocity.x = 100</code></pre>
+                <p style="font-size: 0.95rem; margin-bottom: 0;">Y si queremos que una propiedad nueva del nodo aparezca en
+                    el Inspector para poder cambiarla fácilmente sin entrar al código, usaremos la palabra mágica <code
+                        style="background: rgba(16, 185, 129, 0.2); padding: 0.2rem 0.4rem; border-radius: 0.2rem; color: var(--secondary-color);">@export</code>
+                    en la definición.</p>
+            </div>
+
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. La Escena: Más que un nivel, un "Sub-montaje"</h2>
+            <p>
+                En muchos motores de juegos, una "escena" se refiere solo a un nivel (el bosque, el castillo). En Godot, una
+                <strong>escena</strong> es cualquier conjunto de nodos que tenga sentido por sí mismo.
+            </p>
+
+            <h3 style="color: var(--accent-color); display: flex; align-items: center; gap: 0.5rem;">
+                <span>🧩</span> El símil del LEGO: La Pata y el Animal
+            </h3>
+            <p>
+                Imaginad que queremos construir un animal de LEGO complejo. No intentaremos poner todas las piezas (nodos) en
+                una sola pila gigante. En lugar de esto, trabajaremos de forma modular:
+            </p>
+            <ul style="margin-bottom: 2rem;">
+                <li><strong>Creamos una Escena "Pata":</strong> Juntamos unas cuantas piezas (un nodo de movimiento, uno de
+                    gráficos para la uña, uno para el hueso). Guardamos este montaje como <code>pata.tscn</code>.</li>
+                <li><strong>La Escena es independiente:</strong> Podemos probar la pata ella sola, hacer que se mueva o
+                    cambiarle el color. Funciona de manera autónoma.</li>
+                <li><strong>Instanciar (Llamar la escena):</strong> Cuando vayamos a crear la escena "Animal", no volvemos a
+                    construir las patas desde cero. Simplemente "instanciamos" (arrastramos) la escena
+                    <code>pata.tscn</code> cuatro veces dentro del animal.
+                </li>
+            </ul>
+
+            <div
+                style="background: linear-gradient(to right, rgba(13, 148, 136, 0.1), rgba(5, 150, 105, 0.1)); padding: 1.5rem; border-radius: 0.5rem; border: 1px solid var(--glass-border); margin-bottom: 2rem;">
+                <h4 style="margin-top: 0; color: var(--accent-color);">🚀 ¿Por qué esto es "mágico" para el flujo de
+                    trabajo?</h4>
+                <p><strong>Actualización en cadena:</strong> Si una vez acabado el animal decidimos que las uñas tienen que ser
+                    azules, no hace falta cambiar las cuatro patas una a una. Vamos a la escena original de la pata, cambiamos el
+                    color de la uña, y automáticamente todas las patas de todos los animales del juego se actualizarán.</p>
+                <p style="margin-bottom: 0;"><strong>Orden y limpieza:</strong> La escena del animal se ve limpia (solo tiene
+                    4 "instancias" de pata) en lugar de tener 50 piezas sueltas. Es una de las características básicas de
+                    la programación orientada a objetos,<strong>el Encapsulamiento</strong>.
+                </p>
+            </div>
+
+            <h3 style="color: var(--accent-color);"> El Árbol de Nodos (The Scene Tree)</h3>
+            <p>
+                Diseñar el Árbol de Nodos es, en realidad, diseñar la jerarquía lógica de nuestro "animal". Los nodos
+                se organizan en una relación de <strong>Padre-Hijo</strong>:
+            </p>
+            <ul>
+                <li><strong>La Raíz (Root):</strong> Es el nodo "jefe" de la escena. Si movemos al padre (el cuerpo de
+                    el animal), todos los hijos (las patas instanciadas) se mueven con él de forma solidaria.</li>
+                <li><strong>Herencia de Propiedades:</strong> Si el padre escala al doble de tamaño, las patas se hacen el
+                    doble de grandes automáticamente.</li>
+                <li><strong>Especialización:</strong> Como docentes, enseñamos al alumno a elegir la pieza correcta. Por
+                    ejemplo, si la
+                    pata tiene que hacer ruido al caminar, le añadiremos un nodo hijo de tipo <code>AudioStreamPlayer</code>.
+                </li>
+            </ul>
+
+            <div class="highlight-quote" style="margin-top: 2rem;">
+                💡 <strong>Reflexión para el aula</strong><br>
+                "Godot nos permite trabajar como un estudio real: un alumno puede estar diseñando la escena de la 'Pata', un
+                otro la de la 'Cola' y un otro la de la 'Cabeza'. Al final, solo tenemos que juntar las escenas para dar vida
+                al animal entero. Esto facilita el trabajo en equipo y la corrección de proyectos."
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. 📜 Fundamentos de GDScript: El "Manual de Instrucciones"</h2>
+            <p>
+                <strong>GDScript</strong> es un lenguaje de alto nivel diseñado específicamente para Godot. Su
+                principal virtud en el aula es su claridad visual: se utiliza la indentación (espacios) para definir
+                bloques de código, lo que ayuda al alumnado a estructurar su pensamiento.
+            </p>
+
+            <h3 style="color: var(--accent-color);">1. Variables y la "Magia" del Inspector (@export)</h3>
+            <p>
+                Las variables son contenedores de información. En Godot, tenemos un superpoder docente: la palabra clave
+                <code>@export</code>.
+            </p>
+            <ul>
+                <li><strong>Variables estándar:</strong> Se quedan dentro del código (ej: <code>var vida = 100</code>).
+                </li>
+                <li><strong>Variables Exportadas:</strong> Si escribimos <code>@export var velocidad = 200</code>, esta
+                    variable aparecerá en el Inspector de Godot.</li>
+            </ul>
+            <div class="highlight-quote"
+                style="margin-top: 1rem; border-left-color: var(--secondary-color); background: rgba(16, 185, 129, 0.05);">
+                <strong>Utilidad pedagógica:</strong> Permite que un alumno ajuste la dificultad del juego (más velocidad,
+                menos vida) desde la interfaz visual, sin miedo a "romper" el código.
+            </div>
+
+            <h3 style="color: var(--accent-color); margin-top: 2rem;">2. Las Funciones "Callback" (Puertas de entrada)</h3>
+            <p>Godot nos da unas funciones especiales que se ejecutan en momentos concretos de la vida del nodo:</p>
+            <ul>
+                <li><code>func _ready():</code> Se ejecuta una sola vez cuando el nodo entra en escena (al "nacer"). Es
+                    donde hacemos las configuraciones iniciales.</li>
+                <li><code>func _process(delta):</code> Es el bucle principal que se ejecuta en cada fotograma (unas 60
+                    veces por segundo). Aquí es donde escribimos el movimiento constante.</li>
+            </ul>
+
+            <h3 style="color: var(--accent-color); margin-top: 2rem;">3. El concepto de delta (Física y Tiempo)</h3>
+            <p>Esta es una de las lecciones más importantes para el alumnado.</p>
+            <ul>
+                <li><strong>¿Qué es?</strong> <code>delta</code> es el tiempo que ha pasado desde el último fotograma.</li>
+                <li><strong>¿Para qué sirve?</strong> Si movemos a un enemigo 100 píxeles en cada fotograma, en un ordenador
+                    rápido irá como un cohete y en uno viejo irá lento.</li>
+                <li><strong>La solución:</strong> Multiplicamos siempre la velocidad por <code>delta</code>. Así, el
+                    movimiento es independiente de la potencia del ordenador.</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Creando el Primer Enemigo: El Blob</h2>
+            <p>
+                Vamos a ponerlo en práctica creando nuestro primer personaje: un enemigo blob.
+            </p>
+            <h3>Paso 1: Crear la Escena</h3>
+            <ol>
+                <li>En el panel de Escenas, pulsa el botón <strong>+ (New Scene)</strong>.</li>
+                <li>Elige <strong>Other Node</strong> y busca <code>CharacterBody2D</code>. Este nodo es ideal para
+                    personajes que se mueven y chocan.</li>
+                <li>Cámbiale el nombre a <code>Blob</code> (haciendo doble clic).</li>
+                <li>Guarda la escena (Ctrl+S) dentro de la carpeta <code>scenes/</code> como <code>blob.tscn</code>.</li>
+            </ol>
+
+            <h3>Paso 2: Añadir la Imagen (Sprite)</h3>
+            <ol>
+                <li>Descarga esta imagen del blob y guárdala en la carpeta <code>assets/</code>:<br>
+                    <img src="../../assets/images/blob.png" alt="Blob"
+                        style="max-width: 100px; display: block; margin: 0.5rem 0; border: 1px solid #ddd; padding: 5px; background: white; border-radius: 4px;">
+                </li>
+                <li>Haz clic derecho sobre el nodo <code>Blob</code> y selecciona <strong>Add Child Node</strong>.</li>
+                <li>Busca <code>Sprite2D</code> y créalo.</li>
+                <li>En el Inspector (derecha), arrastra la imagen <code>blob.png</code> que acabas de guardar a la
+                    propiedad <strong>Texture</strong>.
+                </li>
+                <li>(Opcional) Si es Pixel Art, recuerda ajustar la escala o el filtro si no lo has hecho en los ajustes
+                    globales.</li>
+            </ol>
+
+            <h3>Paso 3: Añadir la Colisión</h3>
+            <p>Verás una alerta ⚠️ en el nodo <code>CharacterBody2D</code>. Nos dice que le falta una forma de colisión.
+            </p>
+            <ol>
+                <li>Añade otro nodo hijo a <code>Blob</code> de tipo <code>CollisionShape2D</code>.</li>
+                <li>En el Inspector, en la propiedad <strong>Shape</strong>, selecciona <strong>New
+                        CircleShape2D</strong> o la forma que mejor creas que se adapta al blob.</li>
+                <li>Ajusta el tamaño para que cubra el sprite.</li>
+            </ol>
+            <p>
+                Ahora, si pulsas <strong>F6 (Play Scene)</strong>, verás a tu Blob quieto en la esquina superior
+                izquierda de la pantalla. Esto es porque su posición (0,0) coincide con el origen de coordenadas.
+            </p>
+            
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. Animando en 4 Direcciones y Movimiento Autónomo</h2>
+            <p>
+                Ahora haremos que nuestro Blob tenga vida propia, de esta forma el blob se moverá libremente por la
+                pantalla.
+            </p>
+
+            <h3>Paso 1: Preparar los Sprites</h3>
+            <p>Descarga las 4 imágenes para las direcciones y guárdalas en la carpeta correspondiente:</p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <div style="text-align: center;">
+                    <img src="../../assets/images/blob_front.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../../assets/images/blob_front.png" download>Front</a></small>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../../assets/images/blob_back.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../../assets/images/blob_back.png" download>Back</a></small>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../../assets/images/blob_left.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../../assets/images/blob_left.png" download>Left</a></small>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../../assets/images/blob_right.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../../assets/images/blob_right.png" download>Right</a></small>
+                </div>
+            </div>
+
+            <h3>Paso 2: Crear las Animaciones con AnimatedSprite2D</h3>
+            <ol>
+                <li> Como queremos animaciones sencillas, usaremos un nodo
+                    específico para esto. Borra el nodo <code>Sprite2D</code> y añade un nodo
+                    <strong>AnimatedSprite2D</strong> como hijo de <code>Blob</code>.
+                </li>
+                <li>En el Inspector, donde pone <strong>Sprite Frames</strong>, elige <strong>New SpriteFrames</strong>.
+                </li>
+                <li>Haz clic sobre la palabra <code>SpriteFrames</code> que acaba de aparecer para abrir el panel
+                    inferior de animación.</li>
+                <li><strong>Importante:</strong> Cambia el nombre de la animación por defecto (<code>default</code>) a
+                    <code>walk_down</code> (haciendo doble clic).
+                </li>
+                <li>Pulsa el icono de "Rejilla" (Add frames from Sprite Sheet) <span style="font-size: 1.2rem;">▦</span>.
+                </li>
+                <li>Selecciona <code>blob_front.png</code>. Configura <strong>Horizontal: 2</strong> y
+                    <strong>Vertical:
+                        2</strong>.
+                </li>
+                <li>Selecciona los 4 fotogramas y pulsa <strong>Add 4 Frames</strong>.</li>
+                <li>Repite el proceso creando nuevas animaciones (botón de folio con +) para:
+                    <ul>
+                        <li><code>walk_up</code> (con blob_back.png)</li>
+                        <li><code>walk_left</code> (con blob_left.png)</li>
+                        <li><code>walk_right</code> (con blob_right.png)</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Paso 3: El Código de Movimiento Aleatorio</h3>
+            <p>Para crear el código para que camine, selecciona el nodo CharacterBody2D y pulsa el icono de <img
+                    src="../../assets/images/script_icon.png"
+                    style="vertical-align: middle; width: 20px; height: 20px; margin: 0 4px;" alt="Nuevo Script"> para
+                crear un script <code>blob.gd</code>:
+            </p>
+            <pre><code class="language-gdscript">extends CharacterBody2D
+
+@export var speed = 50
+var movement_direction = Vector2.ZERO
+
+func _ready():
+    # Elegimos una dirección aleatoria al empezar
+    choose_new_direction()
+
+func _physics_process(delta):
+    # Movemos al personaje
+    velocity = movement_direction * speed
+    move_and_slide()
+    
+    # Actualizamos la animación según la dirección usando AnimatedSprite2D
+    if velocity.length() > 0:
+        if abs(velocity.x) > abs(velocity.y):
+            if velocity.x > 0:
+                $AnimatedSprite2D.play("walk_right")
+            else:
+                $AnimatedSprite2D.play("walk_left")
+        else:
+            if velocity.y > 0:
+                $AnimatedSprite2D.play("walk_down")
+            else:
+                $AnimatedSprite2D.play("walk_up")
+
+func choose_new_direction():
+    # Generamos un vector aleatorio (arriba, abajo, izquierda, derecha o diagonales)
+    movement_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
+    
+    # Volvemos a cambiar de dirección de aquí a entre 2 y 3 segundos
+    await get_tree().create_timer(randf_range(2.0, 3.0)).timeout
+    choose_new_direction()
+</code></pre>
+           
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>6. Material de apoyo (Vídeos)</h2>
+            <p>A continuación tenéis unos vídeos explicativos donde se muestra paso a paso lo que hemos trabajado en la lección:</p>
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/IyQEra81PCo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/vSNiLHNa2lA" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- TASCA PER A L'ALUMNAT -->
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tarea</h3>
+            <p>
+                Tienes que crear la escena de tu primer enemigo siguiendo los pasos anteriores.
+            </p>
+            <ol>
+                <li>Crea la escena completa con AnimatedSprite2D y CollisionShape2D.</li>
+                <li>Comprime tu proyecto</li>
+                <li>Sube el archivo comprimido al Aula Virtual.</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

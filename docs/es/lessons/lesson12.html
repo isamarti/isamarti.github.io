@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 12: Ponemos hilo musical a la aventura | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="music_master" data-lesson-id="lesson12">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson12.html" class="lang-btn">CA</a>
+        <a href="lesson12.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 12.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>🎵 Lección 12: Ponemos hilo musical a la aventura</h1>
+            <p>Un buen RPG no sería nada sin su música. El sonido es lo que nos dice si estamos en un bosque tranquilo, en un
+                pueblo acogedor o en medio de una batalla peligrosa. Hoy aprenderemos a gestionar el audio de forma fácil pero
+                profesional.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. 🔊 Los 3 Nodos de Sonido en Godot</h2>
+            <p>No todos los sonidos de nuestro juego tienen que sonar igual. Godot nos ofrece tres herramientas diferentes según si queremos una música de fondo, el ruido de una fuente o un efecto en una cueva.</p>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">1. AudioStreamPlayer (Sonido Global)</h3>
+                <p>Es el nodo que usaremos para la música de fondo.</p>
+                <ul>
+                    <li><strong>¿Cómo funciona?:</strong> El sonido se oye perfectamente en toda la pantalla, sin importar dónde esté Aina. No tiene "posición".</li>
+                    <li><strong>Uso ideal:</strong> Música de ambiente, sonidos de la interfaz (clics de botones) o voces de narrador.</li>
+                </ul>
+
+                <h3>2. AudioStreamPlayer2D (Sonido Posicional)</h3>
+                <p>Este nodo es ideal para objetos que hacen ruido dentro de nuestro mundo en 2D.</p>
+                <ul>
+                    <li><strong>¿Cómo funciona?:</strong> El sonido tiene una posición en el mapa. Si Aina está lejos del objeto, se oye flojo; si se acerca, el volumen sube. Además, si Aina está a la izquierda del objeto, el sonido se oirá más por el auricular derecho (efecto estéreo).</li>
+                    <li><strong>Uso ideal:</strong> Una hoguera que crepita, una cascada de agua o el ruido de un enemigo que se acerca.</li>
+                </ul>
+
+                <h3>3. AudioStreamPlayer3D (Sonido Espacial)</h3>
+                <p>Aunque nuestro juego es un RPG en 2D, es bueno saber que existe este nodo.</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>¿Cómo funciona?:</strong> Igual que el 2D, pero calculando la distancia en tres dimensiones (X, Y, Z). Incluye efectos más complejos como la absorción del sonido por el aire o el efecto Doppler.</li>
+                    <li><strong>Uso ideal:</strong> Juegos en 3D (como un shooter o un juego de exploración en primera persona).</li>
+                </ul>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #3b82f6; background-color: #eff6ff;">
+                <h3 style="margin-top: 0; color: #1d4ed8;">💡 Resumen para la clase: ¿Cuál elegir?</h3>
+                <table style="width:100%; text-align:left; border-collapse: collapse;">
+                    <tr style="border-bottom: 2px solid #93c5fd;">
+                        <th style="padding-bottom: 0.5rem; color: #1e3a8a;">Situación</th>
+                        <th style="padding-bottom: 0.5rem; color: #1e3a8a;">Nodo Recomendado</th>
+                        <th style="padding-bottom: 0.5rem; color: #1e3a8a;">Razón</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;">Música del bosque</td>
+                        <td style="padding: 0.5rem 0;"><code>AudioStreamPlayer</code></td>
+                        <td style="padding: 0.5rem 0;">Tiene que sonar igual en todas partes.</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #bfdbfe;">
+                        <td style="padding: 0.5rem 0;">Aina recibe daño</td>
+                        <td style="padding: 0.5rem 0;"><code>AudioStreamPlayer</code></td>
+                        <td style="padding: 0.5rem 0;">Es un efecto del personaje, no del mundo.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem 0;">Una antorcha en la pared</td>
+                        <td style="padding: 0.5rem 0;"><code>AudioStreamPlayer2D</code></td>
+                        <td style="padding: 0.5rem 0;">Queremos que el jugador "encuentre" la antorcha por el sonido.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fffbeb;">
+                <h3 style="margin-top: 0; color: #b45309;">🛠️ Truco de organización: Los "Audio Buses"</h3>
+                <p style="margin-bottom: 0;">Si queréis hacer las cosas bien, podéis ir a la parte inferior de Godot, a la pestaña <strong>Audio</strong>, y crear canales separados (Buses): uno para "Música" y otro para "Efectos". Así, en el futuro, podríais hacer un menú de opciones donde el jugador pueda bajar la música sin silenciar los golpes de espada.</p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El nodo AudioStreamPlayer</h2>
+            <p>Como ya hemos introducido, Godot tiene tres tipos de nodos para el sonido, pero hoy nos centraremos en el más básico:</p>
+            <ul>
+                <li><strong>AudioStreamPlayer:</strong> Reproduce sonido de forma global (perfecto para la música de fondo que suena igual en toda la pantalla).</li>
+            </ul>
+
+            <div class="highlight-section">
+                <h3>Cómo configurarlo:</h3>
+                <ol>
+                    <li>Añade un nodo <strong>AudioStreamPlayer</strong> a tu escena principal (o al nivel).</li>
+                    <li>En la propiedad <strong>Stream</strong> del Inspector, arrastra tu archivo de música (<code>.mp3</code> o <code>.ogg</code>).</li>
+                    <li>Activa la casilla <strong>Autoplay</strong> si quieres que la música empiece tan pronto como se abra el nivel.</li>
+                </ol>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h4 style="margin-top: 0; color: #334155;">📥 Recursos musicales para descargar</h4>
+                <ul style="margin-bottom: 0;">
+                    <li><a href="../../assets/Beneath_the_Ancient_Bough.mp3" download style="color: var(--accent-color); font-weight: 600;">Beneath the Ancient Bough</a></li>
+                    <li><a href="../../assets/Sovereign_of_the_Ancient_Keep.mp3" download style="color: var(--accent-color); font-weight: 600;">Sovereign of the Ancient Keep</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. El concepto de "Loop" (Bucle)</h2>
+            <p>La música de los videojuegos suele ser corta, pero se repite constantemente sin que se note el corte.</p>
+            
+            <div class="highlight-section" style="border-left: 4px solid #ef4444; background-color: #fef2f2;">
+                <h3 style="margin-top: 0; color: #b91c1c;">⚠️ ¡Importante!</h3>
+                <p style="margin-bottom: 0;">Cuando importéis un archivo de música a Godot, id a la pestaña <strong>Import</strong> (normalmente situada al lado de la pestaña de Escena), aseguraos de que la casilla <strong>Loop</strong> esté activada y pulsad "<strong>Reimport</strong>". ¡Así la música no se parará nunca!</p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. ⚔️ Polifonía: Sonido de la espada sin cortar la música</h2>
+            <p>Un error común cuando empezamos es pensar que el juego solo puede reproducir un sonido a la vez. Si intentamos usar el mismo nodo para la música y para la espada, al atacar, la música se parará. Para evitarlo, usaremos la <strong>polifonía</strong> (muchos sonidos escuchándose a la vez).</p>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">1. Nodos independientes para funciones diferentes</h3>
+                <p>La clave es tener nodos separados en la jerarquía de nuestra escena (o de Aina):</p>
+                <ul>
+                    <li><strong>MusicPlayer (AudioStreamPlayer):</strong> Con la música del bosque en loop.</li>
+                    <li><strong>SfxPlayer (AudioStreamPlayer):</strong> Vacío, que usaremos para los efectos especiales (como la espada).</li>
+                </ul>
+
+                <h3>2. Cómo hacer que la espada suene al ritmo de la animación</h3>
+                <p>En lugar de poner el sonido por código de forma aislada, lo mejor es ligarlo al <strong>AnimationPlayer</strong> de Aina. Así el "swish" sonará exactamente cuando la espada se mueve:</p>
+                <ol>
+                    <li>Abre la animación de <strong>Ataque</strong> de Aina.</li>
+                    <li>Añade una nueva pista (Add track) de tipo <strong>"Audio Playback Track"</strong>.</li>
+                    <li>Le mandaremos que queremos seleccionar el nodo <strong>SfxPlayer</strong> de Aina como un enlace.</li>
+                    <li>En el momento exacto del movimiento de la espada sobre la línea del tiempo, haz <strong>clic derecho &gt; Insert Key</strong> y elige el archivo del sonido de la espada que estés usando.</li>
+                </ol>
+
+                <h3 style="margin-bottom: 0.5rem;">3. El resultado: Capas de sonido</h3>
+                <p>De esta manera, Godot mezcla los dos sonidos automáticamente:</p>
+                <ul style="margin-bottom: 0;">
+                    <li>La música continúa sonando por el canal de música ininterrumpidamente.</li>
+                    <li>El efecto de la espada se activa en una "capa" paralela cada vez que Aina ataca, sin interferir de un lado a otro.</li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h4 style="margin-top: 0; color: #334155;">📥 Recurso de sonido para descargar</h4>
+                <p style="margin-bottom: 0;">Puedes utilizar este efecto sonoro para el ataque: <a href="../../assets/sword.mp3" download style="color: var(--accent-color); font-weight: 600;">sword.mp3</a></p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tarea de la Lección 12: Ponemos sonido al juego</h3>
+            <p><strong>Vuestro objetivo es:</strong></p>
+            <ul>
+                <li><strong>Música de ambiente:</strong> Añade un nodo <code>AudioStreamPlayer</code> creativamente para la música de fondo y asegúrate de que el archivo de audio esté configurado para reproducirse continuamente en bucle (loop).</li>
+                <li><strong>Sonidos de acción (Polifonía):</strong> Crea otro nodo <code>AudioStreamPlayer</code> dedicado a los efectos especiales. Haz uso del <code>AnimationPlayer</code> de Aina para sincronizar el sonido del golpe de espada con la animación correspondiente, sin cortar la melodía de fondo.</li>
+                <li><em>(Opcional)</em> <strong>Sonido posicional:</strong> Elige un elemento de tu mundo y añádele un <code>AudioStreamPlayer2D</code> para experimentar cómo funciona el sonido en el espacio según la distancia del personaje.</li>
+            </ul>
+            <p>Entrega en Aules el archivo comprimido de tu proyecto entero donde se vea la aplicación correcta del audio.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

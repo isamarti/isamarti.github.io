@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 14: Explorando la Tercera Dimensión | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="godot_3d" data-lesson-id="lesson14">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson14.html" class="lang-btn">CA</a>
+        <a href="lesson14.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 14.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>🧊 Lección 14: Explorando la Tercera Dimensión con Godot</h1>
+            <p>Una vez consolidada la lógica de juego en 2D, es el momento de abrir la ventana a una de las capacidades más potentes de Godot: su motor 3D. Esta lección no pretende ser un curso exhaustivo de modelado, sino una introducción a cómo trasladar los conocimientos de programación y nodos que ya tenemos a un entorno con profundidad.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El cambio de paradigma: El eje Z</h2>
+            <p>Hasta ahora, nos hemos movido en un plano cartesiano de ejes X (horizontal) e Y (vertical). En el mundo 3D, Godot añade el eje <strong>Z</strong>, que representa la profundidad.</p>
+            <ul>
+                <li><strong style="color: #ef4444;">X (Rojo):</strong> Izquierda / Derecha.</li>
+                <li><strong style="color: #10b981;">Y (Verde):</strong> Arriba / Abajo.</li>
+                <li><strong style="color: #3b82f6;">Z (Azul):</strong> Delante / Detrás.</li>
+            </ul>
+            <p>Una de las ventajas de Godot es que la filosofía de trabajo se mantiene intacta: seguimos trabajando con una jerarquía de nodos, pero ahora estos tienen una propiedad llamada <code>Transform</code> (posición, rotación y escala en 3 ejes).</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Equivalencia de nodos: Del 2D al 3D</h2>
+            <p>Para el profesorado, es vital entender que no tienen que volver a aprenderlo todo de cero. Godot utiliza una nomenclatura simétrica que facilita la transición:</p>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>Mecánica de juego</th>
+                    <th>Nodo en 2D</th>
+                    <th>Nodo en 3D</th>
+                </tr>
+                <tr>
+                    <td>Cuerpo físico del personaje</td>
+                    <td><code>CharacterBody2D</code></td>
+                    <td><code>CharacterBody3D</code></td>
+                </tr>
+                <tr>
+                    <td>Detección de áreas/proximidad</td>
+                    <td><code>Area2D</code></td>
+                    <td><code>Area3D</code></td>
+                </tr>
+                <tr>
+                    <td>Representación visual</td>
+                    <td><code>Sprite2D</code></td>
+                    <td><code>MeshInstance3D</code></td>
+                </tr>
+                <tr>
+                    <td>Forma de colisión</td>
+                    <td><code>CollisionShape2D</code></td>
+                    <td><code>CollisionShape3D</code></td>
+                </tr>
+            </table>
+            
+            <p>Esta simetría permite que, por ejemplo, el código de movimiento que escribimos para Aina en la Lección 4 sea prácticamente idéntico en 3D, cambiando simplemente <code>Vector2</code> por <code>Vector3</code>.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Elementos esenciales de una escena 3D</h2>
+            <p>A diferencia del 2D, donde a menudo teníamos suficiente con una cámara y un personaje, en 3D hay tres elementos "invisibles" pero obligatorios para que la escena funcione:</p>
+            <ul>
+                <li><strong>WorldEnvironment:</strong> Controla el "cielo" (Sky), la niebla y la iluminación ambiental. Sin él, el mundo se vería plano y sin volumen.</li>
+                <li><strong>DirectionalLight3D:</strong> Actúa como el sol de nuestro mundo. Produce las sombras que ayudan al jugador a percibir la profundidad.</li>
+                <li><strong>Camera3D:</strong> En 3D, la cámara tiene propiedades de lente (FOV - campo de visión). Su posición y ángulo cambian completamente la jugabilidad (primera persona, tercera persona o vista isométrica).</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Prototipado rápido: Los nodos CSG</h2>
+            <p>Para el aula de informática, Godot ofrece los nodos CSG (Constructive Solid Geometry). Estos permiten crear habitaciones, escaleras y objetos complejos combinando formas geométricas básicas (cubo, cilindro, esfera) sin necesidad de saber modelar en programas externos como Blender. Es una herramienta fantástica para que el alumnado cree sus propios escenarios de forma inmediata.</p>
+            
+            <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
+                <h3 style="margin-top: 0; color: #b45309;">👨‍🏫 Aplicación didáctica en el aula</h3>
+                <p>El salto al 3D ofrece oportunidades transversales únicas:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Matemáticas:</strong> Visualización de la geometría espacial y uso de vectores en tres dimensiones.</li>
+                    <li><strong>Tecnología:</strong> Introducción al renderizado, el funcionamiento de la luz y la optimización de recursos (polígonos).</li>
+                    <li><strong>Artes Visuales:</strong> Trabajo sobre el volumen, las texturas y la composición escénica.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>📝 Ejercicio práctico</h3>
+            <p>Cread una escena 3D básica que contenga:</p>
+            <ul>
+                <li>Un suelo (utilizando un <code>CSGBox3D</code>).</li>
+                <li>Una cápsula que represente al jugador (<code>MeshInstance3D</code>).</li>
+                <li>Una luz direccional ajustada para ver sombras alargadas.</li>
+                <li>Una cámara colocada en una posición elevada que enfoque el conjunto.</li>
+            </ul>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

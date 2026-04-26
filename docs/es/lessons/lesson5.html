@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 5: La Física y la Solidez del Mundo | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="physics_ready" data-lesson-id="lesson5">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson5.html" class="lang-btn">CA</a>
+        <a href="lesson5.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 5.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lección 5: La Física y la Solidez del Mundo</h1>
+            <p>Hasta ahora, nuestro juego es puramente visual: Aina puede atravesar paredes, casas y árboles porque los
+                objetos son "transparentes" para el motor de física. En esta lección aprenderemos a darles cuerpo y volumen.
+            </p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El Cuerpo Físico: ¿Quién tiene derecho a chocar?</h2>
+            <p>En Godot, una imagen (<code>Sprite2D</code>) no tiene consistencia. Para que un objeto pueda interactuar con
+                otros, debe estar "dentro" de un nodo de <strong>Cuerpo Físico</strong>. Pensad en el cuerpo como el esqueleto
+                invisible que le dice al motor cómo se tiene que mover el objeto.</p>
+            <h3>Los 3 tipos de cuerpos que usaremos:</h3>
+            <ul>
+                <li><strong>StaticBody2D (Cuerpos estáticos):</strong> Para objetos que no se mueven nunca, como una mesa,
+                    una roca o un árbol. Están ahí para bloquear el paso.</li>
+                <li><strong>CharacterBody2D (Cuerpos de personaje):</strong> El que ya hemos usado para Aina y Blub.
+                    Son cuerpos hechos para moverse por código y reaccionar ante obstáculos.</li>
+                <li><strong>RigidBody2D (Cuerpos simulados):</strong> Se utilizan cuando queremos que el motor de física
+                    controle totalmente el objeto (por ejemplo, una pelota que cae y rebota sola).</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Anatomía de un objeto sólido y su volumen</h2>
+            <p>Es el error más común: intentar poner una colisión a un Sprite. Recordad siempre esta jerarquía. Para
+                hacer que una mesa sea sólida, la estructura en el Árbol de Nodos debe ser esta:</p>
+            <ol>
+                <li><strong>StaticBody2D</strong> (El padre: El esqueleto físico).</li>
+                <li><strong>Sprite2D</strong> (El hijo: La imagen que vemos).</li>
+                <li><strong>CollisionShape2D</strong> (El hijo: El volumen que choca).</li>
+            </ol>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <img src="../../assets/images/staticcollision.PNG" alt="Configuración de CollisionShape2D"
+                    style="max-height: 250px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-quote" style="margin-top: 2rem;">
+                ⚠️ <strong>Nota importante:</strong> El nodo físico (<code>StaticBody2D</code>) siempre tiene que ser el padre.
+                Si ponéis el cuerpo físico como hijo de un Sprite, la física no funcionará correctamente.
+            </div>
+
+            <h3 style="margin-top: 2rem;">¿Cómo definimos el volumen? (CollisionShape2D)</h3>
+            <p>Una vez tenemos el cuerpo, necesitamos decirle qué forma tiene. El nodo <strong>CollisionShape2D</strong>
+                sirve para dibujar esa área (que veréis de color azul en el editor). Podemos elegir la forma en
+                el Inspector, definiendo un New Shape. </p>
+            <ul>
+                <li><strong>Formas simples:</strong> Usad siempre que podáis rectángulos o círculos. Son mucho más fáciles de
+                    calcular para el ordenador que las formas complejas.</li>
+                <li><strong>Ajuste:</strong> En Aina o las mesas, recomendamos poner la colisión solo en la base
+                    (a los pies). Esto permite que
+                    los personajes puedan pasar "por detrás" del objeto, dando una sensación de profundidad 2D
+                    real.</li>
+            </ul>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <img src="../../assets/images/tablecollision.PNG" alt="Ejemplo de colisión de una mesa"
+                    style="max-height: 250px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Colisiones en el TileMapLayer</h2>
+            <p>Si hemos pintado un pueblo entero con el TileMap, no vamos a poner cientos de nodos StaticBody manualmente.
+                Lo haremos directamente desde el TileSet:</p>
+            <ol>
+                <li>Seleccionamos nuestro recurso de <strong>TileSet</strong> y creamos una <strong>Physics Layer</strong>.
+                </li>
+                <li>Vamos al apartado de "Paint" y seleccionamos la propiedad de física.</li>
+                <li><strong>Pintamos lo azul:</strong> Simplemente seleccionamos los mosaicos de paredes o agua y les dibujamos
+                    el área de colisión.</li>
+            </ol>
+            <p>A partir de ahora, cada vez que pintéis con ese mosaico, el personaje chocará automáticamente.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>🚦 4. Capas y Máscaras: ¿Quién choca con quién?</h2>
+            <p>Dentro del Inspector de cualquier cuerpo físico, encontraréis una sección llamada <strong>Collision</strong>.
+                Aquí es donde se decide la interacción entre objetos mediante una cuadrícula de botones numerados.</p>
+            <p>Esta es la parte más "ingeniera", pero es vital para mantener el orden:</p>
+            <ul>
+                <li><strong>Collision Layer (Capa): "¿Quién soy yo?"</strong><br>Indica en qué capa reside el objeto.
+                    Si marcas el botón 1, el objeto "vive" en la capa 1.</li>
+                <li><strong>Collision Mask (Máscara): "¿A quién miro?"</strong><br>Indica con qué capas quiere chocar este
+                    objeto. Si un objeto tiene la máscara 2 activada, buscará y chocará con cualquier cosa que esté en
+                    la capa 2.</li>
+            </ul>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/layermask.PNG" alt="Configuración de colisiones en el inspector"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-section">
+                <h3>Ejemplo práctico para el aula:</h3>
+                <p>Imaginad que organizamos nuestro juego así:</p>
+                <ul>
+                    <li><strong>Capa 1:</strong> Jugador (Aina)</li>
+                    <li><strong>Capa 2:</strong> Escenario (Muros, casas)</li>
+                    <li><strong>Capa 3:</strong> Enemigos (Blub)</li>
+                </ul>
+                <p>Aina tendrá la Layer 1 (ella es el jugador) y la Mask 2 y 3 (quiere chocar con muros y enemigos).</p>
+                <p>El Muro tendrá la Layer 2 (él es escenario) y Mask vacía (los muros no se mueven, no necesitan "mirar"
+                    a nadie).</p>
+                <p>Un Fantasma (enemigo) podría tener la Layer 3 y la Mask 1 (quiere chocar con Aina), pero no la Mask 2.
+                    Al no mirar a la capa 2, el fantasma traspasará las paredes mágicamente.</p>
+            </div>
+
+            <div class="highlight-quote" style="margin-top: 2rem;">
+                💡 <strong>Consejo Docente:</strong> Podéis poner nombres a las capas para no tener que recordar números. En
+                <strong>Proyecto > Configuración del Proyecto > Layer Names > 2D Physics</strong>, podéis escribir
+                "Jugador", "Muros", "Enemigos". A partir de ahora, ¡estos nombres aparecerán en el Inspector!
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tarea Práctica 5: Haciendo el mundo sólido</h3>
+            <p><strong>Objetivo:</strong> Conseguir que Aina no traspase los objetos del escenario.</p>
+            <ol>
+                <li><strong>Aina física:</strong> Comprueba que Aina (CharacterBody2D) tiene un hijo CollisionShape2D
+                    ajustado a su base.</li>
+                <li><strong>Objeto sólido:</strong> Crea una escena para una "Mesa" o "Roca" usando un StaticBody2D como
+                    padre.</li>
+                <li><strong>TileMap físico:</strong> Configura la Physics Layer de tu TileSet y pinta las colisiones
+                    de tus muros.</li>
+                <li><strong>Prueba de Debug:</strong> Activa el menú superior <strong>Debug > Visible Collision
+                        Shapes</strong>. Ahora, al jugar, verás las líneas azules de colisión.</li>
+            </ol>
+            <p><strong>Entrega:</strong> Tu proyecto comprimido en Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

@@ -10,6 +10,10 @@
 </head>
 
 <body data-password="node_master" data-lesson-id="lesson2">
+    <div class="lang-switcher">
+        <a href="lesson2.html" class="lang-btn active">CA</a>
+        <a href="../es/lessons/lesson2.html" class="lang-btn">ES</a>
+    </div>
 
     <!-- PASSWORD OVERLAY -->
     <div id="password-overlay">
@@ -275,12 +279,7 @@
                 Ara, si prems <strong>F6 (Play Scene)</strong>, veuràs el teu Blob quiet en la cantonada superior
                 esquerra de la pantalla. Això és perquè la seua posició (0,0) coincideix amb l'origen de coordenades.
             </p>
-            <div style="margin-top: 1rem; text-align: center;">
-                <video width="100%" controls style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <source src="../assets/videos/lesson2_video1.mp4" type="video/mp4">
-                    El teu navegador no suporta l'etiqueta de vídeo.
-                </video>
-            </div>
+           
         </section>
 
         <section class="card animate-on-load">
@@ -385,11 +384,19 @@ func choose_new_direction():
     await get_tree().create_timer(randf_range(2.0, 3.0)).timeout
     choose_new_direction()
 </code></pre>
-            <div style="margin-top: 1rem; text-align: center;">
-                <video width="100%" controls style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <source src="../assets/videos/lesson2_video3.mp4" type="video/mp4">
-                    El teu navegador no suporta l'etiqueta de vídeo.
-                </video>
+            
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>6. Material de suport (Vídeos)</h2>
+            <p>A continuació teniu uns vídeos explicatius on es mostra pas a pas el que hem treballat a la lliçó:</p>
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/IyQEra81PCo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/vSNiLHNa2lA" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </div>
         </section>
 

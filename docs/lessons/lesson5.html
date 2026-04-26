@@ -10,6 +10,10 @@
 </head>
 
 <body data-password="physics_ready" data-lesson-id="lesson5">
+    <div class="lang-switcher">
+        <a href="lesson5.html" class="lang-btn active">CA</a>
+        <a href="../es/lessons/lesson5.html" class="lang-btn">ES</a>
+    </div>
 
     <!-- PASSWORD OVERLAY -->
     <div id="password-overlay">
@@ -50,7 +54,7 @@
         </section>
 
         <section class="card animate-on-load">
-            <h2>2. Anatomia d'un objecte sòlid</h2>
+            <h2>2. Anatomia d'un objecte sòlid i el seu volum</h2>
             <p>És l'error més comú: intentar posar una col·lisió a un Sprite. Recordeu sempre aquesta jerarquia. Per a
                 fer que una taula siga sòlida, l'estructura en l'Arbre de Nodes ha de ser aquesta:</p>
             <ol>
@@ -58,30 +62,37 @@
                 <li><strong>Sprite2D</strong> (El fill: La imatge que veiem).</li>
                 <li><strong>CollisionShape2D</strong> (El fill: El volum que xoca).</li>
             </ol>
-            <div style="margin-top: 2rem; text-align: center;">
-                <img src="../assets/images/staticbody.png" alt="Hierarquia de nodes per a un objecte sòlid"
-                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <img src="../assets/images/staticcollision.PNG" alt="Configuració de CollisionShape2D"
+                    style="max-height: 250px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             </div>
-            <div class="highlight-quote">
+
+            <div class="highlight-quote" style="margin-top: 2rem;">
                 ⚠️ <strong>Nota important:</strong> El node físic (<code>StaticBody2D</code>) sempre ha de ser el pare.
                 Si poseu el cos físic com a fill d'un Sprite, la física no funcionarà correctament.
             </div>
-        </section>
 
-        <section class="card animate-on-load">
-            <h2>3. Com definim el volum? (CollisionShape2D)</h2>
+            <h3 style="margin-top: 2rem;">Com definim el volum? (CollisionShape2D)</h3>
             <p>Una vegada tenim el cos, necessitem dir-li quina forma té. El node <strong>CollisionShape2D</strong>
-                serveix per a dibuixar eixa àrea (que veureu de color blau a l'editor).</p>
+                serveix per a dibuixar eixa àrea (que veureu de color blau a l'editor). Podem elegir la forma en
+                l'Inspector, definint in new Shape. </p>
             <ul>
                 <li><strong>Formes simples:</strong> Useu sempre que pugueu rectangles o cercles. Són molt més fàcils de
                     calcular per a l'ordinador que les formes complexes.</li>
-                <li><strong>Ajustament:</strong> En l'Aina, recomanem posar la col·lisió només als peus. Això permet que
-                    el seu cap puga passar "per darrere" d'un arbre, donant una sensació de profunditat 2D real.</li>
+                <li><strong>Ajustament:</strong> En l'Aina o les taules, recomanem posar la col·lisió només a la base
+                    (als peus). Això permet que
+                    els personatges puguen passar "per darrere" de l'objecte, donant una sensació de profunditat 2D
+                    real.</li>
             </ul>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <img src="../assets/images/tablecollision.PNG" alt="Exemple de col·lisió d'una taula"
+                    style="max-height: 250px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>4. Col·lisions en el TileMapLayer</h2>
+            <h2>3. Col·lisions en el TileMapLayer</h2>
             <p>Si hem pintat un poble sencer amb el TileMap, no anem a posar centenars de nodes StaticBody manualment.
                 Ho farem directament des del TileSet:</p>
             <ol>
@@ -95,7 +106,7 @@
         </section>
 
         <section class="card animate-on-load">
-            <h2>🚦 5. Capes i Màscares: Qui xoca amb qui?</h2>
+            <h2>🚦 4. Capes i Màscares: Qui xoca amb qui?</h2>
             <p>Dins de l'Inspector de qualsevol cos físic, trobareu una secció anomenada <strong>Collision</strong>.
                 Aquí és on es decideix la interacció entre objectes mitjançant una quadrícula de botons numerats.</p>
             <p>Aquesta és la part més "enginyera", però és vital per mantenir l'ordre:</p>

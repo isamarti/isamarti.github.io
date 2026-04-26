@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 6: Variables Globales y Señales | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_alive" data-lesson-id="lesson6">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson6.html" class="lang-btn">CA</a>
+        <a href="lesson6.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 6.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lección 6: Variables Globales y Señales</h1>
+            <p>Hasta ahora, nuestro juego es una colección de objetos que se mueven. En esta lección, haremos que estos
+                objetos "sientan" la presencia de los demás y que el juego tenga una memoria que no se borre.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Vida Global vs. Vida Local</h2>
+            <p>Hasta ahora, Aina se podía mover por la pantalla y chocar con objetos o el blub sin consecuencias. Pero
+                para que el videojuego tenga sentido, lo más normal sería que Aina pierda vida cuando se encuentra cerca de un
+                peligro (el blub) y que pueda matar enemigos.</p>
+            <p>
+                Antes de programar, tenemos que decidir dónde guardamos la información sobre la vida:</p>
+            <ul>
+                <li>Vida de Aina (Global): Como Aina es nuestra protagonista y su vida tiene que persistir aunque
+                    cambiemos de nivel, tiene que ser una variable global. Solo hay una Aina en todo el juego.</li>
+
+                <li>Vida de los Monstruos (Local): Podemos tener 10 "Blubs" en la pantalla. Si uno recibe un golpe, los otros no
+                    tienen que morir. Por lo tanto, cada monstruo tiene su propia variable vida dentro de su script personal.</li>
+            </ul>
+
+            <p>Para guardar información que dure toda la partida (vida, monedas, llaves), usamos los
+                <strong>Autoloads</strong>.
+            </p>
+            <div class="highlight-section">
+                <h3>Cómo crear un Autoload:</h3>
+                <ol>
+                    <li>Crea un nuevo Script (por ejemplo, <code>Globals.gd</code>).</li>
+                    <li>Ve a <strong>Proyecto > Configuración del Proyecto > Autoload</strong>.</li>
+                    <li>Añade tu script y ponle un nombre (ej: <code>Globals</code>).</li>
+                </ol>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/globals.PNG" alt="Configuración de Autoload en el Proyecto"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+            <p> Añade el siguiente script a tu Autoload Globals.gd. Con él podemos gestionar la vida de Aina.</p>
+            <pre><code class="language-gdscript">extends Node
+
+var aina_life  = 100  # Empezamos con 100 puntos de vida
+
+func hurt(amount):
+	aina_life -= amount
+	print("¡Aina ha recibido daño! Vida restante: ", aina_life)
+	
+	if aina_life <= 0:
+		game_over()
+
+func game_over():
+	print("GAME OVER. Reiniciando...")
+	aina_life = 100 # Restablecemos la vida
+	get_tree().reload_current_scene() # Vuelve a cargar el nivel
+</code></pre>
+            <p>Ahora, desde CUALQUIER script del juego, puedes escribir <code>Globals.aina_life</code> para acceder a ese
+                dato o llamar a las funciones para ejecutar la acción.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El Area2D: El sensor de proximidad</h2>
+            <p>A diferencia de los nodos de "Cuerpo" (StaticBody2D o CharacterBody2D), el Area2D no tiene masa ni es sólida.</p>
+            <p><strong>¿Qué es?</strong> Imaginadla como un "campo de fuerza" invisible o un sensor de movimiento de una
+                alarma.</p>
+            <p><strong>¿Cómo funciona?</strong> Cuando un objeto entra en su espacio, el Area2D no lo detiene, sino que se
+                limita a "avisar".</p>
+            <p><strong>Utilidad:</strong> Es perfecta para detectar cuando el jugador entra en una habitación, cuando toca
+                una moneda o cuando se encuentra cerca de un peligro (como el Blub).</p>
+            <div class="highlight-section">
+                <h3>Creando el sensor de daño para Aina:</h3>
+                <ol>
+                    <li>Añade a la escena de Aina un nodo <strong>Area2D</strong> y cambia el nombre por
+                        <code>HurtArea</code>.
+                    </li>
+                    <li>Créale un hijo <strong>CollisionShape2D</strong> y elige la forma (círculo, rectángulo o polígono)
+                        que mejor se ajuste a la zona del cuerpo donde Aina puede recibir daño.</li>
+                </ol>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/aread.PNG" alt="Nodos de Aina con HurtArea"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. ¿Qué son las Señales (Signals)?</h2>
+            <p>En programación, a menudo queremos que pase una cosa cuando ocurre otra (como un pulsador y una bombilla).
+                En Godot, esto se resuelve con el modelo <strong>Emisor-Receptor</strong>.</p>
+            <ul>
+                <li><strong>El Emisor:</strong> Es el nodo donde pasa el evento (ej: el Area2D que detecta a alguien).</li>
+                <li><strong>La Señal:</strong> Es el mensaje que se envía al aire (ej: "¡He sido pisado!").</li>
+                <li><strong>El Receptor:</strong> Es un script (normalmente del padre o de un nodo de control) que está
+                    "escuchando" esa señal y ejecuta una función cuando la recibe.</li>
+            </ul>
+            <p><strong>¿Por qué es mejor que el código tradicional?</strong> Porque los nodos no necesitan saberlo todo
+                los unos de los otros. El Area2D solo grita: "¡He detectado a alguien!", y le da igual si quien lo escucha es el
+                jugador, el enemigo o el contador de puntos.</p>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/signals.jpg" alt="Modelo Emisor-Receptor en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/senyalsarea2d.PNG" alt="Pestaña de Señales en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-section">
+                <h3>Las señales del Area2D</h3>
+                <p>El Area2D es el nodo especializado en detección. Sus señales principales son:</p>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Señal</th>
+                            <th>¿Qué hace?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>body_entered(body)</code></td>
+                            <td>Se activa cuando un cuerpo físico (como Aina) entra al área.</td>
+                        </tr>
+                        <tr>
+                            <td><code>body_exited(body)</code></td>
+                            <td>Se activa cuando el cuerpo sale del área.</td>
+                        </tr>
+                        <tr>
+                            <td><code>area_entered(area)</code></td>
+                            <td>Se activa cuando otra área (como la de una espada) entra en esta.</td>
+                        </tr>
+                        <tr>
+                            <td><code>area_exited(area)</code></td>
+                            <td>Se activa cuando la otra área sale.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p> Estas señales son las que utilizaremos el 90% del tiempo. Las señales que especifican "shape"
+                    se utilizan para avisar de formas de colisión específicas. Imagina un monstruo que tiene dos
+                    colisiones dentro del area2d: una en la cabeza (para recibir el doble de daño) y una en el cuerpo. Con
+                    area_shape_entered, el motor nos puede decir exactamente cuál de los dos "círculos" azules ha recibido el golpe
+                    gracias al índice, aunque ambos pertenecen al mismo monstruo. </p>
+                <p>En cualquier caso, para una situación así es más sencillo utilizar dos area2d diferentes y las
+                    señales simples. </p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. El Sistema de Combate: Capas y Áreas especializadas</h2>
+            <p>Para hacer un juego robusto, no usaremos el cuerpo principal para detectar el daño. Crearemos dos sensores de Area2D
+                específicos para cada personaje. Para que estos sensores se encuentren entre ellos sin confundirse con los
+                muros o el suelo, configuraremos las Capas (Layers) y Máscaras (Masks) de física:</p>
+
+            <div class="highlight-section">
+                <ul>
+                    <li><strong>Capa 2 (HurtArea):</strong> Donde Aina "recibe" el daño.</li>
+                    <li><strong>Capa 3 (AttackArea):</strong> Donde el enemigo "hace" el daño.</li>
+                </ul>
+            </div>
+
+            <h3>Configuración en el Enemigo (El atacante):</h3>
+            <ol>
+                <li>Añade un <strong>Area2D</strong> llamado <code>AttackArea</code>.</li>
+                <li>En el Inspector (Collision):
+                    <ul>
+                        <li><strong>Layer:</strong> Capa 3</li>
+                        <li><strong>Mask:</strong> Capa 2 (para buscar la zona de recibir daño de Aina).</li>
+                    </ul>
+                </li>
+                <li>Añade su <strong>CollisionShape2D</strong>.</li>
+            </ol>
+
+            <h3>Configuración en Aina (La víctima):</h3>
+            <ol>
+                <li>Añade un <strong>Area2D</strong> llamado <code>HurtArea</code>.</li>
+                <li>En el Inspector (Collision):
+                    <ul>
+                        <li><strong>Layer:</strong> Capa 2</li>
+                        <li><strong>Mask:</strong> Capa 3 (para detectar el ataque del enemigo).</li>
+                    </ul>
+                </li>
+                <li>Añade su <strong>CollisionShape2D</strong>.</li>
+            </ol>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. Conectando la detección de daño</h2>
+            <p>Ahora que las áreas están configuradas para "escucharse" solo entre ellas, conectaremos las señales para
+                gestionar la vida Global (Aina) y Local (Enemigo).</p>
+
+            <p>En este proyecto, conectaremos la señal de daño dentro del script del enemigo.</p>
+
+            <p><strong>¿Por qué lo hacemos así?</strong> Si Aina tuviera que gestionar el daño de todos los monstruos, tendría
+                que conocerlos a todos. En cambio, si el enemigo es quien gestiona el ataque:</p>
+            <ul>
+                <li>Él sabe exactamente cuántos puntos de vida quita (ej: el enemigo quita 10, pero un jefe final podría
+                    quitar 50).</li>
+                <li>Hay una función global que le quita puntos a Aina y cualquier monstruo la puede llamar.</li>
+            </ul>
+            <p>En el blob, conectamos la señal <code>area_entered</code> de su <code>AttackArea</code> con la función
+                <code>_on_attack_area_area_entered</code> en el script del blob, creamos una variable <code>hurt_amount</code> con
+                el valor de daño
+                deseado y añadimos este código.
+            </p>
+            <pre><code class="language-gdscript"> 
+    func _on_attack_area_area_entered(area: Area2D) -> void:
+	    #Nos aseguramos de que el área detectada es del jugador
+	    if(area.get_parent().is_in_group("player")):
+		    Globals.hurt(hurt_amount)
+
+</code></pre>
+
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tarea Práctica 6: Comunicación entre nodos</h3>
+            <p><strong>Objetivo:</strong> Crear un sistema de puntuación o de vida que persista entre escenas.</p>
+            <ol>
+                <li><strong>Crea un Autoload:</strong> Crea un script llamado <code>Global.gd</code> con una variable
+                    <code>puntuacion</code>.
+                </li>
+                <li> Configura los nombres de las capas de física en Proyecto > Configuración del Proyecto > 2D Physics:</li>
+                <li>Configura los nodos HurtArea en Aina y AttackArea en el blob.</li>
+                <li>Crea el script de globals y ponlo en autoload.</li>
+                <li>Conecta la señal area_entered del blob con la función _on_attack_area_area_entered en el script del
+                    blob, crea una variable hurt_amount con el valor de daño
+                    deseado y añade este código.
+                </li>
+            </ol>
+            <p><strong>Entrega:</strong> Tu proyecto actualizado en Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

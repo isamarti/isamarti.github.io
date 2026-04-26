@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 4: Creación de Entornos y la Cámara | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="vincent_van_gogh" data-lesson-id="lesson4">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson4.html" class="lang-btn">CA</a>
+        <a href="lesson4.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 4.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lección 4: Construyendo Mundos y Enfocando la Acción</h1>
+            <p>En esta lección aprenderemos a crear el escenario donde se moverá nuestro personaje. Exploraremos dos técnicas
+                diferentes para crear pantallas y configuraremos una cámara para no perder de vista a nuestra heroína.
+            </p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Pantallas con Sprite2D: El enfoque Estático</h2>
+            <p>
+                La forma más sencilla de crear una habitación es utilizando una imagen ya completamente dibujada. En
+                Godot, usamos el nodo <code>Sprite2D</code> para esto.
+            </p>
+            <h3>Materiales Necesarios</h3>
+            <div class="highlight-quote" style="margin-bottom: 2rem;">
+                📥 <strong>Recursos de la lección:</strong> Descarga el paquete de objetos e imágenes aquí:
+                <a href="../../assets/images/objects.rar" download
+                    style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">objects.rar</a>
+                <p>Dentro encontrarás <code>room.png</code> (la habitación vacía) y <code>assets.png</code> (muebles y
+                    objetos).</p>
+                <p>También puedes buscar tus propios recursos en webs como <a href="https://opengameart.org/"
+                        target="_blank">opengameart.org</a> o <a href="https://itch.io/game-assets"
+                        target="_blank">itch.io</a>, o generarlos con alguna IA.</p>
+            </div>
+            <h3>Pasos para crear la pantalla:</h3>
+            <ol>
+                <li>Crea una nueva escena con Node2D como raíz.</li>
+                <li>Añade un nodo <strong>Sprite2D</strong> como fondo y carga <code>room.png</code> en la propiedad
+                    <strong>Texture</strong>.
+                </li>
+                <li>Si la imagen no encaja con el tamaño de la pantalla, puedes escalarla con la propiedad
+                    <strong>Scale</strong> o utilizar la propiedad <strong>Region</strong> para recortar solo la parte
+                    que te interesa.
+                </li>
+                <li>Para los muebles y objetos, puedes añadir más nodos <strong>Sprite2D</strong> hijos.</li>
+                <li>Si una imagen (como <code>assets.png</code>) contiene muchos objetos, puedes utilizar la propiedad
+                    <strong>Region</strong> en el inspector para recortar solo el objeto que te interesa.
+                </li>
+            </ol>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/room.png" alt="Ejemplo de pantalla con Sprite2D"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Pantallas con TileMapLayer: El enfoque Profesional</h2>
+            <p>
+                El método anterior es limitado si queremos crear niveles grandes o reutilizar partes. El sistema de
+                <strong>TileMaps</strong> nos permite "pintar" el nivel utilizando una cuadrícula de baldosas (tiles).
+            </p>
+            <h3>Materiales Necesarios</h3>
+            <div class="highlight-quote" style="margin-bottom: 2rem;">
+                📥 <strong>Recursos de la lección:</strong> Descarga el Tileset completo aquí:
+                <a href="../../assets/lpc-tileset-16x16.zip" download
+                    style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">lpc-tileset-16x16.zip</a>
+                <p> También puedes buscar uno que te guste en la web. Para buscar tilesets puedes utilizar los siguientes enlaces:
+                    <a href="https://opengameart.org/" target="_blank">opengameart.org</a>
+                    <a href="https://itch.io/game-assets" target="_blank">itch.io</a> y buscar LPC tilesets.
+                </p>
+            </div>
+            <p>A partir de Godot 4.3, el método recomendado es utilizar el nodo <strong>TileMapLayer</strong>.</p>
+            <h3>Configuración del TileSet:</h3>
+            <ol>
+                <li>Crea un nodo <strong>TileMapLayer</strong>.</li>
+                <li>En el inspector, en la propiedad <strong>Tile Set</strong>, elige "New TileSet".</li>
+                <li>Configura el tamaño de la celda (Tile Size). Para este recurso es de <strong>16x16</strong> píxeles.
+                </li>
+                <li>En el panel inferior "TileSet", arrastra la imagen del tileset. Godot te preguntará si quieres crear las
+                    baldosas automáticamente; di que sí.</li>
+            </ol>
+            <h3>Pintando el nivel:</h3>
+            <ol>
+                <li>Selecciona el panel inferior "TileMap".</li>
+                <li>Elige una baldosa y empieza a "pintar" en el visor 2D.</li>
+                <li>Puedes tener múltiples nodos <code>TileMapLayer</code> para gestionar diferentes capas (una para el
+                    suelo, otra para las paredes, etc.).</li>
+            </ol>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/tilemapcanvas.PNG" alt="Interfaz del TileMap"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-section">
+                <h3>🖌️ Herramientas de Dibujo (La Barra Superior)</h3>
+                <p><strong>El Pincel (Selección/Pintar):</strong></p>
+                <ul>
+                    <li>Icono: Un pincel.</li>
+                    <li>Qué hace: Es la herramienta por defecto. Seleccionas un tile (mosaico) de tu catálogo y haces clic en la
+                        cuadrícula para colocarlo. Si mantienes pulsado y arrastras, irás pintando de forma
+                        continua.</li>
+                </ul>
+
+                <p><strong>La Goma de borrar:</strong></p>
+                <ul>
+                    <li>Icono: Una goma.</li>
+                    <li>Qué hace: Elimina los tiles de la capa donde estés trabajando.</li>
+                    <li><em>Tip:</em> También puedes borrar rápidamente haciendo clic con el botón derecho del ratón mientras tienes
+                        seleccionado el pincel.</li>
+                </ul>
+
+                <p><strong>El Cuentagotas (Picker):</strong></p>
+                <ul>
+                    <li>Icono: Un cuentagotas.</li>
+                    <li>Qué hace: Si haces clic sobre un tile que ya está pintado en el escenario, lo selecciona automáticamente
+                        en tu catálogo para volver a pintar con él. Ahorra mucho tiempo de búsqueda.</li>
+                </ul>
+
+                <p><strong>El cubo de pintura (Bucket Fill):</strong></p>
+                <ul>
+                    <li>Icono: Un cubo derramando pintura.</li>
+                    <li>Qué hace: Rellena un área cerrada con el mismo tile. Es ideal para rellenar grandes zonas de hierba o
+                        agua rápidamente.</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem;">📐 Herramientas de Formas Geométricas</h3>
+                <p><strong>Línea:</strong></p>
+                <ul>
+                    <li>Icono: Una línea diagonal.</li>
+                    <li>Qué hace: Haces clic en un punto, arrastras y dibujas una línea recta de tiles. Útil para hacer
+                        vallas o caminos rectos.</li>
+                </ul>
+
+                <p><strong>Rectángulo:</strong></p>
+                <ul>
+                    <li>Icono: Un cuadrado vacío.</li>
+                    <li>Qué hace: Permite dibujar un rectángulo de un solo golpe. Si lo mantienes seleccionado, puedes elegir si
+                        quieres que sea solo el contorno o el rectángulo rellenado.</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem;">🎨 Opciones de Transformación (¡Muy útil!)</h3>
+                <p>Al lado de las herramientas, verás unas flechas o iconos de giro. Estas te permiten modificar el tile
+                    antes de pintarlo:</p>
+                <ul>
+                    <li><strong>Rotación a derecha o izquierda:</strong> Gira el mosaico 90 grados.</li>
+                    <li><strong>Giro Horizontal/Vertical:</strong> Sirve para "voltear" una imagen. Por ejemplo, si
+                        tienes una pieza de una esquina de una casa, la puedes girar para usar la misma imagen para
+                        la otra esquina.</li>
+                </ul>
+            </div>
+            <div class="highlight-quote">
+                💡 <strong>Consejo:</strong> Podéis seleccionar un grupo de mosaicos en el catálogo (por ejemplo, un árbol
+                entero formado por 4 piezas) y pintarlos todos a la vez como si fueran un solo sello.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Importando a Aina en la Escena</h2>
+            <p>
+                Ahora que ya tenemos nuestras pantallas o nuestro TileMap configurado, es hora de meter a los personajes
+                en un mundo real.
+            </p>
+            <p>Los personajes se pueden importar desde el árbol de la escena, como si fueran un nodo más, con el segundo botón
+                (Instantiate child scene). De esta manera, la escena del jugador se ha convertido en un nodo más de
+                la escena principal y podemos colocarlo donde queramos, así como ver si tiene un tamaño apropiado para
+                nuestra escena y si se ve bien.</p>
+            <p>También podemos instanciar los personajes por código, pero en este caso solo lo veremos en la pantalla en tiempo
+                de ejecución. Para ello utilizamos la siguiente expresión en la función _ready():</p>
+            <div class="highlight-code">
+                <pre><code>
+                    var player = load("res://player.tscn").instantiate()
+                    add_child(player)
+                </code></pre>
+            </div>
+            <p>En el caso de que queramos que el personaje se vea en tiempo de edición, tenemos que crear una "instancia" del
+                personaje en la escena principal. Para ello, tenemos que hacer clic en el segundo botón de la barra de herramientas
+                (Instantiate child scene). De esta manera, la escena del jugador se ha convertido en un nodo más de
+                la escena principal y podemos colocarlo donde queramos, así como ver si tiene un tamaño apropiado para
+                nuestra escena y si se ve bien.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Camera2D: No perder de vista la acción</h2>
+            <p>
+                Si has probado el juego, verás que Aina se ve muy pequeña en el centro de una pantalla blanca enorme (o que
+                sale de la pantalla). Para solucionarlo, necesitamos una cámara.
+            </p>
+            <p><strong>Cómo añadir la cámara:</strong></p>
+            <ol>
+                <li>Ve a la escena del <code>Player</code> (Aina).</li>
+                <li>Añade un nodo <strong>Camera2D</strong> como hijo del CharacterBody2D.</li>
+                <li>En el inspector, asegúrate de que la propiedad <strong>Enabled</strong> esté activada.</li>
+            </ol>
+            <p><strong>Configuración recomendada:</strong></p>
+            <ul>
+                <li><strong>Zoom:</strong> Si tu juego tiene una estética Pixel Art, un zoom entre 3 y 4 suele quedar muy
+                    bien para ver los detalles, aunque según las medidas de la pantalla puede ser que lo veas un poco grande.
+                </li>
+                <li><strong>Position Smoothing:</strong> Activa "Enabled" en esta sección para que el movimiento de la
+                    cámara sea suave y no a saltos.</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. Material de apoyo (Vídeos)</h2>
+            <p>A continuación tenéis unos vídeos explicativos donde se muestra paso a paso lo que hemos trabajado en la lección:</p>
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/V0f5sXFtnyo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/qimnQbuxNUw" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tarea: Crea tu Mundo</h3>
+            <p>
+                Ahora que sabes cómo crear entornos, diseña el primer nivel de tu juego.
+            </p>
+            <ol>
+                <li>Implementa dos pantallas, una con cada método (Sprite2D y TileMapLayer).</li>
+                <li>Crea una escena principal e importa a Aina en las dos pantallas.</li>
+                <li>Configura la <strong>Camera2D</strong> con un zoom adecuado.</li>
+                <li>Sube el proyecto comprimido a Aules.</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 13: ¡No pierdas el progreso! | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="save_game" data-lesson-id="lesson13">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson13.html" class="lang-btn">CA</a>
+        <a href="lesson13.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 13.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>💾 Lección 13: ¡No pierdas el progreso! (Guardar y Cargar)</h1>
+            <p>Hasta ahora, cada vez que cerrábamos el juego de Aina, todo volvía a empezar. Hoy aprenderemos a crear un
+                sistema de Save &amp; Load para que el jugador pueda continuar su aventura exactamente donde la dejó.
+            </p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El concepto: ¿Qué tenemos que guardar?</h2>
+            <p>No hace falta guardar "todo" el juego, solo los datos que cambian. En nuestro RPG, lo más importante es:</p>
+            <ul>
+                <li><strong>La Posición:</strong> En qué pantalla (nivel) está Aina y en qué coordenadas X e Y.
+                </li>
+                <li><strong>El Inventario:</strong> Qué objetos <code>.tres</code> tiene y qué cantidad.</li>
+                <li><strong>El Estado del mundo:</strong> ¿Se ha abierto ya la puerta de la Lección 10? ¿Hemos hablado ya con el NPC?
+                    ¿Cuánta vida le queda a Aina?</li>
+            </ul>
+            <p>Lo que importa es decidir cuáles son los datos importantes para retomar el juego donde lo dejamos. </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Guardar archivos: El formato JSON</h2>
+            <p>Para guardar los datos, crearemos un diccionario en GDScript en el que iremos guardando los datos en
+                el archivo Globals, y lo convertiremos a JSON para guardarlo en un archivo. </p>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">Ejemplo de qué guardaremos:</h3>
+                <pre><code class="language-json">var game_data : Dictionary = {
+	"playerHealth" : 100,
+	"inventory":[],
+	"last_screen":"bosque",
+	"x_position":450,
+	"y_position":320,
+	}</code></pre>
+            </div>
+            <p>Cada vez que alguno de estos datos cambia, se tiene que actualizar. Por ejemplo, cuando hacemos un update del
+                inventory, tenemos que actualizar este al diccionario: </p>
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">Código extra en el update_inventory para almacenar los datos al diccionario.
+                </h3>
+                <pre><code class="language-json">var new_inv:Array
+	for slot in slots:
+		if(slot.item!=null):
+			var myitem={
+				"name":slot.item.name,
+				"texture_path":slot.item.texture.resource_path,
+			}
+			for i in range(0,slot.amount):
+				new_inv.append(myitem)
+	Globals.game_data["inventory"]=new_inv}</code></pre>
+            </div>
+        </section>
+        <section class="card animate-on-load">
+            <h2>3. 📂 ¿Dónde se guardan los datos? res:// vs user://</h2>
+            <p>En Godot, no usamos rutas de carpetas como <code>C:\Documents\Juego...</code> porque el juego tiene que
+                funcionar igual en Windows, Mac, Linux o Android. Por eso, Godot usa "prefijos" especiales.</p>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0;">1. res:// (The Resources - El contenido del juego)</h3>
+                <p>Este prefijo hace referencia a la carpeta de tu proyecto (donde tienes los sprites, la música y los
+                    scripts).</p>
+                <ul>
+                    <li><strong>¿Qué es?:</strong> Es el "paquete" del juego. Cuando publicas el juego y lo envías a un amigo,
+                        todo lo que hay dentro de <code>res://</code> se convierte en un archivo comprimido que no se puede
+                        tocar.</li>
+                    <li><strong>Permisos:</strong> Es de SOLO LECTURA.</li>
+                    <li><strong>¿Por qué?:</strong> Por seguridad. El sistema operativo (Windows, Android...) no deja que
+                        un programa se modifique a sí mismo mientras se ejecuta. Si intentaras guardar la partida dentro de
+                        <code>res://</code> una vez publicado el juego, el programa daría un error o, simplemente, no
+                        guardaría nada.
+                    </li>
+                    <li><strong>Analogía:</strong> Es como un libro de texto. Puedes leerlo, pero no puedes escribir
+                        encima para cambiar lo que dice el tema 1.</li>
+                </ul>
+
+                <h3>2. user:// (The User Data - Los datos del jugador)</h3>
+                <p>Este prefijo apunta a una carpeta especial que el sistema operativo reserva específicamente para que
+                    ese juego pueda escribir datos.</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>¿Qué es?:</strong> Es el espacio privado del jugador en el disco duro. Dependiendo del sistema,
+                        estará en AppData (Windows) o en la carpeta Home (Linux/Mac).</li>
+                    <li><strong>Permisos:</strong> Tiene permisos de ESCRITURA Y LECTURA.</li>
+                    <li><strong>¿Por qué?:</strong> Es el único sitio donde tenemos permiso para crear archivos nuevos (como
+                        <code>partida.save</code> o <code>configuracion.cfg</code>) sin que el antivirus o el sistema
+                        operativo nos bloquee.
+                    </li>
+                    <li><strong>Analogía:</strong> Es como tu libreta de notas. Está vacía cuando empiezas el curso,
+                        pero tú tienes el bolígrafo para ir apuntando todo lo que vas aprendiendo (o guardando tu
+                        progreso).</li>
+                </ul>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #ef4444; background-color: #fef2f2;">
+                <h3 style="margin-top: 0; color: #b91c1c;">🛡️ Una lección de Seguridad Informática</h3>
+                <p>¿Por qué los sistemas modernos funcionan así? Por dos motivos clave:</p>
+                <ul>
+                    <li><strong>Protección contra Virus:</strong> Si un juego pudiera modificar sus propios archivos
+                        (<code>res://</code>), un programa malicioso podría "esconderse" dentro de un juego legítimo y
+                        cambiar su código sin que te dieras cuenta. Al separar los datos del usuario del código del
+                        programa, el sistema es más robusto.</li>
+                    <li><strong>Multiusuario:</strong> Varios jugadores pueden jugar al mismo juego en el mismo ordenador.
+                        El código del juego (<code>res://</code>) es el mismo para los dos, pero cada uno
+                        tendrá su propia carpeta <code>user://</code> (dentro de su perfil de usuario). Así, tus
+                        partidas no se mezclan con las suyas.</li>
+                </ul>
+            </div>
+
+            <div class="highlight-section" style="border-left: 4px solid #3b82f6; background-color: #eff6ff;">
+                <h3 style="margin-top: 0; color: #1d4ed8;">💡 Cómo aplicarlo al código</h3>
+                <p>Siempre que queráis guardar un archivo desde Godot, recordad empezar la ruta así:</p>
+                <pre><code class="language-gdscript">var ruta = "user://partida_guardada.save"</code></pre>
+                <p style="margin-bottom: 0;">Si intentáis hacerlo con <code>res://</code>, vuestro juego funcionará mientras
+                    lo editáis en Godot, pero fallará cuando lo convirtáis en un archivo ejecutable para repartirlo al
+                    resto de gente.</p>
+            </div>
+        </section>
+        <section class="card animate-on-load">
+            <h2>4. El proceso en 3 pasos</h2>
+
+            <div class="highlight-section">
+                <h3 style="margin-top: 0; color: var(--accent-color);">Paso A: Serializar (Escribir)</h3>
+                <p>Crearemos una función en nuestro script <code>Globals</code> (o un nuevo script de
+                    <code>SaveManager</code>) que coja todas las variables importantes y las meta en un archivo dentro de
+                    la carpeta secreta de Godot: <code>user://partida_guardada.save</code>.
+                </p>
+                <div class="highlight-section">
+                    <h3 style="margin-top: 0;">Guardar los datos
+                    </h3>
+                    <pre><code class="language-json">func save_game()->void:
+	var save_file = FileAccess.open(save_path,FileAccess.WRITE)
+	save_file.store_var(game_data)
+	save_file = null</code></pre>
+                </div>
+
+                <h3 style="color: var(--accent-color);">Paso B: Deserializar (Leer)</h3>
+                <p>Al iniciar el juego, buscaremos si ese archivo existe. Si existe, lo leeremos y sobrescribiremos las
+                    variables del juego con los datos del archivo.</p>
+                <div class="highlight-section">
+                    <h3 style="margin-top: 0;">Cargar los datos
+                    </h3>
+                    <pre><code class="language-json">func load_game()->void:
+	if FileAccess.file_exists(save_path):
+		var save_file = FileAccess.open(save_path,FileAccess.READ)
+		game_data = save_file.get_var()
+        save_file=null</code></pre>
+
+                </div>
+                <h3 style="color: var(--accent-color); margin-bottom: 0.5rem;">Paso C: El inventario es especial</h3>
+                <p style="margin-bottom: 0;">Como nuestro inventario es un Resource (<code>.tres</code>), el truco
+                    más fácil es leer el array del diccionario y que el player haga un "collect" de cada Resource que
+                    encontremos en el diccionario.</p>
+                <div class="highlight-section">
+                    <h3 style="margin-top: 0;">Cargar diccionario en la pantalla de inicio
+                    </h3>
+                    <pre><code class="language-json">
+                        func ready():
+                        [...]
+                        Globals.load_game()
+	var inventory = Globals.game_data.get("inventory")
+	if(inventory!=null):
+		load_inventory(inventory)
+    [...]
+    
+    
+                        func load_inventory(inventory:Array)->void:
+	for item in inventory:
+		print (item)
+		var new_item: InvItem = InvItem.new()
+		new_item.name = item["name"]
+		new_item.texture = load(item["texture_path"])
+		print("loading")
+		print(new_item.name)
+		aina.collect(new_item)
+
+    </code></pre>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Recuperar la pantalla y la posición</h2>
+            <p>Para cargar el nivel correcto, usaremos:</p>
+            <pre><code class="language-gdscript">get_tree().change_scene_to_file(ruta_del_nivel)</code></pre>
+            <p>Y justo después, moveremos el nodo de Aina a la posición X e Y que teníamos guardada.</p>
+
+        </section>
+
+
+
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tarea de la Lección 13: El Botón de Continuar</h3>
+            <p><strong>Vuestro objetivo es:</strong></p>
+            <ul>
+                <li><strong>Menú Principal:</strong> Crear dos botones en un menú principal: "Nueva Partida" y
+                    "Continuar".</li>
+                <li><strong>El Punto de Guardado:</strong> Programar que, al pulsar un botón o tecla de "Guardar" (o en un
+                    punto de
+                    control), se cree el archivo de guardado con la posición de Aina y el contenido de su mochila.
+                </li>
+                <li><strong>El reto final:</strong> Cierra el juego completamente, vuélvelo a abrir, pulsa "Continuar" y
+                    comprueba que Aina aparece donde la habías dejado y que todavía tiene los objetos en el inventario.</li>
+            </ul>
+            <p>Entrega en Aules el archivo comprimido de tu proyecto</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

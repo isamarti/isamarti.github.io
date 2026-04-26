@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 7: El Arte del Combate | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_combat" data-lesson-id="lesson7">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson7.html" class="lang-btn">CA</a>
+        <a href="lesson7.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 7.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>⚔️ Lección 7: El Arte del Combate – Sincronización, Animación y Detección</h1>
+            <p>En esta lección transformaremos a Aina de una exploradora a una guerrera. No se trata solo de pulsar una
+                tecla, sino de entender cómo el motor coordina la imagen del arma, su zona de peligro y la lógica del
+                monstruo.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. La Anatomía del Arma: Más que una imagen</h2>
+            <p>Una espada en un videojuego no es solo un dibujo que se mueve. Es la combinación de dos elementos vitales:</p>
+            <ul>
+                <li><strong>Visual (Sprite2D):</strong> Lo que el jugador ve.</li>
+                <li><strong>Física (Area2D + CollisionShape2D):</strong> Lo que el juego entiende como "zona de peligro" o
+                    <strong>Hitbox</strong>.
+                </li>
+            </ul>
+            <p>En Godot, lo más eficiente es crear una escena separada llamada <code>Weapon.tscn</code>. Así, podríamos
+                cambiar de espada o incluso darles armas a los enemigos reutilizando la misma lógica.</p>
+
+            <div class="highlight-section">
+                <h3>Estructura del Nodo Weapon:</h3>
+                <ol>
+                    <li><strong>Area2D</strong> (Llamada <code>Hitbox</code>).
+                        <ul>
+                            <li><strong>Sprite2D</strong> (La imagen de la espada).</li>
+                            <li><strong>CollisionShape2D</strong>: La zona exacta donde la espada hace daño.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/weapon_nodes.PNG" alt="Estructura de nodos del arma"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Versatilidad: Una sola escena, muchas armas</h2>
+            <p>En lugar de crear cientos de escenas para cada arma del juego, lo más eficiente es utilizar una única
+                escena <code>Weapon.tscn</code> y cambiar sus propiedades dinámicamente.</p>
+            <p>Podemos cargar diferentes texturas para el <strong>Sprite2D</strong> en tiempo de ejecución y definir valores
+                de "daño" específicos para cada tipo de arma:</p>
+
+            <div class="highlight-section">
+                <h3>Control Dinámico por Código:</h3>
+                <ul>
+                    <li><strong>Texturas:</strong> Cambiamos la propiedad <code>texture</code> del Sprite según el arma
+                        equipada.</li>
+                    <li><strong>Daño Variable:</strong> Asignamos un valor de daño diferente a cada textura.</li>
+                    <li><strong>Ajuste de Hitbox:</strong> Podemos acoplar el tamaño del <code>CollisionShape2D</code> al
+                        tamaño exacto de la nueva textura vía código.</li>
+                </ul>
+            </div>
+            <pre><code class="language-gdscript"># Ejemplo de ajuste de colisión por código
+func update_weapon(new_texture, damage_value):
+    sprite.texture = new_texture
+    damage = damage_value
+    # Ajustamos el tamaño de la colisión a la nueva textura
+    var shape = collision_shape.shape
+    if shape is RectangleShape2D:
+        shape.size = new_texture.get_size()
+</code></pre>
+            <p>Esto nos permite ahorrar memoria y facilitar la escalabilidad de nuestro arsenal sin complicar
+                la estructura de nodos.</p>
+
+            <div class="highlight-section" style="border-left: 4px solid var(--accent-color);">
+                <p>💡 <strong>Nota:</strong> Es recomendable escalar las armas fuera del juego al tamaño que nos vaya bien para
+                    el personaje. Aunque escalar por código es posible, saber cuánto hemos
+                    de escalar "a ojo" cada textura diferente que cambiemos es prácticamente imposible. Igualmente, todas las
+                    armas tienen que estar en la misma orientación y es recomendable que la empuñadura esté en el (0,0) de la
+                    escena, pero colocársela siempre en la mano de Aina</p>
+            </div>
+        </section>
+
+
+        <section class="card animate-on-load">
+            <h2>3. El Arma en la Guerrera: Integración a Aina</h2>
+            <p>Una vez tenemos nuestra escena <code>Weapon.tscn</code>, el siguiente paso es integrarla dentro de Aina.
+                No queremos que la espada sea un elemento independiente que flote, sino una parte de su anatomía.</p>
+
+            <div class="highlight-section">
+                <h3>Pasos para la instalación:</h3>
+                <ol>
+                    <li>Abrimos la escena de <strong>Aina</strong>.</li>
+                    <li>Arrastramos el archivo <code>Weapon.tscn</code> desde el sistema de archivos hasta el panel de nodos
+                        de Aina (haciéndola su hija).</li>
+                    <li><strong>Posicionamiento:</strong> Es crucial que la empuñadura del arma esté en el punto
+                        <code>(0,0)</code> de su propia escena. Así, cuando la coloquemos en la mano de Aina, rotará
+                        y se moverá desde el punto correcto.
+                    </li>
+                </ol>
+            </div>
+            <p>Recordad: Todas las texturas de armas que usemos tienen que tener la misma orientación original para que el código
+                de rotación funcione igual para todas.</p>
+        </section>
+
+
+        <section class="card animate-on-load">
+            <h2>4. La Acción del Combate: Animación y Código</h2>
+            <p>Para que Aina ataque, necesitamos coordinar tres sistemas: la Tecla, la Animación y la Detección.</p>
+
+            <div class="highlight-section">
+                <h3>1. El Input Map: El botón de atacar</h3>
+                <p>Ve a <strong>Proyecto > Configuración del Proyecto > Input Map</strong>. Añade una acción llamada
+                    <code>attack</code> y asígnale la tecla <strong>Espacio</strong> o <strong>al botón izquierdo del
+                        ratón </strong>.
+                </p>
+
+                <h3>2. La Animación en el AnimationPlayer</h3>
+                <p>En la escena de Aina, selecciona el <strong>AnimationPlayer</strong> y crea la animación de atacar.</p>
+                <p> Necesitarás las animaciones de tu Aina para que pueda atacar. Además de los sprites del movimiento
+                    de Aina, como hicimos para las animaciones de correr, tienes que añadir a la línea del tiempo el movimiento
+                    del arma. </p>
+                <p> Por eso, tienes que recolocar el nodo del arma en cada frame de ataque de Aina y añadir los parámetros
+                    que hayas modificado a la línea del tiempo.</p>
+
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <img src="../../assets/images/aina/attack_front.png" alt="Ataque Frontal"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Ataque Front</p>
+                        <a href="../../assets/images/aina/attack_front.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descargar</a>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="../../assets/images/aina/attack_back.png" alt="Ataque Posterior"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Ataque Back</p>
+                        <a href="../../assets/images/aina/attack_back.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descargar</a>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="../../assets/images/aina/attack_left.png" alt="Ataque Izquierda"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Ataque Left</p>
+                        <a href="../../assets/images/aina/attack_left.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descargar</a>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="../../assets/images/aina/attack_right.png" alt="Ataque Derecha"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Ataque Right</p>
+                        <a href="../../assets/images/aina/attack_right.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descargar</a>
+                    </div>
+                </div>
+
+                <p style="margin-top: 2rem;"> Recuerda activar/desactivar las propiedades <code>disabled</code> y
+                    <code>visible</code> del
+                    CollisionShape2D del arma en la línea de tiempo para que solo haga daño cuando la espada se mueve.
+                </p>
+
+                <h3>3. El Código de Ataque</h3>
+                <p>En el script de Aina, detectamos la tecla y activamos la condición en el <strong>AnimationTree</strong>:
+                </p>
+                <pre><code class="language-gdscript"># Aina.gd
+                    func update_animation_parameters():
+	#Si direction es Vector.Zero, Aina esta parada, si no está en movimiento
+	#Se actualizan los parametros del árbol según direction
+	if(direction==Vector2.ZERO):
+		weapon.visible=false
+		tree["parameters/conditions/idle"]=true
+		tree["parameters/conditions/running"]=false
+
+	else:
+		weapon.visible=false
+		tree["parameters/conditions/idle"]=false
+		tree["parameters/conditions/running"]=true
+		
+	if Input.is_action_just_pressed("attack"):
+		tree["parameters/conditions/attack"]=true
+		weapon.enable_collision()
+	else:
+		tree["parameters/conditions/attack"]=false
+	
+	if(direction!=Vector2.ZERO):
+		tree["parameters/idle/blend_position"]=direction
+		tree["parameters/run/blend_position"]=direction
+		tree["parameters/attack/blend_position"]=direction
+                </code></pre>
+            </div>
+            <p><strong>Truco Pro:</strong> Recuerda que en el AnimationTree, la transición de vuelta desde el ataque hacia
+                "Idle" o "Run" tiene que tener activado el <strong>Auto Advance</strong> (o <code>At End</code>) para que
+                vuelva sola al acabar el swing.</p>
+        </section>
+        <section class="card animate-on-load">
+            <h2>6. Detección y Daño al Monstruo</h2>
+            <p>Ahora que el arma está en las manos de Aina, necesitamos que los monstruos "sientan" su corte. En lugar de
+                que el arma tenga una lista de enemigos, haremos que sea el monstruo quien pregunte al arma cuánto daño hace.
+            </p>
+
+            <div class="highlight-section">
+                <h3>1. El método en el Arma (Weapon.gd):</h3>
+                <pre><code class="language-gdscript"># Weapon.gd
+func get_damage():
+    return damage</code></pre>
+
+                <h3>2. La detección en el Monstruo (Enemy.gd):</h3>
+                <p>Tenemos que crear un hitArea en el monstruo, con capa de colisión 4 y conectamos la señal
+                    <code>area_entered</code> del Area2D del monstruo (su Hurtbox) y añadimos:
+                </p>
+                <pre><code class="language-gdscript">func _on_hurtbox_area_entered(area):
+    # Si el area que nos toca tiene el método get_damage...
+    if area.has_method("get_damage"):
+        var dany_rebut = area.get_damage()
+        vida -= dany_rebut
+        print("¡Monstruo herido! Daño: ", dany_rebut)
+        
+        if vida <= 0:
+            die()
+
+func die():
+    # El monstruo desaparece del juego
+    queue_free()</code></pre>
+            </div>
+            <p>Este sistema es muy flexible: si mañana creamos una lanza o un hacha, solo tienen que tener el método
+                <code>get_damage()</code> y el monstruo las reconocerá automáticamente.
+            </p>
+        </section>
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tarea Práctica 7: Tu Primer Golpe</h3>
+            <p><strong>Objetivo:</strong> Implementar un ataque funcional que reste vida al monstruo.</p>
+            <ol>
+                <li><strong>Configuración:</strong> Agrega "attack" a tu Input Map.</li>
+                <li><strong>Animaciones:</strong>Añade las animaciones de attack a Aina, incluyendo el arma.</li>
+                <li><strong>Código del Arma:</strong> Pon el código necesario para cambiar la textura, ajustar la
+                    colisión y el daño.</li>
+                <li><strong>Lógica del Monstruo:</strong> Conecta la señal para que el monstruo reste vida al detectar
+                    el área del arma.</li>
+                <li><strong>Sincronización:</strong> Edita la animación para que la colisión del arma se active y se
+                    desactive correctamente.</li>
+            </ol>
+            <p><strong>Entrega:</strong> Tu proyecto comprimido en Aules</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

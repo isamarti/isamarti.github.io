@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 3: Movimiento del Jugador y Animaciones Complejas | Premium Learning</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="input_master" data-lesson-id="lesson3">
+    <div class="lang-switcher">
+        <a href="../../lessons/lesson3.html" class="lang-btn">CA</a>
+        <a href="lesson3.html" class="lang-btn active">ES</a>
+    </div>
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acceso Restringido</h2>
+            <p>Introduce la contraseña para acceder a la Lección 3.</p>
+            <input type="password" id="password-input" placeholder="Contraseña">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquear Lección</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lección 3: Control Total y Animaciones Complejas</h1>
+            <p>En esta lección haremos que el jugador tome el control. Aprenderemos a abstraer las entradas de teclado y ratón
+                para hacer el código más limpio y robusto, y utilizaremos herramientas profesionales de animación para dar vida a
+                nuestro protagonista.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Abstracción de Entradas: El Input Map</h2>
+            <p>
+                Hasta ahora, hemos visto cómo el motor mueve objetos de forma automática (como el enemigo). Pero, ¿cómo hacemos que
+                nuestro personaje responda a nuestras órdenes?
+
+                El primer impulso de un programador principiante sería escribir una instrucción que diga: "Si se pulsa la
+                tecla W, mueve el personaje hacia arriba". Sin embargo, en el desarrollo profesional de videojuegos
+                usamos un concepto más inteligente llamado Abstracción mediante el Input Map (Mapa de Entradas).
+            </p>
+
+            <h3>¿Por qué no usamos teclas directamente?</h3>
+            <p>
+                Imaginad que un alumno quiere jugar con las flechas del teclado, otro con las teclas WASD y otro con un
+                mando de consola. Si hubiéramos programado la tecla "W" directamente, el juego solo funcionaría para
+                el primer alumno.
+            </p>
+            <h3>La solución: Crear "Acciones"</h3>
+            <p>
+                En lugar de preguntar "¿se ha pulsado la tecla W?", preguntaremos "¿se ha realizado la acción de moverse arriba?".
+                Esto es una <strong>abstracción</strong>.
+            </p>
+            <ol>
+                <li>Creamos la acción llamada "up".</li>
+                <li>Dentro de la configuración de Godot, le decimos que esta acción se activa si se pulsa la "W", la "Flecha
+                    Arriba" o el "Stick del mando".</li>
+                <li>En nuestro código, solo preguntaremos: "¿Se ha realizado la acción 'up'?".</li>
+            </ol>
+            <h3>Configurando el Input Map</h3>
+            <ol>
+                <li>Ve al menú <strong>Project > Project Settings</strong>.</li>
+                <li>Selecciona la pestaña <strong>Input Map</strong>.</li>
+                <li>En la barra "Add New Action", escribe el nombre de la acción. Para este curso usaremos los nombres:
+                    <ul>
+                        <li><code>up</code></li>
+                        <li><code>down</code></li>
+                        <li><code>left</code></li>
+                        <li><code>right</code></li>
+                    </ul>
+                </li>
+                <li>Pulsa <strong>Add</strong> para crear cada acción.</li>
+                <li>Al lado de cada acción nueva, pulsa el botón <strong>+</strong> para asignarle una tecla o botón.
+                </li>
+                <li>Pulsa la tecla que quieras (ej: W para <code>up</code>) y pulsa OK. Puedes añadir múltiples teclas para
+                    una misma acción (ej: W y Flecha Arriba).</li>
+            </ol>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/inputmap.png" alt="Configuración del Input Map en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-quote">
+                💡 <strong>Nota Pedagógica:</strong> Este concepto es fundamental en informática. Separamos la "intención"
+                (querer moverse) de la "implementación" (pulsar la tecla W). Esto hace que nuestro software sea más
+                flexible y adaptable.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Creando el Personaje Principal (Player)</h2>
+            <p>
+                Igual que hicimos con el enemigo, crearemos una escena para nuestro personaje principal, nuestra
+                heroína. Yo la llamaré Aina.
+            </p>
+            <ol>
+                <li>Crea una nueva escena y elige <strong>CharacterBody2D</strong> como raíz. Llámalo
+                    <code>Aina</code> (o como tú quieras).
+                </li>
+                <li>Añade un <strong>CollisionShape2D</strong> y define su forma (normalmente una cápsula o
+                    rectángulo a los pies).</li>
+                <li>Guarda la escena en la carpeta <code>scenes/</code>.</li>
+            </ol>
+            <p>
+                Para la imagen, esta vez no usaremos un simple <code>Sprite2D</code> ni un
+                <code>AnimatedSprite2D</code> básico, sino algo más potente.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. AnimationPlayer: Creando el Catálogo de Animaciones</h2>
+            <p>
+                El AnimationPlayer es el nodo fundamental para crear movimiento. Nos permite animar prácticamente cualquier
+                propiedad de cualquier nodo
+                de nuestro proyecto (posición, escala, rotación, color, o el frame de un Sprite).
+            </p>
+            <p><strong>Conceptos clave:</strong></p>
+            <ul>
+                <li><strong>La Línea de Tiempo (Timeline):</strong> Es donde definimos la duración de la animación.</li>
+                <li><strong>Fotogramas Clave (Keyframes):</strong> Son los puntos donde "fotografiamos" una propiedad. Si en el
+                    segundo 0 Aina está en la posición X=0 y en el segundo 1 está en X=100, Godot calculará automáticamente todos
+                    los pasos intermedios (interpolación).</li>
+                <li><strong>Pistas (Tracks):</strong> Cada propiedad que animamos tiene su propia pista. Podemos tener
+                    una pista para el movimiento y otra para el sonido en la misma animación.</li>
+            </ul>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../../assets/images/animationPlayer.PNG" alt="La interfaz del AnimationPlayer en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <h3>Paso a Paso: Sprite Sheet y AnimationPlayer</h3>
+            <div class="highlight-quote" style="margin-bottom: 2rem;">
+                📥 <strong>Recursos de la lección:</strong> Puedes descargar el paquete de imágenes de Aina para empezar
+                a crear tus animaciones aquí:
+                <a href="../../assets/images/aina.rar" download
+                    style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">aina.rar</a>
+                <p> También puedes buscar tus propios recursos en webs como opengameart.org o itch.io</p>
+            </div>
+            <ol>
+                <li>Añade un nodo <strong>Sprite2D</strong> a tu <code>Player</code>.</li>
+                <li>Carga una "Sprite Sheet" (una hoja con todos los fotogrames del personaje) en la propiedad
+                    <strong>Texture</strong>. Asegúrate de configurar <strong>Hframes</strong> y
+                    <strong>Vframes</strong> según cuántas filas y columnas tenga tu imagen.
+                </li>
+                <li>Añade un nodo <strong>AnimationPlayer</strong>. Este nodo es el "director de orquesta" que controla
+                    qué fotogrames se muestran y cuándo.</li>
+                <li>En el panel <strong>Animation</strong> (abajo), crea las nuevas animaciones: <code>idle_down</code>,
+                    <code>walk_down</code>, <code>walk_up</code>, etc.
+                </li>
+                <li>Para cada animación:
+                    <ul>
+                        <li>Define la duración (ej: 0.8 segundos).</li>
+                        <li>Pulsa la llave al lado de la propiedad <strong>Frame</strong> del Sprite2D para grabar los
+                            fotogrames clave en la línea de tiempo.</li>
+                        <li>Activa la opción de bucle (loop) si es una animación que se repite (como caminar).</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="highlight-quote">
+                 <strong>Nota:</strong> El AnimationPlayer es perfecto para crear las animaciones individuales, pero para
+                gestionarlas necesitaremos un sistema más inteligente.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. AnimationTree: El Sistema Experto</h2>
+            <p>
+                Si el AnimationPlayer crea las animaciones, el AnimationTree es el sistema que las conecta y gestiona de
+                forma inteligente. Nos permite crear lógicas complejas de movimiento sin escribir cientos de líneas
+                de "if/else".
+            </p>
+
+            <h3>1. Tipos de Nodos Raíz (Tree Root)</h3>
+            <p>Cuando configuramos un AnimationTree, tenemos que elegir cómo queremos organizar nuestras animaciones:</p>
+            <ul>
+                <li><strong>AnimationNodeStateMachine:</strong> Ideal para estados que se excluyen mutuamente (o estás
+                    quieto, o caminas, o atacas).</li>
+                <li><strong>AnimationNodeBlendTree:</strong> Permite mezclar múltiples animaciones a la vez (por ejemplo,
+                    caminar mientras reproduces una animación de daño).</li>
+                <li><strong>AnimationNodeBlendSpace2D:</strong> Utilizado dentro de los anteriores para gestionar direcciones
+                    (8 direcciones en un mapa 2D).</li>
+            </ul>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Opción</th>
+                        <th>Tipo de control</th>
+                        <th>Analogía pedagógica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>StateMachine</strong></td>
+                        <td>Lógica de estados</td>
+                        <td>Un mapa de ciudades y carreteras.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BlendSpace2D</strong></td>
+                        <td>Direccionalidad</td>
+                        <td>Una brújula que apunta a la animación correcta.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BlendTree</strong></td>
+                        <td>Mezcla modular</td>
+                        <td>Una mesa de mezclas de DJ donde combinas canales.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. La combinación ganadora para Aina</h3>
+            <p>
+                Para un personaje que se mueve en 4 direcciones (como un RPG clásico), lo que hacemos normalmente es:
+            </p>
+            <ol>
+                <li>Creamos una <strong>StateMachine</strong> como raíz.</li>
+                <li>Dentro de la State Machine, en lugar de poner una animación simple de un AnimationPlayer, creamos un nodo
+                    de tipo <strong>BlendSpace2D</strong> y lo llamamos "Caminar".</li>
+                <li>Hacemos lo mismo para "Parado" (Idle).</li>
+            </ol>
+
+            <p><strong>¿Por qué lo hacemos así?</strong></p>
+            <ul>
+                <li>La <strong>StateMachine</strong> se encarga de decidir si Aina está caminando o parada (la parte
+                    "macro" de la lógica).</li>
+                <li>El <strong>BlendSpace2D</strong> se encarga de decidir, si Aina está caminando, cuál de las 4
+                    animaciones (arriba, abajo, izquierda, derecha) debe mostrar según el vector de movimiento (la parte
+                    "micro").</li>
+            </ul>
+            <div class="highlight-quote">
+                🧠 Utilizamos la <strong>StateMachine</strong> para organizar los conceptos (Parado vs. Caminando) y
+                utilizamos el
+                <strong>BlendSpace2D</strong> dentro de esos estados para gestionar las direcciones (Norte, Sur, Este, Oeste).
+                Es como si la
+                <strong>StateMachine</strong> fuera el mapa de carreteras y el <strong>BlendSpace2D</strong> fuera la
+                brújula."
+            </div>
+
+            <h3 style="margin-top: 2rem;">3. Paso a Paso: Configuración de la Máquina de Estados</h3>
+            <ol>
+                <li>Añade un nodo <strong>AnimationTree</strong> al <code>Player</code>.</li>
+                <li>Asígnale el <code>AnimationPlayer</code> que has creado antes.</li>
+                <li>En <strong>Tree Root</strong>, selecciona <strong>New AnimationNodeStateMachine</strong>.</li>
+                <li>Activa la casilla <strong>Active</strong>.</li>
+            </ol>
+
+            <h4>A. El BlendSpace2D (El espacio de mezcla)</h4>
+            <p>
+                Dentro del grafo de la máquina de estados, hacemos clic derecho y creamos un <strong>BlendSpace2D</strong> llamado
+                <code>Idle</code>.
+            </p>
+            <ul>
+                <li>Ponemos la animación de "Idle Right" en el punto (1, 0) y "Idle Left" en el (-1, 0).</li>
+                <li>El nodo recibirá una dirección (Vector2) y elegirá la animación correcta automáticamente.</li>
+            </ul>
+
+            <h4>B. Transiciones y Condiciones de Avance</h4>
+            <p>
+                Las flechas que conectan estados (como de <code>Idle</code> a <code>Walk</code>) pueden ser de dos tipos:
+            </p>
+            <ul>
+                <li><strong>Inmediatas:</strong> Cambian de estado tan pronto como lo pedimos por código (usando
+                    <code>travel()</code>).
+                </li>
+                <li><strong>Advance Conditions:</strong> Podemos crear variables booleanas en el inspector y conectarlas
+                    a las flechas. La animación cambiará sola cuando la variable sea true.</li>
+            </ul>
+
+            <h4>C. Parámetros y el Inspector</h4>
+            <p>
+                Uno de los puntos que más confunde a los principiantes es dónde se esconden las variables del árbol. Cuando creas un
+                BlendSpace2D, aparecerá una nueva sección en el inspector del nodo llamada <strong>Parameters</strong>.
+            </p>
+            <ul>
+                <li><strong>Playback:</strong> Es el objeto que usamos para viajar entre estados.</li>
+                <li><strong>Blend Positions:</strong> Son los vectores que indican hacia dónde mira el personaje.</li>
+            </ul>
+
+            <h3>4. Las otras opciones del AnimationTree</h3>
+            <p>Si exploras el menú, verás más opciones:</p>
+            <ul>
+                <li><strong>BlendSpace1D:</strong> Igual que el 2D, pero solo en un eje. Útil para un juego de
+                    plataformas lateral (izquierda/derecha).</li>
+                <li><strong>AnimationNodeBlend2:</strong> Sirve para mezclar dos animaciones por porcentaje. Por
+                    ejemplo, si quieres que un personaje camine y esté herido a la vez, puedes mezclar las dos animaciones
+                    al 50%.</li>
+                <li><strong>AnimationNodeOneShot:</strong> Para animaciones que solo pasan una vez y vuelven al
+                    estado anterior (como recibir un golpe o hacer un salto).</li>
+            </ul>
+
+            <div class="highlight-quote">
+                🧠 <strong>Concepto Avanzado:</strong> El AnimationTree funciona como un "filtro" entre nuestro código y
+                el AnimationPlayer. El código solo dice la "intención" (velocidad: 100, dirección: derecha) y el árbol
+                se encarga de elegir el fotograma exacto y hacer la transición suave.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. El Código: Juntándolo todo</h2>
+            <p>
+                Finalmente, daremos vida a todo esto con un script en el nodo <code>Player</code>.
+            </p>
+            <pre><code class="language-gdscript">extends CharacterBody2D
+
+extends CharacterBody2D
+
+@onready var tree: AnimationTree = $AnimationTree
+
+@export var speed=150
+
+var direction:Vector2
+
+func _ready() -> void:
+	tree.active=true
+	
+func _physics_process(delta: float) -> void:
+	
+	#En esta función tenemos en cuenta todos los procesos físicos, como caminar, etc
+	direction = Input.get_vector("left", "right", "up","down").normalized()
+	
+	if(direction):
+		velocity= direction*speed
+		move_and_slide()
+		
+func _process(delta: float) -> void:
+	update_animation_parameters()
+	
+
+func update_animation_parameters():
+	#Si direction es Vector.Zero, Aina está parada, si no está en movimiento
+	#Se actualizan los parámetros del árbol según direction
+	
+	if(direction==Vector2.ZERO):
+		tree["parameters/conditions/idle"]=true
+		tree["parameters/conditions/running"]=false
+	else:
+		tree["parameters/conditions/idle"]=false
+		tree["parameters/conditions/running"]=true
+		
+	if(direction!=Vector2.ZERO):
+		tree["parameters/idle/blend_position"]=direction
+		tree["parameters/run/blend_position"]=direction
+
+            </code></pre>
+            <p>
+                Fíjate lo limpio que queda el código gracias al <code>AnimationTree</code>. No tenemos que decirle "reproduce
+                la animación walk_up", simplemente le decimos "estamos caminando hacia arriba" (la <code>blend_position</code>) y
+                el árbol se encarga de hacer la transición fluida entre estados mediante el <code>playback</code>.
+            </p>
+        </section>
+
+        <!-- TASCA PER A L'ALUMNAT -->
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tarea: Tu Personaje</h3>
+            <p>
+                Ahora te toca a ti crear el protagonista de tu juego.
+            </p>
+            <ol>
+                <li>Utiliza el spritesheet de Aina, busca otro o crea un SpriteSheet para tu personaje
+                    (asegúrate de que tenga al menos 4 direcciones).</li>
+                <li>Configura el <strong>Input Map</strong> con las acciones de movimiento.</li>
+                <li>Monta la escena del jugador con <code>AnimationPlayer</code> y <code>AnimationTree</code>.</li>
+                <li>Configura los BlendSpaces para <code>Idle</code> y <code>Walk</code>.</li>
+                <li>Escribe el script para hacerlo moverse.</li>
+                <li>Sube tu proyecto comprimido a Aules</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Volver al Inicio</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Licencia Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Esta obra está sujeta a una licencia de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconocimiento-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

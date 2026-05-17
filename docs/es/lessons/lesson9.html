@@ -23,7 +23,8 @@
             <input type="password" id="password-input" placeholder="Contraseña">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquear Lección</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al
+                    Inicio</a></p>
         </div>
     </div>
 
@@ -31,22 +32,26 @@
     <div id="main-content" class="container hidden-content">
         <header>
             <h1>🎒 Lección 9: La Arquitectura de la Mochila</h1>
-            <p>Bienvenidos a una de las lecciones más importantes del curso. Hasta ahora, Aina podía recibir daño, pero no podía
+            <p>Bienvenidos a una de las lecciones más importantes del curso. Hasta ahora, Aina podía recibir daño, pero
+                no podía
                 guardar nada. Hoy aprenderemos a crear su mochila.</p>
         </header>
 
         <section class="card animate-on-load">
             <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
-                <p>⚠️ <strong>Importante:</strong> En esta lección nos centraremos exclusivamente en el diseño visual y en
+                <p>⚠️ <strong>Importante:</strong> En esta lección nos centraremos exclusivamente en el diseño visual y
+                    en
                     la creación de datos. Dejaremos la mochila "lista y bonita", pero la "magia" para recoger objetos
-                    y usarlos la programaremos en la Lección 10. Dividir el trabajo nos permitirá entender mejor cómo Godot
+                    y usarlos la programaremos en la Lección 10. Dividir el trabajo nos permitirá entender mejor cómo
+                    Godot
                     separa la imagen de la información.</p>
             </div>
         </section>
 
         <section class="card animate-on-load">
             <h2>1. ¿Qué es un Resource (Recurso) en Godot?</h2>
-            <p>Hasta ahora hemos trabajado con Nodos (Aina, los enemigos, las cámaras). Los nodos son "cosas que hacen cosas":
+            <p>Hasta ahora hemos trabajado con Nodos (Aina, los enemigos, las cámaras). Los nodos son "cosas que hacen
+                cosas":
                 se mueven, colisionan o emiten sonidos. Pero, ¿dónde guardamos la información pura? Para eso sirven los
                 <strong>Resources</strong>.
             </p>
@@ -54,21 +59,28 @@
             <h3>1. La analogía de la "Ficha de Personaje"</h3>
             <p>Imagina un juego de mesa:</p>
             <ul>
-                <li><strong>El Jugador es el Nodo:</strong> es quien mueve la pieza, tira los dados y está físicamente en la
+                <li><strong>El Jugador es el Nodo:</strong> es quien mueve la pieza, tira los dados y está físicamente
+                    en la
                     mesa.</li>
-                <li><strong>La Ficha de Cartulina es el Resource:</strong> es un papel donde está escrito el nombre, la fuerza y
-                    los objetos que lleva. La cartulina no "hace" nada, pero el jugador la necesita para saber quién es y
+                <li><strong>La Ficha de Cartulina es el Resource:</strong> es un papel donde está escrito el nombre, la
+                    fuerza y
+                    los objetos que lleva. La cartulina no "hace" nada, pero el jugador la necesita para saber quién es
+                    y
                     qué tiene.</li>
             </ul>
 
             <h3>2. ¿Por qué no usamos Nodos para los objetos de la mochila?</h3>
-            <p>Si tuviéramos 100 pociones en el suelo, y cada una fuera un nodo completo con física y código, el juego iría
-                lento. En cambio, si esas 100 pociones solo son una "referencia" a un archivo de datos (Resource), el juego
+            <p>Si tuviéramos 100 pociones en el suelo, y cada una fuera un nodo completo con física y código, el juego
+                iría
+                lento. En cambio, si esas 100 pociones solo son una "referencia" a un archivo de datos (Resource), el
+                juego
                 es mucho más ligero.</p>
 
             <h3>3. El archivo .tres (Text Resource)</h3>
-            <p>Cuando creamos un Resource en Godot, se guarda con la extensión <code>.tres</code>. Es un archivo que contiene datos
-                en formato texto que podemos editar desde el Inspector de Godot sin tener que tocar el código del personaje.
+            <p>Cuando creamos un Resource en Godot, se guarda con la extensión <code>.tres</code>. Es un archivo que
+                contiene datos
+                en formato texto que podemos editar desde el Inspector de Godot sin tener que tocar el código del
+                personaje.
             </p>
 
             <div style="text-align: center; margin: 2rem 0;">
@@ -103,7 +115,8 @@
             <ul>
                 <li><strong>Organización:</strong> Permite tener una carpeta llamada <code>resources</code> con todos
                     los ítems del juego bien ordenados.</li>
-                <li><strong>Facilidad de edición:</strong> Si quieres que la "Espada de Madera" ahora se llame "Espada del
+                <li><strong>Facilidad de edición:</strong> Si quieres que la "Espada de Madera" ahora se llame "Espada
+                    del
                     Aprendiz", solo tienes que cambiar el nombre en el archivo <code>.tres</code> y se actualizará
                     automáticamente en todo el juego.</li>
             </ul>
@@ -155,7 +168,8 @@ class_name Inv
 @export var slots: Array[InvSlot]</code></pre>
             </div>
             <p>¡Con estos tres nuevos <code>class_name</code> creados, podremos ir al explorador de archivos, hacer clic
-                derecho y crear directamente el inventario, los huecos libres y los objetos físicos (como el `.tres` de la
+                derecho y crear directamente el inventario, los huecos libres y los objetos físicos (como el `.tres` de
+                la
                 Poción) desde el Inspector!</p>
         </section>
 
@@ -169,9 +183,11 @@ class_name Inv
                 <ol>
                     <li>En el explorador de archivos (abajo a la izquierda), haz <strong>Clic Derecho</strong> en tu
                         carpeta de resources y elige <strong>Nuevo &gt; Recurso...</strong></li>
-                    <li>En la ventana de búsqueda que aparece, busca <strong>InvItem</strong> (la clase que creamos en el
+                    <li>En la ventana de búsqueda que aparece, busca <strong>InvItem</strong> (la clase que creamos en
+                        el
                         Paso A). Selecciónala y dale el nombre de archivo <code>Pocio.tres</code>.</li>
-                    <li>Haz doble clic sobre <code>Pocio.tres</code>. En el Inspector de la derecha verás las variables que
+                    <li>Haz doble clic sobre <code>Pocio.tres</code>. En el Inspector de la derecha verás las variables
+                        que
                         definimos. Rellena el <strong>Name</strong> con <em>"Pocio"</em> y en <strong>Texture</strong>
                         ¡asígnale una imagen!</li>
                 </ol>
@@ -237,7 +253,8 @@ class_name Inv
                     style="background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; font-family: monospace; list-style-type: none; line-height: 1.6;">
                     <li><span style="color:#5cdb7a;">■</span> <strong>InventoryUiSlot</strong> (Nodo Panel o Control
                         raíz)</li>
-                    <li>&nbsp;&nbsp;├── <span style="color:#5c97db;">●</span> <strong>Sprite2D</strong> (Aquí pondremos la
+                    <li>&nbsp;&nbsp;├── <span style="color:#5c97db;">●</span> <strong>Sprite2D</strong> (Aquí pondremos
+                        la
                         textura <code>inv_slot.png</code>)</li>
                     <li>&nbsp;&nbsp;├── <span style="color:#5cdb7a;">■</span> <strong>CenterContainer</strong></li>
                     <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span> <strong>Panel</strong>
@@ -248,7 +265,8 @@ class_name Inv
                     <li>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span style="color:#a8db5c;">▶</span>
                         <strong>amount</strong> (Label para mostrar el número de objetos)
                     </li>
-                    <li>&nbsp;&nbsp;├── <span style="color:#5cdb7a;">■</span> <strong>Button</strong> (Un botón arriba de
+                    <li>&nbsp;&nbsp;├── <span style="color:#5cdb7a;">■</span> <strong>Button</strong> (Un botón arriba
+                        de
                         todo para detectar cuando hacemos clic en el cuadradito)</li>
                     <li>&nbsp;&nbsp;└── <span style="color:#5cdb7a;">■</span> <strong>UsePanel</strong> (Un panel
                         oculto inicialmente)</li>
@@ -264,24 +282,29 @@ class_name Inv
                     tener botones para usarlos o tirarlos en la siguiente lección. Quedará como se ve en la imagen:</p>
 
                 <div style="text-align: center; margin: 2rem 0;">
-                    <img src="../../assets/images/slotfet.png" alt="Estructura de nodos de InventoryUiSlot"
+                    <img src="../../assets/images/slotfet.PNG" alt="Estructura de nodos de InventoryUiSlot"
                         style="max-width: 300px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
                 </div>
             </div>
 
             <div class="highlight-section">
                 <h3>🛠️ Paso 2: Creando la Mochila entera (`InventariUI.tscn`)</h3>
-                <p>Ahora que tenemos un cuadradito preparado para hacer de todo, vamos a organizar muchos de manera automática
+                <p>Ahora que tenemos un cuadradito preparado para hacer de todo, vamos a organizar muchos de manera
+                    automática
                     utilizando el fantástico nodo <strong>GridContainer</strong>.</p>
 
                 <div class="highlight-section"
                     style="border-left: 4px solid #3b82f6; background-color: #eff6ff; margin: 1.5rem 0; padding: 1rem; border-radius: 0 8px 8px 0;">
                     <h4 style="margin-top: 0; color: #1e3a8a;">ℹ️ ¿Por qué usamos un NinePatchRect?</h4>
                     <p style="margin-bottom: 0;">Un <strong>NinePatchRect</strong> es un nodo de la interfaz gráfica
-                        especial. A diferencia de un <em>TextureRect</em> normal (que se deforma o se pixela cuando lo hacemos
-                        más grande para hacerlo cuadrar con todos los objetos), el NinePatchRect "corta" inteligentemente la
-                        imagen en 9 cuadrantes (un 3x3). De esta manera, puede estirar la parte central infinitamente para
-                        acoger todos los slots, <strong>¡manteniendo las esquinas originales redondeadas sin estirarlas ni
+                        especial. A diferencia de un <em>TextureRect</em> normal (que se deforma o se pixela cuando lo
+                        hacemos
+                        más grande para hacerlo cuadrar con todos los objetos), el NinePatchRect "corta"
+                        inteligentemente la
+                        imagen en 9 cuadrantes (un 3x3). De esta manera, puede estirar la parte central infinitamente
+                        para
+                        acoger todos los slots, <strong>¡manteniendo las esquinas originales redondeadas sin estirarlas
+                            ni
                             distorsionarlas!</strong> Es el nodo ideal para dibujar fondos de paneles y ventanas en los
                         videojuegos.</p>
                 </div>
@@ -293,10 +316,13 @@ class_name Inv
                     <li>Añade un <strong>NinePatchRect</strong> llamado <code>Background</code> y ponle la textura
                         <code>inventory.png</code>. Esto será el fondo principal de la mochila.
                     </li>
-                    <li>Dentro del fondo, añade un nodo <strong>GridContainer</strong> y céntralo para que ocupe el espacio
-                        libre en el dibujo. En el Inspector de este nodo, cambia la propiedad <strong>Columns</strong> al
+                    <li>Dentro del fondo, añade un nodo <strong>GridContainer</strong> y céntralo para que ocupe el
+                        espacio
+                        libre en el dibujo. En el Inspector de este nodo, cambia la propiedad <strong>Columns</strong>
+                        al
                         número de columnas (ej. 5).</li>
-                    <li>En lugar de crear slots nuevos a mano, <strong>instancia</strong> (con el icono de la cadena encima
+                    <li>En lugar de crear slots nuevos a mano, <strong>instancia</strong> (con el icono de la cadena
+                        encima
                         del GridContainer) la escena <code>InventoryUiSlot.tscn</code> como hijo.</li>
                     <li>Duplica esta instancia pulsando <code>Ctrl+D</code> varias veces. ¡Observa cómo el
                         GridContainer los ordena rápidamente en la cuadrícula!</li>
@@ -324,20 +350,23 @@ class_name Inv
                     </li>
                 </ul>
             </div>
-            <p>Juega con los espacios del GridContainer y el escalado hasta que tengas tantas casillas instanciadas como las
+            <p>Juega con los espacios del GridContainer y el escalado hasta que tengas tantas casillas instanciadas como
+                las
                 que has metido en el Array de <code>playerinv.tres</code>. Tu nueva mochila en el Editor se debería
                 ver similar a esta:</p>
 
             <div style="text-align: center; margin: 2rem 0;">
-                <img src="../../assets/images/invfet.png" alt="Vista previa del Inventario completo"
+                <img src="../../assets/images/invfet.PNG" alt="Vista previa del Inventario completo"
                     style="max-width: 450px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
             </div>
         </section>
 
         <section class="card animate-on-load">
             <h2>5. 🔗 Conexión: Uniendo la Interfaz con los Datos</h2>
-            <p>Ahora que ya tenemos la escena de la mochila (<code>InventoryUi</code>) y el archivo donde guardaremos los objetos
-                (<code>playerInv.tres</code>), tenemos que decirle a la interfaz: <em>"Oye, mira dentro de este archivo para
+            <p>Ahora que ya tenemos la escena de la mochila (<code>InventoryUi</code>) y el archivo donde guardaremos
+                los objetos
+                (<code>playerInv.tres</code>), tenemos que decirle a la interfaz: <em>"Oye, mira dentro de este archivo
+                    para
                     saber qué tienes que dibujar"</em>.</p>
 
             <div class="highlight-section">
@@ -368,8 +397,10 @@ class_name Inv
                 <p>Aunque hoy no veremos cómo se mueven los ítems, al hacer este paso hemos conseguido que:</p>
                 <ul>
                     <li>La UI ya tiene acceso a la lista de slots.</li>
-                    <li>Podemos tener diferentes inventarios (uno para el jugador, uno para un cofre, uno para un tendero)
-                        usando la misma escena de UI, simplemente cambiando qué archivo <code>.tres</code> le metemos en el
+                    <li>Podemos tener diferentes inventarios (uno para el jugador, uno para un cofre, uno para un
+                        tendero)
+                        usando la misma escena de UI, simplemente cambiando qué archivo <code>.tres</code> le metemos en
+                        el
                         Inspector.</li>
                 </ul>
             </div>
@@ -385,15 +416,18 @@ class_name Inv
                     un fondo y un <code>GridContainer</code>, e instancia dentro tantos Slots como necesites, ajustando
                     marcos y márgenes.</li>
                 <li><strong>La base de datos:</strong> Crea los 3 scripts de Recurso personalizado
-                    (<code>InvItem.gd</code>, <code>InvSlot.gd</code> e <code>Inv.gd</code>) siguiendo el código descrito en
+                    (<code>InvItem.gd</code>, <code>InvSlot.gd</code> e <code>Inv.gd</code>) siguiendo el código
+                    descrito en
                     la lección.</li>
                 <li><strong>Crea tu Mochila y Slots:</strong> Haz clic derecho en el explorador y crea un recurso tipo
-                    <code>Inv</code> (con nombre como <code>Inv_Player.tres</code>). Configura en el Inspector que el Array
+                    <code>Inv</code> (con nombre como <code>Inv_Player.tres</code>). Configura en el Inspector que el
+                    Array
                     tenga el mismo número de slots que casillas tienes dibujadas. Dentro del Array para cada casilla
                     créale un recurso tipo <code>InvSlot</code>.
                 </li>
                 <li><strong>Crea tus Primeros Objetos:</strong> De forma parecida, crea al menos <strong>dos
-                        recursos nuevos tipo InvItem</strong> (ej. diamante, manzana) e insértalos directamente en los slots de
+                        recursos nuevos tipo InvItem</strong> (ej. diamante, manzana) e insértalos directamente en los
+                    slots de
                     la mochila y mete temporalmente una cantidad mayor a 0 para probarlo en el Inspector.</li>
             </ol>
             <p><strong>Entrega:</strong> Sube el proyecto entero. Tu tarea es que la UI sea increíble, el botón

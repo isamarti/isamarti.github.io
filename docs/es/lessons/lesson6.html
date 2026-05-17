@@ -23,7 +23,8 @@
             <input type="password" id="password-input" placeholder="Contraseña">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquear Lección</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al
+                    Inicio</a></p>
         </div>
     </div>
 
@@ -38,7 +39,8 @@
         <section class="card animate-on-load">
             <h2>1. Vida Global vs. Vida Local</h2>
             <p>Hasta ahora, Aina se podía mover por la pantalla y chocar con objetos o el blub sin consecuencias. Pero
-                para que el videojuego tenga sentido, lo más normal sería que Aina pierda vida cuando se encuentra cerca de un
+                para que el videojuego tenga sentido, lo más normal sería que Aina pierda vida cuando se encuentra cerca
+                de un
                 peligro (el blub) y que pueda matar enemigos.</p>
             <p>
                 Antes de programar, tenemos que decidir dónde guardamos la información sobre la vida:</p>
@@ -46,8 +48,10 @@
                 <li>Vida de Aina (Global): Como Aina es nuestra protagonista y su vida tiene que persistir aunque
                     cambiemos de nivel, tiene que ser una variable global. Solo hay una Aina en todo el juego.</li>
 
-                <li>Vida de los Monstruos (Local): Podemos tener 10 "Blubs" en la pantalla. Si uno recibe un golpe, los otros no
-                    tienen que morir. Por lo tanto, cada monstruo tiene su propia variable vida dentro de su script personal.</li>
+                <li>Vida de los Monstruos (Local): Podemos tener 10 "Blubs" en la pantalla. Si uno recibe un golpe, los
+                    otros no
+                    tienen que morir. Por lo tanto, cada monstruo tiene su propia variable vida dentro de su script
+                    personal.</li>
             </ul>
 
             <p>Para guardar información que dure toda la partida (vida, monedas, llaves), usamos los
@@ -82,19 +86,23 @@ func game_over():
 	aina_life = 100 # Restablecemos la vida
 	get_tree().reload_current_scene() # Vuelve a cargar el nivel
 </code></pre>
-            <p>Ahora, desde CUALQUIER script del juego, puedes escribir <code>Globals.aina_life</code> para acceder a ese
+            <p>Ahora, desde CUALQUIER script del juego, puedes escribir <code>Globals.aina_life</code> para acceder a
+                ese
                 dato o llamar a las funciones para ejecutar la acción.
             </p>
         </section>
 
         <section class="card animate-on-load">
             <h2>2. El Area2D: El sensor de proximidad</h2>
-            <p>A diferencia de los nodos de "Cuerpo" (StaticBody2D o CharacterBody2D), el Area2D no tiene masa ni es sólida.</p>
+            <p>A diferencia de los nodos de "Cuerpo" (StaticBody2D o CharacterBody2D), el Area2D no tiene masa ni es
+                sólida.</p>
             <p><strong>¿Qué es?</strong> Imaginadla como un "campo de fuerza" invisible o un sensor de movimiento de una
                 alarma.</p>
-            <p><strong>¿Cómo funciona?</strong> Cuando un objeto entra en su espacio, el Area2D no lo detiene, sino que se
+            <p><strong>¿Cómo funciona?</strong> Cuando un objeto entra en su espacio, el Area2D no lo detiene, sino que
+                se
                 limita a "avisar".</p>
-            <p><strong>Utilidad:</strong> Es perfecta para detectar cuando el jugador entra en una habitación, cuando toca
+            <p><strong>Utilidad:</strong> Es perfecta para detectar cuando el jugador entra en una habitación, cuando
+                toca
                 una moneda o cuando se encuentra cerca de un peligro (como el Blub).</p>
             <div class="highlight-section">
                 <h3>Creando el sensor de daño para Aina:</h3>
@@ -102,7 +110,8 @@ func game_over():
                     <li>Añade a la escena de Aina un nodo <strong>Area2D</strong> y cambia el nombre por
                         <code>HurtArea</code>.
                     </li>
-                    <li>Créale un hijo <strong>CollisionShape2D</strong> y elige la forma (círculo, rectángulo o polígono)
+                    <li>Créale un hijo <strong>CollisionShape2D</strong> y elige la forma (círculo, rectángulo o
+                        polígono)
                         que mejor se ajuste a la zona del cuerpo donde Aina puede recibir daño.</li>
                 </ol>
             </div>
@@ -114,16 +123,19 @@ func game_over():
 
         <section class="card animate-on-load">
             <h2>3. ¿Qué son las Señales (Signals)?</h2>
-            <p>En programación, a menudo queremos que pase una cosa cuando ocurre otra (como un pulsador y una bombilla).
+            <p>En programación, a menudo queremos que pase una cosa cuando ocurre otra (como un pulsador y una
+                bombilla).
                 En Godot, esto se resuelve con el modelo <strong>Emisor-Receptor</strong>.</p>
             <ul>
-                <li><strong>El Emisor:</strong> Es el nodo donde pasa el evento (ej: el Area2D que detecta a alguien).</li>
+                <li><strong>El Emisor:</strong> Es el nodo donde pasa el evento (ej: el Area2D que detecta a alguien).
+                </li>
                 <li><strong>La Señal:</strong> Es el mensaje que se envía al aire (ej: "¡He sido pisado!").</li>
                 <li><strong>El Receptor:</strong> Es un script (normalmente del padre o de un nodo de control) que está
                     "escuchando" esa señal y ejecuta una función cuando la recibe.</li>
             </ul>
             <p><strong>¿Por qué es mejor que el código tradicional?</strong> Porque los nodos no necesitan saberlo todo
-                los unos de los otros. El Area2D solo grita: "¡He detectado a alguien!", y le da igual si quien lo escucha es el
+                los unos de los otros. El Area2D solo grita: "¡He detectado a alguien!", y le da igual si quien lo
+                escucha es el
                 jugador, el enemigo o el contador de puntos.</p>
             <div style="margin-top: 2rem; text-align: center;">
                 <img src="../../assets/images/signals.jpg" alt="Modelo Emisor-Receptor en Godot"
@@ -165,8 +177,10 @@ func game_over():
                 </table>
                 <p> Estas señales son las que utilizaremos el 90% del tiempo. Las señales que especifican "shape"
                     se utilizan para avisar de formas de colisión específicas. Imagina un monstruo que tiene dos
-                    colisiones dentro del area2d: una en la cabeza (para recibir el doble de daño) y una en el cuerpo. Con
-                    area_shape_entered, el motor nos puede decir exactamente cuál de los dos "círculos" azules ha recibido el golpe
+                    colisiones dentro del area2d: una en la cabeza (para recibir el doble de daño) y una en el cuerpo.
+                    Con
+                    area_shape_entered, el motor nos puede decir exactamente cuál de los dos "círculos" azules ha
+                    recibido el golpe
                     gracias al índice, aunque ambos pertenecen al mismo monstruo. </p>
                 <p>En cualquier caso, para una situación así es más sencillo utilizar dos area2d diferentes y las
                     señales simples. </p>
@@ -175,8 +189,10 @@ func game_over():
 
         <section class="card animate-on-load">
             <h2>4. El Sistema de Combate: Capas y Áreas especializadas</h2>
-            <p>Para hacer un juego robusto, no usaremos el cuerpo principal para detectar el daño. Crearemos dos sensores de Area2D
-                específicos para cada personaje. Para que estos sensores se encuentren entre ellos sin confundirse con los
+            <p>Para hacer un juego robusto, no usaremos el cuerpo principal para detectar el daño. Crearemos dos
+                sensores de Area2D
+                específicos para cada personaje. Para que estos sensores se encuentren entre ellos sin confundirse con
+                los
                 muros o el suelo, configuraremos las Capas (Layers) y Máscaras (Masks) de física:</p>
 
             <div class="highlight-section">
@@ -218,7 +234,8 @@ func game_over():
 
             <p>En este proyecto, conectaremos la señal de daño dentro del script del enemigo.</p>
 
-            <p><strong>¿Por qué lo hacemos así?</strong> Si Aina tuviera que gestionar el daño de todos los monstruos, tendría
+            <p><strong>¿Por qué lo hacemos así?</strong> Si Aina tuviera que gestionar el daño de todos los monstruos,
+                tendría
                 que conocerlos a todos. En cambio, si el enemigo es quien gestiona el ataque:</p>
             <ul>
                 <li>Él sabe exactamente cuántos puntos de vida quita (ej: el enemigo quita 10, pero un jefe final podría
@@ -226,7 +243,8 @@ func game_over():
                 <li>Hay una función global que le quita puntos a Aina y cualquier monstruo la puede llamar.</li>
             </ul>
             <p>En el blob, conectamos la señal <code>area_entered</code> de su <code>AttackArea</code> con la función
-                <code>_on_attack_area_area_entered</code> en el script del blob, creamos una variable <code>hurt_amount</code> con
+                <code>_on_attack_area_area_entered</code> en el script del blob, creamos una variable
+                <code>hurt_amount</code> con
                 el valor de daño
                 deseado y añadimos este código.
             </p>
@@ -240,6 +258,28 @@ func game_over():
 
         </section>
 
+        <section class="card animate-on-load">
+            <h2>6. Material de apoyo (Vídeos)</h2>
+            <p>A continuación tienes unos vídeos explicativos donde se muestra paso a paso lo que hemos trabajado en la
+                lección:</p>
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/fSkMP-4q568"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/fSkMP-4q568"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
         <section class="card animate-on-load task-box">
             <h3>🛠️ Tarea Práctica 6: Comunicación entre nodos</h3>
             <p><strong>Objetivo:</strong> Crear un sistema de puntuación o de vida que persista entre escenas.</p>
@@ -247,7 +287,8 @@ func game_over():
                 <li><strong>Crea un Autoload:</strong> Crea un script llamado <code>Global.gd</code> con una variable
                     <code>puntuacion</code>.
                 </li>
-                <li> Configura los nombres de las capas de física en Proyecto > Configuración del Proyecto > 2D Physics:</li>
+                <li> Configura los nombres de las capas de física en Proyecto > Configuración del Proyecto > 2D Physics:
+                </li>
                 <li>Configura los nodos HurtArea en Aina y AttackArea en el blob.</li>
                 <li>Crea el script de globals y ponlo en autoload.</li>
                 <li>Conecta la señal area_entered del blob con la función _on_attack_area_area_entered en el script del

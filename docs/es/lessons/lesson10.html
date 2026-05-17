@@ -23,7 +23,8 @@
             <input type="password" id="password-input" placeholder="Contraseña">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquear Lección</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al
+                    Inicio</a></p>
         </div>
     </div>
 
@@ -32,7 +33,8 @@
         <header>
             <h1>📦 Lección 10: Dando vida al Inventario</h1>
             <p>En la lección anterior dejamos la mochila "bonita" pero vacía. Hoy vamos a programar su "cerebro".
-                Dividiremos el trabajo en tres scripts que trabajan en equipo: el Cuadradito (Vista), la Mochila (Datos) y el
+                Dividiremos el trabajo en tres scripts que trabajan en equipo: el Cuadradito (Vista), la Mochila (Datos)
+                y el
                 Panel (Control).</p>
         </header>
 
@@ -95,8 +97,10 @@ func _on_drop_pressed() -> void:
                 <ul>
                     <li><strong>Variables @onready:</strong> Conectamos los nodos visuales (icono, texto y el panel
                         de opciones) para que el código pueda cambiarlos.</li>
-                    <li><strong>La función update_slot:</strong> Es el corazón del sistema. Recibe la información del recurso
-                        <code>itemSlot</code>. Si no hay nada, lo oculta todo para que el cuadradito se vea vacío; si hay
+                    <li><strong>La función update_slot:</strong> Es el corazón del sistema. Recibe la información del
+                        recurso
+                        <code>itemSlot</code>. Si no hay nada, lo oculta todo para que el cuadradito se vea vacío; si
+                        hay
                         un objeto, pone su textura y el número de cantidad.
                     </li>
                     <li><strong>Gestión del botón:</strong> El botón principal del slot sirve para mostrar u ocultar el
@@ -151,12 +155,15 @@ func update_inv(item:InvItem):
                 <h3>¿Cómo gestiona los ítems? (update_inv)</h3>
                 <p>Cuando Aina coge algo del suelo, este script hace tres pasos lógicos:</p>
                 <ul>
-                    <li><strong>¿Son iguales?:</strong> Mira si el ítem que acabamos de coger ya lo tenemos en la mochila. Si
+                    <li><strong>¿Son iguales?:</strong> Mira si el ítem que acabamos de coger ya lo tenemos en la
+                        mochila. Si
                         es así (por ejemplo, ya teníamos una poción), en lugar de gastar otro cuadradito, le suma 1 a la
                         cantidad.</li>
-                    <li><strong>¿Dónde hay sitio?:</strong> Si el ítem es completamente nuevo, busca el primer hueco que tenga
+                    <li><strong>¿Dónde hay sitio?:</strong> Si el ítem es completamente nuevo, busca el primer hueco que
+                        tenga
                         el valor
-                        <code>null</code> (vacío). Lo hace utilizando la función <code>.filter</code>, que es como un colador
+                        <code>null</code> (vacío). Lo hace utilizando la función <code>.filter</code>, que es como un
+                        colador
                         de datos.
                     </li>
                     <li><strong>Avisar del cambio:</strong> Una vez guardado, emite la señal <code>inv_updated</code>.
@@ -175,7 +182,8 @@ func update_inv(item:InvItem):
                     sus señales de "Usar" y "Tirar"</li>.
                 <li> También se conecta al Recurso del inventario. Abrir/Cerrar: Detecta
                     la tecla "I" (o la que queramos) para mostrar u ocultar todo el panel.</li>
-                <li>Lógica de acciones (use_item): Aquí es donde decidimos qué pasa realmente. Por ejemplo: Si el objeto se llama
+                <li>Lógica de acciones (use_item): Aquí es donde decidimos qué pasa realmente. Por ejemplo: Si el objeto
+                    se llama
                     "potion" $\rightarrow$ Llamamos a la función de curar. Si
                     se llama "key" $\rightarrow$ Emitimos una señal hacia el escenario para abrir la puerta.</li>
             </ul>
@@ -233,8 +241,10 @@ func drop_item(item:itemSlot):
                 break
             index+=1
     update_inv_ui()</code></pre>
-                <p><strong>¿Qué hace en resumen?</strong> Captura cuando pulsamos la tecla asignada en el mapa de acciones
-                    ("inventory") para abrir o cerrar la UI, escucha si algún botón ha emitido las señales <code>use</code> y
+                <p><strong>¿Qué hace en resumen?</strong> Captura cuando pulsamos la tecla asignada en el mapa de
+                    acciones
+                    ("inventory") para abrir o cerrar la UI, escucha si algún botón ha emitido las señales
+                    <code>use</code> y
                     <code>drop</code>, y automáticamente refresca las cantidades y los iconos en pantalla.
                 </p>
             </div>
@@ -242,16 +252,20 @@ func drop_item(item:itemSlot):
 
         <section class="card animate-on-load">
             <h2>4. 🎒 Aina y su Mochila: La conexión final</h2>
-            <p>Para que todo el sistema que hemos programado funcione, Aina tiene que ser la <strong>propietaria</strong> de
-                la información y de la interfaz.</p>
+            <p>Para que todo el sistema que hemos programado funcione, Aina tiene que ser la
+                <strong>propietaria</strong> de
+                la información y de la interfaz.
+            </p>
 
             <div class="highlight-section">
                 <h3>1. Equipando a Aina (Nodos y Recursos)</h3>
-                <p>Dentro de la escena de nuestro personaje (<code>Player.tscn</code>), tenemos que hacer dos pasos fundamentales:
+                <p>Dentro de la escena de nuestro personaje (<code>Player.tscn</code>), tenemos que hacer dos pasos
+                    fundamentales:
                 </p>
                 <ul>
                     <li><strong>Añadir la UI:</strong> Arrastrad la escena <code>InventariUI.tscn</code> dentro de Aina
-                        (mejor si está dentro de un nodo <strong>CanvasLayer</strong> para que no se mueva con la cámara y
+                        (mejor si está dentro de un nodo <strong>CanvasLayer</strong> para que no se mueva con la cámara
+                        y
                         siempre aparezca en el centro de la pantalla de forma perfecta).</li>
                     <li><strong>Asignar los datos:</strong> Creamos la variable <code>inventory</code> con
                         <code>@export</code> en el script de Aina y, en el Inspector de esta, le añadimos el recurso
@@ -265,7 +279,8 @@ func drop_item(item:itemSlot):
                 <h3>2. La función de Recogida (collect)</h3>
                 <p>Dentro del script de Aina, necesitaremos una función llamada <code>collect</code>.</p>
                 <ul>
-                    <li><strong>¿Qué hace?:</strong> Esta función será la "puerta de entrada". Cuando Aina encuentre un objeto
+                    <li><strong>¿Qué hace?:</strong> Esta función será la "puerta de entrada". Cuando Aina encuentre un
+                        objeto
                         en el mundo, este objeto le "pasará" su archivo <code>.tres</code> correspondiente.</li>
                     <li><strong>¿Cómo funciona?:</strong> La función cogerá ese archivo en bruto y llamará al método
                         <code>update_inv</code> de nuestra mochila para guardarlo oficialmente dentro a toda
@@ -276,12 +291,14 @@ func drop_item(item:itemSlot):
 
             <div class="highlight-section" style="border-left: 4px solid #10b981; background-color: #ecfdf5;">
                 <h3 style="margin-top: 0; color: #065f46;">🌍 Objetos en el Mundo: El camino del .tres</h3>
-                <p>Para que Aina pueda recoger una llave o una poción saltando por el escenario, el objeto que vemos en la
+                <p>Para que Aina pueda recoger una llave o una poción saltando por el escenario, el objeto que vemos en
+                    la
                     pantalla tiene que tener obligatoriamente dos cosas preparadas:</p>
                 <ul>
                     <li>Una imagen (Sprite2D) y una <strong>Area2D</strong> con forma: Para que el juego sepa dónde está
                         el objeto y cuándo lo tocamos.</li>
-                    <li>Su propio archivo <strong>.tres</strong>: En el script del objeto del suelo, tenemos que tener un
+                    <li>Su propio archivo <strong>.tres</strong>: En el script del objeto del suelo, tenemos que tener
+                        un
                         hueco en el Inspector de la variable del export para poner el recurso del ítem (por ejemplo, le
                         arrastramos nuestro archivo <code>clau.tres</code> o <code>pocio.tres</code>).</li>
                 </ul>
@@ -302,15 +319,18 @@ func drop_item(item:itemSlot):
                 <p>La llave por sí sola no sabe abrir puertas de manera mecánica; necesitamos que haya una comunicación
                     entre la mochila de Aina y el escenario.</p>
                 <ul>
-                    <li><strong>La Acción del Usuario:</strong> Cuando abrimos el inventario y clicamos en "Usar" sobre la llave
+                    <li><strong>La Acción del Usuario:</strong> Cuando abrimos el inventario y clicamos en "Usar" sobre
+                        la llave
                         de oro, el inventario tiene que emitir esa nueva señal explícita (por ejemplo, la señal
                         <code>use_key</code>).
                     </li>
-                    <li><strong>El Escenario escucha:</strong> Tenéis que conectar esa señal única de la UI (que actualmente
+                    <li><strong>El Escenario escucha:</strong> Tenéis que conectar esa señal única de la UI (que
+                        actualmente
                         está dentro de Aina) con el script de vuestro nivel principal o directamente a la misma puerta.
                     </li>
                     <li><strong>La Condición:</strong> La puerta solo se tiene que abrir o destrozar (haciendo
-                        <code>queue_free()</code> u ocultándose) exclusivamente si se ha recibido la señal de uso de la llave
+                        <code>queue_free()</code> u ocultándose) exclusivamente si se ha recibido la señal de uso de la
+                        llave
                         mágica.
                     </li>
                 </ul>
@@ -327,15 +347,18 @@ func drop_item(item:itemSlot):
                 </li>
                 <li>Dibujar una Puerta (o un muro invisible) en el Tilemap o en la escena que nos impida continuar o
                     pasar.</li>
-                <li>Programar la lógica para que, al usar la llave desde el inventario mientras estamos cerca de la puerta,
+                <li>Programar la lógica para que, al usar la llave desde el inventario mientras estamos cerca de la
+                    puerta,
                     esta desaparezca o se desbloquee completamente.</li>
             </ul>
             <div class="highlight-section" style="background-color: transparent; border: none; padding: 0.5rem 0;">
-                <p>💡 <strong>Pista para expertos:</strong> Tendréis que conectar la señal <code>use_key</code> que emite
+                <p>💡 <strong>Pista para expertos:</strong> Tendréis que conectar la señal <code>use_key</code> que
+                    emite
                     el inventario de Aina con la escena de vuestro nivel. ¡Pensad bien qué nodo está escuchando a cuál!
                 </p>
             </div>
-            <p><strong>Entrega:</strong> Comprueba que toda la cadena de recogida, guardado y uso funciona perfectamente.
+            <p><strong>Entrega:</strong> Comprueba que toda la cadena de recogida, guardado y uso funciona
+                perfectamente.
                 Adjunta el zip de tu proyecto actualizado en Aules.</p>
         </section>
 

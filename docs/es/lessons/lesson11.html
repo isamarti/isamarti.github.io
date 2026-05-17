@@ -23,7 +23,8 @@
             <input type="password" id="password-input" placeholder="Contraseña">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquear Lección</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al
+                    Inicio</a></p>
         </div>
     </div>
 
@@ -40,7 +41,8 @@
         <section class="card animate-on-load">
             <h2>1. Cómo añadir extensiones a Godot (DialogManager)</h2>
             <p>Godot es un motor inmenso, pero no trae absolutamente todo de serie para no sobrecargarlo.
-                Afortunadamente, cuenta con una gran comunidad que crea <strong>Addons (Extensiones)</strong> que podemos
+                Afortunadamente, cuenta con una gran comunidad que crea <strong>Addons (Extensiones)</strong> que
+                podemos
                 descargar e instalar en nuestro proyecto con dos clics.</p>
 
             <div class="highlight-section" style="border-left: 4px solid #f59e0b; background-color: #fef3c7;">
@@ -60,17 +62,20 @@
                     </li>
                 </ol>
             </div>
-            <p>Entonces observarás cómo ha aparecido arriba del todo de la pantalla una nueva pestaña llamada "Dialogue".</p>
+            <p>Entonces observarás cómo ha aparecido arriba del todo de la pantalla una nueva pestaña llamada
+                "Dialogue".</p>
         </section>
 
         <section class="card animate-on-load">
             <h2>2. 📝 Anatomía de un archivo .dialogue</h2>
-            <p>Un archivo de diálogo no es más que un documento de texto donde escribimos qué dirán los personajes. Pero, además
+            <p>Un archivo de diálogo no es más que un documento de texto donde escribimos qué dirán los personajes.
+                Pero, además
                 de texto, podemos añadirle reglas. Vamos a ver todas las opciones:</p>
 
             <div class="highlight-section">
                 <h3>1. Los Títulos (Etiquetas)</h3>
-                <p>Cada conversación tiene que empezar con un título precedido de <code>~</code>. Esto nos permite tener muchas
+                <p>Cada conversación tiene que empezar con un título precedido de <code>~</code>. Esto nos permite tener
+                    muchas
                     conversaciones en un mismo archivo y llamar a la que queramos.</p>
                 <pre><code class="language-plaintext">~ este_es_el_titulo
 Aina: ¡Hola!</code></pre>
@@ -90,9 +95,11 @@ Guardián: Estoy aquí, joven aventurera.</code></pre>
     Guardián: Pues vuelve cuando estés preparada.</code></pre>
 
                 <h3>4. Variables y Condiciones (if / else)</h3>
-                <p>Podemos hacer que el personaje sepa cosas del juego. Por ejemplo, si Aina tiene la llave en el inventario.
+                <p>Podemos hacer que el personaje sepa cosas del juego. Por ejemplo, si Aina tiene la llave en el
+                    inventario.
                 </p>
-                <p><strong>Nota:</strong> Las variables tienen que coincidir con las que tenéis en vuestros Globals de Godot.
+                <p><strong>Nota:</strong> Las variables tienen que coincidir con las que tenéis en vuestros Globals de
+                    Godot.
                 </p>
                 <pre><code class="language-plaintext">~ conversacion_puerta
 if tiene_la_llave == true
@@ -156,7 +163,8 @@ goto conversacion_final # (para saltar a otro título ~ del mismo archivo).</cod
 
         <section class="card animate-on-load">
             <h2>3. Diálogos Automáticos: "Aina piensa"</h2>
-            <p>A veces no queremos hablar con nadie, simplemente queremos que aparezca un mensaje cuando pasamos por un sitio.
+            <p>A veces no queremos hablar con nadie, simplemente queremos que aparezca un mensaje cuando pasamos por un
+                sitio.
                 Por ejemplo: Aina se acerca a la puerta cerrada y aparece un texto: "Parece que está cerrada...
                 necesitaré una llave".</p>
 
@@ -164,7 +172,8 @@ goto conversacion_final # (para saltar a otro título ~ del mismo archivo).</cod
                 <h3 style="margin-top: 0; color: #047857;">🤔 ¿Cómo se hace?</h3>
                 <ul style="margin-bottom: 0;">
                     <li>Usamos una <strong>Area2D</strong> alrededor de la puerta o la zona.</li>
-                    <li>En el script, cuando detectamos que Aina entra (con la señal <code>body_entered</code>), llamamos al
+                    <li>En el script, cuando detectamos que Aina entra (con la señal <code>body_entered</code>),
+                        llamamos al
                         Dialog Manager para lanzar una línea de texto específica de nuestro archivo
                         <code>.dialogue</code>.
                     </li>
@@ -177,7 +186,8 @@ goto conversacion_final # (para saltar a otro título ~ del mismo archivo).</cod
 
         <section class="card animate-on-load">
             <h2>4. Diálogos por Interacción: Actionables</h2>
-            <p>Aquí es donde el juego se vuelve un RPG de verdad. Queremos que Aina pueda hablar con NPCs o examinar objetos
+            <p>Aquí es donde el juego se vuelve un RPG de verdad. Queremos que Aina pueda hablar con NPCs o examinar
+                objetos
                 pulsando una tecla.</p>
             <p>Para hacerlo, usaremos el sistema de Nathan Hoad:</p>
 
@@ -197,8 +207,10 @@ goto conversacion_final # (para saltar a otro título ~ del mismo archivo).</cod
 
         <section class="card animate-on-load">
             <h2>5. El Actionable: Los elementos del mundo</h2>
-            <p>Cualquier NPC, señal de madera, llave en el suelo o cartel que podamos leer necesitará un nodo que indique
-                a la memoria del juego que "con esto se puede interactuar". Crearemos una escena padre y universal llamada
+            <p>Cualquier NPC, señal de madera, llave en el suelo o cartel que podamos leer necesitará un nodo que
+                indique
+                a la memoria del juego que "con esto se puede interactuar". Crearemos una escena padre y universal
+                llamada
                 <code>Actionable.tscn</code> para no tener que repetir trabajo nunca más.
             </p>
 
@@ -211,7 +223,8 @@ goto conversacion_final # (para saltar a otro título ~ del mismo archivo).</cod
                     <li>Asegúrate de cambiar en el Inspector su <strong>Collision Layer</strong> (por ejemplo, la
                         capa 5 exclusiva para <em>Interacciones</em>, dejando la máscara vacía).</li>
                     <li>Añádele un nuevo script llamado <code>Actionable.gd</code> y copia este código. Este script
-                        será el encargado de recibir el recurso de diálogo y dar la orden de mostrarlo por pantalla al ser
+                        será el encargado de recibir el recurso de diálogo y dar la orden de mostrarlo por pantalla al
+                        ser
                         tocado.</li>
                 </ul>
                 <pre><code class="language-gdscript">extends Area2D
@@ -230,21 +243,27 @@ func action():
 
         <section class="card animate-on-load">
             <h2>6. El Buscador: Actionable Finder en el Player</h2>
-            <p>Ahora tenemos que decirle a Aina que mire precisamente si tiene algún <code>Actionable</code> en el solapamiento activo
-                una vez pulsemos nosotros la tecla correspondiente en el teclado (como el Espacio o la E de Explorar).</p>
+            <p>Ahora tenemos que decirle a Aina que mire precisamente si tiene algún <code>Actionable</code> en el
+                solapamiento activo
+                una vez pulsemos nosotros la tecla correspondiente en el teclado (como el Espacio o la E de Explorar).
+            </p>
 
             <div class="highlight-section">
                 <h3>Buscando Objetos y Entidades</h3>
                 <p>Añadiremos un nuevo <strong>Area2D</strong> como hijo de Aina, donde le pondremos el nombre de
                     <code>ActionableFinder</code>. Dentro de él le colocaremos su <code>CollisionShape2D</code> (por
-                    ejemplo, un círculo o un rectángulo grande). Este finder hay que configurarlo exclusivamente para que mire a la
+                    ejemplo, un círculo o un rectángulo grande). Este finder hay que configurarlo exclusivamente para
+                    que mire a la
                     <strong>Collision Mask</strong> número 5.
                 </p>
-                <p>Después, recuerda modificar el AnimationPlayer de Aina para incluir el ActionableFinder en la posición
+                <p>Después, recuerda modificar el AnimationPlayer de Aina para incluir el ActionableFinder en la
+                    posición
                     que más te interese según hacia dónde mira Aina. </p>
-                <p> Crea una nueva acción llamada <code>talk</code> en el mapa de entradas y asígnale la tecla que quieras
+                <p> Crea una nueva acción llamada <code>talk</code> en el mapa de entradas y asígnale la tecla que
+                    quieras
                     (por ejemplo, el espacio) </p>
-                <p>El secreto de todo el mecanismo reside en el código, que inyectaremos directamente en el script global del
+                <p>El secreto de todo el mecanismo reside en el código, que inyectaremos directamente en el script
+                    global del
                     Jugador (Player.gd):</p>
                 <pre><code class="language-gdscript">@onready var actionable_finder = $ActionableFinder
 
@@ -267,13 +286,17 @@ func _unhandled_input(event: InputEvent) -> void:
                 <li><strong>Instalar el addon:</strong> Id al apartado superior del AssetLib de Godot y buscad el
                     famoso <strong>DialogManager</strong> (por Nathan Hoad). Instaladlo en vuestro Proyecto y
                     activadlo en Configuración del Proyecto -> Plugins.</li>
-                <li><strong>Lanzar una conversación de forma automática:</strong> Crea un diálogo con alguna cosa que pueda
+                <li><strong>Lanzar una conversación de forma automática:</strong> Crea un diálogo con alguna cosa que
+                    pueda
                     pensar Aina al encontrarse en algún punto.</li>
                 <li><strong>Crear Actionable y ActionableFinder:</strong> Diseñad la jerarquía del
                     <code>Actionable</code> como
                     escena individual y adjuntad el <code>ActionableFinder</code> (con formato círculo/cuadrado)
-                    exclusivamente en el medio de Aina para que solo intercepte los códigos al pulsar el botón habilitado.</li>
-                <li><strong>El Diálogo:</strong> Crea un nuevo personaje NPC y haz que Aina pueda tener una conversación con
+                    exclusivamente en el medio de Aina para que solo intercepte los códigos al pulsar el botón
+                    habilitado.
+                </li>
+                <li><strong>El Diálogo:</strong> Crea un nuevo personaje NPC y haz que Aina pueda tener una conversación
+                    con
                     él.</li>
             </ul>
             <strong>Entrega:</strong> Tu proyecto comprimido en Aules

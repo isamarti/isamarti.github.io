@@ -23,7 +23,8 @@
             <input type="password" id="password-input" placeholder="Contraseña">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquear Lección</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al
+                    Inicio</a></p>
         </div>
     </div>
 
@@ -32,18 +33,22 @@
         <header>
             <h1>Lección 5: La Física y la Solidez del Mundo</h1>
             <p>Hasta ahora, nuestro juego es puramente visual: Aina puede atravesar paredes, casas y árboles porque los
-                objetos son "transparentes" para el motor de física. En esta lección aprenderemos a darles cuerpo y volumen.
+                objetos son "transparentes" para el motor de física. En esta lección aprenderemos a darles cuerpo y
+                volumen.
             </p>
         </header>
 
         <section class="card animate-on-load">
             <h2>1. El Cuerpo Físico: ¿Quién tiene derecho a chocar?</h2>
-            <p>En Godot, una imagen (<code>Sprite2D</code>) no tiene consistencia. Para que un objeto pueda interactuar con
-                otros, debe estar "dentro" de un nodo de <strong>Cuerpo Físico</strong>. Pensad en el cuerpo como el esqueleto
+            <p>En Godot, una imagen (<code>Sprite2D</code>) no tiene consistencia. Para que un objeto pueda interactuar
+                con
+                otros, debe estar "dentro" de un nodo de <strong>Cuerpo Físico</strong>. Pensad en el cuerpo como el
+                esqueleto
                 invisible que le dice al motor cómo se tiene que mover el objeto.</p>
             <h3>Los 3 tipos de cuerpos que usaremos:</h3>
             <ul>
-                <li><strong>StaticBody2D (Cuerpos estáticos):</strong> Para objetos que no se mueven nunca, como una mesa,
+                <li><strong>StaticBody2D (Cuerpos estáticos):</strong> Para objetos que no se mueven nunca, como una
+                    mesa,
                     una roca o un árbol. Están ahí para bloquear el paso.</li>
                 <li><strong>CharacterBody2D (Cuerpos de personaje):</strong> El que ya hemos usado para Aina y Blub.
                     Son cuerpos hechos para moverse por código y reaccionar ante obstáculos.</li>
@@ -68,7 +73,8 @@
             </div>
 
             <div class="highlight-quote" style="margin-top: 2rem;">
-                ⚠️ <strong>Nota importante:</strong> El nodo físico (<code>StaticBody2D</code>) siempre tiene que ser el padre.
+                ⚠️ <strong>Nota importante:</strong> El nodo físico (<code>StaticBody2D</code>) siempre tiene que ser el
+                padre.
                 Si ponéis el cuerpo físico como hijo de un Sprite, la física no funcionará correctamente.
             </div>
 
@@ -77,7 +83,8 @@
                 sirve para dibujar esa área (que veréis de color azul en el editor). Podemos elegir la forma en
                 el Inspector, definiendo un New Shape. </p>
             <ul>
-                <li><strong>Formas simples:</strong> Usad siempre que podáis rectángulos o círculos. Son mucho más fáciles de
+                <li><strong>Formas simples:</strong> Usad siempre que podáis rectángulos o círculos. Son mucho más
+                    fáciles de
                     calcular para el ordenador que las formas complejas.</li>
                 <li><strong>Ajuste:</strong> En Aina o las mesas, recomendamos poner la colisión solo en la base
                     (a los pies). Esto permite que
@@ -92,13 +99,16 @@
 
         <section class="card animate-on-load">
             <h2>3. Colisiones en el TileMapLayer</h2>
-            <p>Si hemos pintado un pueblo entero con el TileMap, no vamos a poner cientos de nodos StaticBody manualmente.
+            <p>Si hemos pintado un pueblo entero con el TileMap, no vamos a poner cientos de nodos StaticBody
+                manualmente.
                 Lo haremos directamente desde el TileSet:</p>
             <ol>
-                <li>Seleccionamos nuestro recurso de <strong>TileSet</strong> y creamos una <strong>Physics Layer</strong>.
+                <li>Seleccionamos nuestro recurso de <strong>TileSet</strong> y creamos una <strong>Physics
+                        Layer</strong>.
                 </li>
                 <li>Vamos al apartado de "Paint" y seleccionamos la propiedad de física.</li>
-                <li><strong>Pintamos lo azul:</strong> Simplemente seleccionamos los mosaicos de paredes o agua y les dibujamos
+                <li><strong>Pintamos lo azul:</strong> Simplemente seleccionamos los mosaicos de paredes o agua y les
+                    dibujamos
                     el área de colisión.</li>
             </ol>
             <p>A partir de ahora, cada vez que pintéis con ese mosaico, el personaje chocará automáticamente.</p>
@@ -106,13 +116,16 @@
 
         <section class="card animate-on-load">
             <h2>🚦 4. Capas y Máscaras: ¿Quién choca con quién?</h2>
-            <p>Dentro del Inspector de cualquier cuerpo físico, encontraréis una sección llamada <strong>Collision</strong>.
-                Aquí es donde se decide la interacción entre objetos mediante una cuadrícula de botones numerados.</p>
+            <p>Dentro del Inspector de cualquier cuerpo físico, encontraréis una sección llamada
+                <strong>Collision</strong>.
+                Aquí es donde se decide la interacción entre objetos mediante una cuadrícula de botones numerados.
+            </p>
             <p>Esta es la parte más "ingeniera", pero es vital para mantener el orden:</p>
             <ul>
                 <li><strong>Collision Layer (Capa): "¿Quién soy yo?"</strong><br>Indica en qué capa reside el objeto.
                     Si marcas el botón 1, el objeto "vive" en la capa 1.</li>
-                <li><strong>Collision Mask (Máscara): "¿A quién miro?"</strong><br>Indica con qué capas quiere chocar este
+                <li><strong>Collision Mask (Máscara): "¿A quién miro?"</strong><br>Indica con qué capas quiere chocar
+                    este
                     objeto. Si un objeto tiene la máscara 2 activada, buscará y chocará con cualquier cosa que esté en
                     la capa 2.</li>
             </ul>
@@ -131,19 +144,43 @@
                     <li><strong>Capa 3:</strong> Enemigos (Blub)</li>
                 </ul>
                 <p>Aina tendrá la Layer 1 (ella es el jugador) y la Mask 2 y 3 (quiere chocar con muros y enemigos).</p>
-                <p>El Muro tendrá la Layer 2 (él es escenario) y Mask vacía (los muros no se mueven, no necesitan "mirar"
+                <p>El Muro tendrá la Layer 2 (él es escenario) y Mask vacía (los muros no se mueven, no necesitan
+                    "mirar"
                     a nadie).</p>
-                <p>Un Fantasma (enemigo) podría tener la Layer 3 y la Mask 1 (quiere chocar con Aina), pero no la Mask 2.
+                <p>Un Fantasma (enemigo) podría tener la Layer 3 y la Mask 1 (quiere chocar con Aina), pero no la Mask
+                    2.
                     Al no mirar a la capa 2, el fantasma traspasará las paredes mágicamente.</p>
             </div>
 
             <div class="highlight-quote" style="margin-top: 2rem;">
-                💡 <strong>Consejo Docente:</strong> Podéis poner nombres a las capas para no tener que recordar números. En
+                💡 <strong>Consejo Docente:</strong> Podéis poner nombres a las capas para no tener que recordar
+                números. En
                 <strong>Proyecto > Configuración del Proyecto > Layer Names > 2D Physics</strong>, podéis escribir
                 "Jugador", "Muros", "Enemigos". A partir de ahora, ¡estos nombres aparecerán en el Inspector!
             </div>
         </section>
-
+        <section class="card animate-on-load">
+            <h2>5. Material de apoyo (Vídeos)</h2>
+            <p>A continuación tienes unos vídeos explicativos donde se muestra paso a paso lo que hemos trabajado en la
+                lección:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/CmmVL_tvGHM"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/CmmVL_tvGHM"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
         <section class="card animate-on-load task-box">
             <h3>🛠️ Tarea Práctica 5: Haciendo el mundo sólido</h3>
             <p><strong>Objetivo:</strong> Conseguir que Aina no traspase los objetos del escenario.</p>

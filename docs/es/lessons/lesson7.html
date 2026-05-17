@@ -23,7 +23,8 @@
             <input type="password" id="password-input" placeholder="Contraseña">
             <p id="error-message"></p>
             <button id="submit-password" class="btn">Desbloquear Lección</button>
-            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al Inicio</a></p>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Volver al
+                    Inicio</a></p>
         </div>
     </div>
 
@@ -38,10 +39,12 @@
 
         <section class="card animate-on-load">
             <h2>1. La Anatomía del Arma: Más que una imagen</h2>
-            <p>Una espada en un videojuego no es solo un dibujo que se mueve. Es la combinación de dos elementos vitales:</p>
+            <p>Una espada en un videojuego no es solo un dibujo que se mueve. Es la combinación de dos elementos
+                vitales:</p>
             <ul>
                 <li><strong>Visual (Sprite2D):</strong> Lo que el jugador ve.</li>
-                <li><strong>Física (Area2D + CollisionShape2D):</strong> Lo que el juego entiende como "zona de peligro" o
+                <li><strong>Física (Area2D + CollisionShape2D):</strong> Lo que el juego entiende como "zona de peligro"
+                    o
                     <strong>Hitbox</strong>.
                 </li>
             </ul>
@@ -69,7 +72,8 @@
             <h2>2. Versatilidad: Una sola escena, muchas armas</h2>
             <p>En lugar de crear cientos de escenas para cada arma del juego, lo más eficiente es utilizar una única
                 escena <code>Weapon.tscn</code> y cambiar sus propiedades dinámicamente.</p>
-            <p>Podemos cargar diferentes texturas para el <strong>Sprite2D</strong> en tiempo de ejecución y definir valores
+            <p>Podemos cargar diferentes texturas para el <strong>Sprite2D</strong> en tiempo de ejecución y definir
+                valores
                 de "daño" específicos para cada tipo de arma:</p>
 
             <div class="highlight-section">
@@ -78,7 +82,8 @@
                     <li><strong>Texturas:</strong> Cambiamos la propiedad <code>texture</code> del Sprite según el arma
                         equipada.</li>
                     <li><strong>Daño Variable:</strong> Asignamos un valor de daño diferente a cada textura.</li>
-                    <li><strong>Ajuste de Hitbox:</strong> Podemos acoplar el tamaño del <code>CollisionShape2D</code> al
+                    <li><strong>Ajuste de Hitbox:</strong> Podemos acoplar el tamaño del <code>CollisionShape2D</code>
+                        al
                         tamaño exacto de la nueva textura vía código.</li>
                 </ul>
             </div>
@@ -95,10 +100,13 @@ func update_weapon(new_texture, damage_value):
                 la estructura de nodos.</p>
 
             <div class="highlight-section" style="border-left: 4px solid var(--accent-color);">
-                <p>💡 <strong>Nota:</strong> Es recomendable escalar las armas fuera del juego al tamaño que nos vaya bien para
+                <p>💡 <strong>Nota:</strong> Es recomendable escalar las armas fuera del juego al tamaño que nos vaya
+                    bien para
                     el personaje. Aunque escalar por código es posible, saber cuánto hemos
-                    de escalar "a ojo" cada textura diferente que cambiemos es prácticamente imposible. Igualmente, todas las
-                    armas tienen que estar en la misma orientación y es recomendable que la empuñadura esté en el (0,0) de la
+                    de escalar "a ojo" cada textura diferente que cambiemos es prácticamente imposible. Igualmente,
+                    todas las
+                    armas tienen que estar en la misma orientación y es recomendable que la empuñadura esté en el (0,0)
+                    de la
                     escena, pero colocársela siempre en la mano de Aina</p>
             </div>
         </section>
@@ -113,7 +121,8 @@ func update_weapon(new_texture, damage_value):
                 <h3>Pasos para la instalación:</h3>
                 <ol>
                     <li>Abrimos la escena de <strong>Aina</strong>.</li>
-                    <li>Arrastramos el archivo <code>Weapon.tscn</code> desde el sistema de archivos hasta el panel de nodos
+                    <li>Arrastramos el archivo <code>Weapon.tscn</code> desde el sistema de archivos hasta el panel de
+                        nodos
                         de Aina (haciéndola su hija).</li>
                     <li><strong>Posicionamiento:</strong> Es crucial que la empuñadura del arma esté en el punto
                         <code>(0,0)</code> de su propia escena. Así, cuando la coloquemos en la mano de Aina, rotará
@@ -121,7 +130,8 @@ func update_weapon(new_texture, damage_value):
                     </li>
                 </ol>
             </div>
-            <p>Recordad: Todas las texturas de armas que usemos tienen que tener la misma orientación original para que el código
+            <p>Recordad: Todas las texturas de armas que usemos tienen que tener la misma orientación original para que
+                el código
                 de rotación funcione igual para todas.</p>
         </section>
 
@@ -138,11 +148,14 @@ func update_weapon(new_texture, damage_value):
                 </p>
 
                 <h3>2. La Animación en el AnimationPlayer</h3>
-                <p>En la escena de Aina, selecciona el <strong>AnimationPlayer</strong> y crea la animación de atacar.</p>
+                <p>En la escena de Aina, selecciona el <strong>AnimationPlayer</strong> y crea la animación de atacar.
+                </p>
                 <p> Necesitarás las animaciones de tu Aina para que pueda atacar. Además de los sprites del movimiento
-                    de Aina, como hicimos para las animaciones de correr, tienes que añadir a la línea del tiempo el movimiento
+                    de Aina, como hicimos para las animaciones de correr, tienes que añadir a la línea del tiempo el
+                    movimiento
                     del arma. </p>
-                <p> Por eso, tienes que recolocar el nodo del arma en cada frame de ataque de Aina y añadir los parámetros
+                <p> Por eso, tienes que recolocar el nodo del arma en cada frame de ataque de Aina y añadir los
+                    parámetros
                     que hayas modificado a la línea del tiempo.</p>
 
                 <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
@@ -182,7 +195,8 @@ func update_weapon(new_texture, damage_value):
                 </p>
 
                 <h3>3. El Código de Ataque</h3>
-                <p>En el script de Aina, detectamos la tecla y activamos la condición en el <strong>AnimationTree</strong>:
+                <p>En el script de Aina, detectamos la tecla y activamos la condición en el
+                    <strong>AnimationTree</strong>:
                 </p>
                 <pre><code class="language-gdscript"># Aina.gd
                     func update_animation_parameters():
@@ -210,14 +224,18 @@ func update_weapon(new_texture, damage_value):
 		tree["parameters/attack/blend_position"]=direction
                 </code></pre>
             </div>
-            <p><strong>Truco Pro:</strong> Recuerda que en el AnimationTree, la transición de vuelta desde el ataque hacia
-                "Idle" o "Run" tiene que tener activado el <strong>Auto Advance</strong> (o <code>At End</code>) para que
+            <p><strong>Truco Pro:</strong> Recuerda que en el AnimationTree, la transición de vuelta desde el ataque
+                hacia
+                "Idle" o "Run" tiene que tener activado el <strong>Auto Advance</strong> (o <code>At End</code>) para
+                que
                 vuelva sola al acabar el swing.</p>
         </section>
         <section class="card animate-on-load">
             <h2>6. Detección y Daño al Monstruo</h2>
-            <p>Ahora que el arma está en las manos de Aina, necesitamos que los monstruos "sientan" su corte. En lugar de
-                que el arma tenga una lista de enemigos, haremos que sea el monstruo quien pregunte al arma cuánto daño hace.
+            <p>Ahora que el arma está en las manos de Aina, necesitamos que los monstruos "sientan" su corte. En lugar
+                de
+                que el arma tenga una lista de enemigos, haremos que sea el monstruo quien pregunte al arma cuánto daño
+                hace.
             </p>
 
             <div class="highlight-section">
@@ -248,6 +266,30 @@ func die():
                 <code>get_damage()</code> y el monstruo las reconocerá automáticamente.
             </p>
         </section>
+
+        <section class="card animate-on-load">
+            <h2>7. Material de apoyo (Vídeos)</h2>
+            <p>Aquí tienes unos vídeos explicativos donde se muestra paso a paso lo que hemos trabajado en la
+                lección:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://youtu.be/W3hLRaBNvrg"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <iframe src="https://youtu.be/W3hLRaBNvrg"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
         <section class="card animate-on-load task-box">
             <h3>🛠️ Tarea Práctica 7: Tu Primer Golpe</h3>
             <p><strong>Objetivo:</strong> Implementar un ataque funcional que reste vida al monstruo.</p>
